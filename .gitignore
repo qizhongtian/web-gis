@@ -1,0 +1,12 @@
+node_modules
+dist
+*.local
+.DS_Store
+
+# 本地静态资源（由 npm run sync:vendor 从 node_modules 生成）
+public/cesium
+public/vendor
+
+# 临时文件
+.dev.log
+.tmp-*.png

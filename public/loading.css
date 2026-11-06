@@ -1,0 +1,434 @@
+/* ===================================================================
+   GIS 启动 / 加载动画（全局样式，index.html 与 Vue 组件共用）
+   - .gis-boot            首屏开机动画（刷新时立即出现，路由就绪后淡出）
+   - .gis-overlay         加载遮罩：二维地图用白色极简，三维场景用科技风
+   - .gis-load--tech      科技风变体（雷达 + 扫描），用于 Cesium / Three
+   =================================================================== */
+
+html.is-booting,
+html.is-booting body {
+  background: #ffffff;
+  overflow: hidden;
+}
+
+/* ---------- 首屏开机动画 ---------- */
+.gis-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #ffffff;
+  background-image: radial-gradient(circle at 50% 38%, #f5f8fd 0%, #ffffff 58%);
+  transition: opacity 0.55s ease, visibility 0.55s ease;
+}
+
+.gis-boot.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* 品牌标识：三层地图叠层，逐层淡入 */
+.gis-boot__logo {
+  width: 62px;
+  height: 62px;
+  margin-bottom: 24px;
+  overflow: visible;
+}
+
+.gis-boot__logo path {
+  opacity: 0;
+  animation: gis-layer-in 0.65s cubic-bezier(0.22, 0.68, 0.34, 1) forwards;
+}
+
+.gis-boot__logo path:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.gis-boot__logo path:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.gis-boot__logo path:nth-child(3) {
+  animation-delay: 0.35s;
+}
+
+/* ---------- 文案 / 进度 ---------- */
+.gis-load {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.gis-load__title {
+  display: flex;
+  align-items: center;
+  font-family: 'MiSans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #1f2937;
+  white-space: nowrap;
+}
+
+.gis-dots {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 6px;
+}
+
+.gis-dots i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #b8c2d3;
+  opacity: 0.3;
+  animation: gis-dot 1.4s ease-in-out infinite;
+}
+
+.gis-dots i:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.gis-dots i:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+.gis-load__desc {
+  margin-top: 10px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: #9aa5b5;
+}
+
+.gis-load__bar {
+  width: 168px;
+  height: 3px;
+  margin-top: 26px;
+  border-radius: 3px;
+  background: #eef1f6;
+  overflow: hidden;
+}
+
+.gis-load__bar > span {
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0), #7aa7f0 35%, #3b82f6);
+  animation: gis-bar 1.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.gis-load__bar.is-determinate > span {
+  animation: none;
+  transition: width 0.35s ease;
+}
+
+.gis-load__pct {
+  margin-top: 10px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  color: #a8b3c4;
+}
+
+/* ---------- 加载环（地图 / 场景内使用）---------- */
+.gis-radar {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 2px solid #e9eef6;
+}
+
+.gis-radar::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #3b82f6;
+  animation: gis-spin 0.9s linear infinite;
+}
+
+/* ---------- 科技风变体：雷达（三维场景遮罩）---------- */
+.gis-radar--tech {
+  width: 92px;
+  height: 92px;
+  border: 0;
+}
+
+.gis-radar--tech::after {
+  display: none;
+}
+
+.gis-radar__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(125, 211, 252, 0.16);
+}
+
+.gis-radar__ring:nth-child(1) {
+  inset: 0;
+  border-color: rgba(125, 211, 252, 0.22);
+}
+
+.gis-radar__ring:nth-child(2) {
+  inset: 17px;
+}
+
+.gis-radar__ring:nth-child(3) {
+  inset: 33px;
+  border-color: rgba(125, 211, 252, 0.3);
+}
+
+.gis-radar__sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(56, 189, 248, 0) 0deg,
+    rgba(56, 189, 248, 0) 198deg,
+    rgba(56, 189, 248, 0.32) 318deg,
+    rgba(186, 230, 253, 0.9) 356deg,
+    rgba(56, 189, 248, 0) 360deg
+  );
+  -webkit-mask-image: radial-gradient(circle, transparent 0 5px, #000 6px);
+  mask-image: radial-gradient(circle, transparent 0 5px, #000 6px);
+  animation: gis-spin 2.4s linear infinite;
+}
+
+.gis-radar__ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(125, 211, 252, 0.5);
+  animation: gis-ripple 2.6s ease-out infinite;
+}
+
+.gis-radar__orbit {
+  position: absolute;
+  inset: 0;
+  animation: gis-spin 3.6s linear infinite;
+}
+
+.gis-radar__orbit::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #7dd3fc;
+  box-shadow: 0 0 10px rgba(125, 211, 252, 0.9);
+}
+
+.gis-radar__core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: #e0f2fe;
+  box-shadow: 0 0 12px rgba(125, 211, 252, 0.95), 0 0 30px rgba(56, 189, 248, 0.55);
+}
+
+/* ---------- 地图 / 场景内遮罩 ---------- */
+.gis-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.gis-overlay .gis-radar {
+  width: 44px;
+  height: 44px;
+}
+
+.gis-overlay .gis-load__title {
+  margin-top: 18px;
+  font-size: 13px;
+}
+
+.gis-overlay .gis-load__desc {
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.gis-overlay .gis-load__bar {
+  width: 148px;
+  margin-top: 18px;
+}
+
+.gis-overlay .gis-load__pct {
+  font-size: 10px;
+}
+
+.gis-load--compact .gis-radar {
+  width: 36px;
+  height: 36px;
+}
+
+.gis-load--compact .gis-load__title {
+  margin-top: 14px;
+  font-size: 12px;
+}
+
+/* ---------- 科技风变体：三维场景遮罩 ---------- */
+.gis-overlay.gis-load--tech {
+  background: radial-gradient(circle at 50% 45%, rgba(14, 42, 68, 0.92) 0%, rgba(6, 20, 34, 0.96) 70%);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.gis-overlay .gis-radar--tech {
+  width: 64px;
+  height: 64px;
+}
+
+.gis-load--compact .gis-radar--tech {
+  width: 52px;
+  height: 52px;
+}
+
+.gis-load--tech .gis-load__title {
+  margin-top: 22px;
+  font-family: ui-monospace, SFMono-Regular, 'Cascadia Mono', Menlo, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-transform: uppercase;
+  color: #e2f2ff;
+  text-shadow: 0 0 18px rgba(56, 189, 248, 0.45);
+}
+
+.gis-load--tech .gis-dots i {
+  width: 4px;
+  height: 4px;
+  background: #7dd3fc;
+}
+
+.gis-load--tech .gis-load__desc {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(148, 197, 235, 0.62);
+}
+
+.gis-load--tech .gis-load__bar {
+  width: 180px;
+  height: 2px;
+  margin-top: 18px;
+  border-radius: 2px;
+  background: rgba(125, 211, 252, 0.14);
+}
+
+.gis-load--tech .gis-load__bar > span {
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(56, 189, 248, 0), #38bdf8 40%, #bae6fd);
+}
+
+.gis-load--tech .gis-load__pct {
+  margin-top: 8px;
+  font-family: ui-monospace, SFMono-Regular, 'Cascadia Mono', Menlo, Consolas, monospace;
+  font-size: 10px;
+  color: rgba(186, 230, 253, 0.75);
+}
+
+/* ---------- 过渡 ---------- */
+.gis-fade-enter-active,
+.gis-fade-leave-active {
+  transition: opacity 0.4s ease;
+}
+
+.gis-fade-enter-from,
+.gis-fade-leave-to {
+  opacity: 0;
+}
+
+/* ---------- 关键帧 ---------- */
+@keyframes gis-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gis-layer-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gis-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  45% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes gis-ripple {
+  0% {
+    transform: scale(0.62);
+    opacity: 0.65;
+  }
+  80% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+
+@keyframes gis-bar {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(280%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gis-boot__logo path,
+  .gis-radar::after,
+  .gis-radar__sweep,
+  .gis-radar__ripple,
+  .gis-radar__orbit,
+  .gis-dots i,
+  .gis-load__bar > span {
+    animation: none;
+  }
+
+  .gis-boot__logo path {
+    opacity: 1;
+  }
+}

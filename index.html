@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN" class="is-booting">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" href="/font/MiSans-Normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/font/MiSans-Demibold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/loading.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f6f8" />
+    <title>WebGIS 示例管理平台</title>
+    <style>
+      /* 首屏内联兜底：避免 loading.css 到达前出现闪黑 */
+      html.is-booting,
+      html.is-booting body {
+        background: #ffffff;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <!-- 开机动画：刷新立即显示，应用路由就绪后由 main.ts 淡出 -->
+    <div id="boot-screen" class="gis-boot" aria-live="polite" aria-label="正在加载">
+      <div class="gis-load">
+        <svg class="gis-boot__logo" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M24 5.5 43 15 24 24.5 5 15z" fill="#e3edfb" />
+          <path d="M24 16.5 43 26 24 35.5 5 26z" fill="#a9c6f2" />
+          <path d="M24 27.5 43 37 24 46.5 5 37z" fill="#4b86e8" />
+        </svg>
+        <div class="gis-load__title">
+          <span class="gis-load__text">WebGIS 示例管理平台</span>
+          <span class="gis-dots"><i></i><i></i><i></i></span>
+        </div>
+        <div class="gis-load__desc">正在准备工作空间</div>
+        <div class="gis-load__bar"><span></span></div>
+      </div>
+    </div>
+
+    <script>
+      // 开机文案跟随上次选择的语言（与 src/i18n 的 appName / booting 保持一致），避免刷新瞬间语言跳变
+      ;(function () {
+        try {
+          var en = localStorage.getItem('wg-locale') === 'en'
+          if (!en) return
+          document.documentElement.lang = 'en'
+          var text = document.querySelector('#boot-screen .gis-load__text')
+          var desc = document.querySelector('#boot-screen .gis-load__desc')
+          if (text) text.textContent = 'WebGIS Demo Platform'
+          if (desc) desc.textContent = 'Preparing workspace'
+        } catch (e) {
+          /* localStorage 不可用时保持默认中文 */
+        }
+      })()
+    </script>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
