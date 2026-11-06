@@ -11,6 +11,7 @@ declare global {
   const CESIUM_VIEWER_KEY: typeof import('../composables/useCesium')['CESIUM_VIEWER_KEY']
   const DEFAULT_TRACK: typeof import('../composables/useCesiumTrackPlayback')['DEFAULT_TRACK']
   const EffectScope: typeof import('vue')['EffectScope']
+  const VECTOR_LAYERS_KEY: typeof import('../composables/useCesiumVectorLayers')['VECTOR_LAYERS_KEY']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
@@ -168,6 +169,7 @@ declare global {
   const useCesiumTerrainSample: typeof import('../composables/useCesiumTerrainSample')['useCesiumTerrainSample']
   const useCesiumTileset: typeof import('../composables/useCesiumTileset')['useCesiumTileset']
   const useCesiumTrackPlayback: typeof import('../composables/useCesiumTrackPlayback')['useCesiumTrackPlayback']
+  const useCesiumVectorLayers: typeof import('../composables/useCesiumVectorLayers')['useCesiumVectorLayers']
   const useCesiumWeather: typeof import('../composables/useCesiumWeather')['useCesiumWeather']
   const useClipboard: typeof import('@vueuse/core')['useClipboard']
   const useClipboardItems: typeof import('@vueuse/core')['useClipboardItems']
@@ -301,6 +303,7 @@ declare global {
   const useUserStore: typeof import('../store/user')['useUserStore']
   const useVModel: typeof import('@vueuse/core')['useVModel']
   const useVModels: typeof import('@vueuse/core')['useVModels']
+  const useVectorLayersStore: typeof import('../composables/useCesiumVectorLayers')['useVectorLayersStore']
   const useVibrate: typeof import('@vueuse/core')['useVibrate']
   const useVirtualList: typeof import('@vueuse/core')['useVirtualList']
   const useWakeLock: typeof import('@vueuse/core')['useWakeLock']
@@ -345,6 +348,7 @@ declare module 'vue' {
     readonly CESIUM_VIEWER_KEY: UnwrapRef<typeof import('../composables/useCesium')['CESIUM_VIEWER_KEY']>
     readonly DEFAULT_TRACK: UnwrapRef<typeof import('../composables/useCesiumTrackPlayback')['DEFAULT_TRACK']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly VECTOR_LAYERS_KEY: UnwrapRef<typeof import('../composables/useCesiumVectorLayers')['VECTOR_LAYERS_KEY']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
@@ -502,6 +506,7 @@ declare module 'vue' {
     readonly useCesiumTerrainSample: UnwrapRef<typeof import('../composables/useCesiumTerrainSample')['useCesiumTerrainSample']>
     readonly useCesiumTileset: UnwrapRef<typeof import('../composables/useCesiumTileset')['useCesiumTileset']>
     readonly useCesiumTrackPlayback: UnwrapRef<typeof import('../composables/useCesiumTrackPlayback')['useCesiumTrackPlayback']>
+    readonly useCesiumVectorLayers: UnwrapRef<typeof import('../composables/useCesiumVectorLayers')['useCesiumVectorLayers']>
     readonly useCesiumWeather: UnwrapRef<typeof import('../composables/useCesiumWeather')['useCesiumWeather']>
     readonly useClipboard: UnwrapRef<typeof import('@vueuse/core')['useClipboard']>
     readonly useClipboardItems: UnwrapRef<typeof import('@vueuse/core')['useClipboardItems']>
@@ -635,6 +640,7 @@ declare module 'vue' {
     readonly useUserStore: UnwrapRef<typeof import('../store/user')['useUserStore']>
     readonly useVModel: UnwrapRef<typeof import('@vueuse/core')['useVModel']>
     readonly useVModels: UnwrapRef<typeof import('@vueuse/core')['useVModels']>
+    readonly useVectorLayersStore: UnwrapRef<typeof import('../composables/useCesiumVectorLayers')['useVectorLayersStore']>
     readonly useVibrate: UnwrapRef<typeof import('@vueuse/core')['useVibrate']>
     readonly useVirtualList: UnwrapRef<typeof import('@vueuse/core')['useVirtualList']>
     readonly useWakeLock: UnwrapRef<typeof import('@vueuse/core')['useWakeLock']>

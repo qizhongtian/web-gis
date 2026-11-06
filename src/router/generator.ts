@@ -12,6 +12,24 @@ const PassThrough = defineComponent({
 // 懒加载全部视图（配合 Vite 代码分割）
 const viewModules = import.meta.glob('../views/**/*.vue')
 
+/**
+ * 需要 keep-alive 缓存的页面：同步导入拿到真实组件对象（带 name），
+ * Layout 里的 <keep-alive :include> 靠组件名匹配；懒加载的异步包装没有 name 无法命中。
+ * 新增缓存页时，在这里补一条 glob 模式，并给页面加 defineOptions({ name: 'XXX' })，
+ * 再把 name 写入 src/layout/index.vue 的 cachedViews。
+ */
+const cachedModules = import.meta.glob('../views/cesium/tool/vector/index.vue', {
+  eager: true,
+})
+
+/** 解析页面组件：缓存页取同步导入的组件，其余保持懒加载 */
+function resolveView(component: string) {
+  const key = `../views/${component}`
+  const cached = cachedModules[key] as { default: any } | undefined
+  if (cached) return cached.default
+  return viewModules[key] || PassThrough
+}
+
 export function buildRoutes(menus: MenuItem[]): RouteRecordRaw[] {
   return menus
     .filter((m) => m.path)
@@ -27,7 +45,7 @@ function menuToRoute(menu: MenuItem): RouteRecordRaw {
     return {
       path: menu.path,
       name: pathToName(menu.path),
-      component: viewModules[`../views/${menu.component}`] || PassThrough,
+      component: resolveView(menu.component),
       meta,
     }
   }

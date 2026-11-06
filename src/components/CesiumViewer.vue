@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, provide, ref, shallowRef } from 'vue'
+import {
+  computed,
+  onActivated,
+  onDeactivated,
+  onMounted,
+  onUnmounted,
+  provide,
+  ref,
+  shallowRef,
+} from 'vue'
 import { useI18n } from 'vue-i18n'
 import CesiumStatusBar from './CesiumStatusBar.vue'
 import { CESIUM_LIB_KEY, CESIUM_VIEWER_KEY } from '@/composables/useCesium'
@@ -24,10 +33,15 @@ const props = withDefaults(
     statusBar?: boolean
     /** 是否显示加载遮罩 */
     showLoading?: boolean
+    /** 自定义 XYZ 影像底图（替代默认 OSM），如香港影像服务 */
+    imageryUrl?: string
+    /** 自定义影像最大层级 */
+    imageryMaxLevel?: number
   }>(),
   {
     statusBar: true,
     showLoading: true,
+    imageryMaxLevel: 20,
   },
 )
 
@@ -156,6 +170,21 @@ function destroyViewer() {
   }
 }
 
+/** 合并自定义底图配置：传 imageryUrl 时替换默认 OSM 底图 */
+function buildOptions(C: any) {
+  if (!props.imageryUrl) return props.options
+  return {
+    ...props.options,
+    baseLayer: new C.ImageryLayer(
+      new C.UrlTemplateImageryProvider({
+        url: props.imageryUrl,
+        maximumLevel: props.imageryMaxLevel,
+        credit: '',
+      }),
+    ),
+  }
+}
+
 function applyHome(v: any, C: any) {
   if (!props.home) return
   const [lon, lat, height] = props.home
@@ -170,7 +199,7 @@ async function boot() {
     const C = await loadCesium()
     // 加载是异步的，期间组件可能已卸载
     if (disposed || !el.value) return
-    const v = createViewer(C, el.value, props.options)
+    const v = createViewer(C, el.value, buildOptions(C))
     cesium.value = C
     viewer.value = v
     // 开发期调试入口（生产构建不会执行）
@@ -195,6 +224,20 @@ function reload() {
 }
 
 onMounted(boot)
+
+// 被 keep-alive 缓存时暂停渲染循环，避免隐藏页面持续占用 GPU；回到页面再恢复
+onDeactivated(() => {
+  const v = viewer.value
+  if (v && !v.isDestroyed?.()) v.useDefaultRenderLoop = false
+})
+
+onActivated(() => {
+  const v = viewer.value
+  if (!v || v.isDestroyed?.()) return
+  v.useDefaultRenderLoop = true
+  v.resize()
+  v.scene?.requestRender?.()
+})
 
 // 用 onUnmounted 而非 onBeforeUnmount：确保子组件先完成解绑，再销毁 Viewer
 onUnmounted(() => {
