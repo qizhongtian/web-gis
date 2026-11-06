@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, shallowRef } from 'vue'
+import { computed, nextTick, reactive, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
@@ -57,53 +57,20 @@ const fileName = ref('')
 const geo = shallowRef<any>(null)
 const type = ref<VectorType | ''>('')
 
+/** 正在编辑的已保存图层 id（空 = 新建） */
+const editingId = ref('')
+const isEditing = computed(() => Boolean(editingId.value))
+/** 编辑前的快照，用于「取消编辑」回滚 */
+let snapshot: VectorLayerPayload | null = null
+/** 回填表单时跳过 watch，避免无意义的重建 */
+let filling = false
+
 const typeLabel = computed(() => {
   if (type.value === 'point') return t('vector.typePoint')
   if (type.value === 'line') return t('vector.typeLine')
   if (type.value === 'polygon') return t('vector.typePolygon')
   return ''
 })
-
-/** 读取 GeoJSON 并识别要素类型 */
-async function onFile(e: Event) {
-  const input = e.target as HTMLInputElement
-  const file = input.files?.[0]
-  input.value = ''
-  if (!file) return
-  try {
-    const json = JSON.parse(await file.text())
-    const detected = detectVectorType(json)
-    if (!detected) {
-      geo.value = null
-      type.value = ''
-      fileName.value = ''
-      ElMessage.warning(t('vector.noFeatures'))
-      return
-    }
-    geo.value = json
-    type.value = detected
-    fileName.value = file.name
-    if (!form.name) form.name = file.name.replace(/\.(geo)?json$/i, '')
-  } catch {
-    geo.value = null
-    type.value = ''
-    fileName.value = ''
-    ElMessage.error(t('vector.parseError'))
-  }
-}
-
-/** 点位图片：读为 dataURL 直接给 billboard 使用 */
-function onImage(e: Event) {
-  const input = e.target as HTMLInputElement
-  const file = input.files?.[0]
-  input.value = ''
-  if (!file) return
-  const reader = new FileReader()
-  reader.onload = () => {
-    form.image = String(reader.result || '')
-  }
-  reader.readAsDataURL(file)
-}
 
 function buildStyle(): PointStyle | LineStyle | PolygonStyle {
   if (type.value === 'point') {
@@ -121,60 +88,302 @@ function buildStyle(): PointStyle | LineStyle | PolygonStyle {
   }
 }
 
-function reset() {
-  form.name = ''
-  form.createTime = nowText()
-  form.enabled = true
-  form.image = DEFAULT_POINT_IMAGE
-  form.scale = 1
-  form.lineColor = '#2563eb'
-  form.lineWidth = 2
-  form.dashed = false
-  form.outlineColor = '#1d4ed8'
-  form.fillColor = '#3b82f6'
-  form.fillAlpha = 0.35
-  form.outlineDashed = false
-  form.outlineWidth = 2
-  geo.value = null
-  type.value = ''
-  fileName.value = ''
-}
-
-/** 提交：组装 payload 交给图层管理器（等价于后端接口返回结构） */
-function submit() {
-  if (!geo.value || !type.value) return ElMessage.warning(t('vector.needFile'))
-  if (!form.name.trim()) return ElMessage.warning(t('vector.needName'))
-  if (!form.createTime) return ElMessage.warning(t('vector.needTime'))
-  if (type.value === 'point' && !form.image) return ElMessage.warning(t('vector.needImage'))
-
-  const payload: VectorLayerPayload = {
-    id: `vec-${Date.now()}`,
-    name: form.name.trim(),
-    createTime: form.createTime,
+/** 组装当前表单对应的 payload */
+function buildPayload(): VectorLayerPayload | null {
+  if (!geo.value || !type.value) return null
+  return {
+    id: editingId.value || `vec-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    name: form.name.trim() || fileName.value || t('vector.unnamed'),
+    createTime: form.createTime || nowText(),
     enabled: form.enabled,
     type: type.value,
     data: geo.value,
     style: buildStyle(),
   }
+}
+
+/* ---------------- 实时预览 / 实时更新 ---------------- */
+
+let applyTimer: ReturnType<typeof setTimeout> | undefined
+
+/** 立即把当前参数应用到地图：编辑态更新正式图层，新建态更新预览层 */
+function applyNow(fly = false) {
+  const payload = buildPayload()
+  if (!payload) return
+  if (editingId.value) {
+    store.update(editingId.value, payload)
+  } else {
+    store.preview(payload, fly)
+  }
+}
+
+/** 参数变化防抖应用，实现「一边调参数一边看」 */
+function scheduleApply() {
+  if (filling) return
+  if (!geo.value || !type.value) return
+  clearTimeout(applyTimer)
+  applyTimer = setTimeout(() => applyNow(false), 160)
+}
+
+watch(form, scheduleApply, { deep: true })
+
+/* ---------------- 文件解析 ---------------- */
+
+/** 读取 GeoJSON 并识别要素类型：解析成功后立即飞行定位并预览 */
+async function onFile(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+  try {
+    const json = JSON.parse(await file.text())
+    const detected = detectVectorType(json)
+    if (!detected) {
+      geo.value = null
+      type.value = ''
+      fileName.value = ''
+      store.clearPreview()
+      ElMessage.warning(t('vector.noFeatures'))
+      return
+    }
+    // 上传新文件即开始新的编辑对象：名称 / 时间按新图层重置
+    leaveEditing(false)
+    geo.value = json
+    type.value = detected
+    fileName.value = file.name
+    form.name = file.name.replace(/\.(geo)?json$/i, '')
+    form.createTime = nowText()
+    // 立即渲染 + 飞到数据范围
+    await nextTick()
+    applyNow(true)
+  } catch {
+    geo.value = null
+    type.value = ''
+    fileName.value = ''
+    store.clearPreview()
+    ElMessage.error(t('vector.parseError'))
+  }
+}
+
+/** 点位图片：读为 dataURL 直接给 billboard 使用 */
+function onImage(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = () => {
+    form.image = String(reader.result || '')
+  }
+  reader.readAsDataURL(file)
+}
+
+/* ---------------- 新建 / 编辑 ---------------- */
+
+function resetForm(keepStyle = true) {
+  form.name = ''
+  form.createTime = nowText()
+  form.enabled = true
+  if (!keepStyle) {
+    form.image = DEFAULT_POINT_IMAGE
+    form.scale = 1
+    form.lineColor = '#2563eb'
+    form.lineWidth = 2
+    form.dashed = false
+    form.outlineColor = '#1d4ed8'
+    form.fillColor = '#3b82f6'
+    form.fillAlpha = 0.35
+    form.outlineDashed = false
+    form.outlineWidth = 2
+  }
+  geo.value = null
+  type.value = ''
+  fileName.value = ''
+  store.clearPreview()
+}
+
+/** 退出编辑态（可选清空表单） */
+function leaveEditing(clearForm = true) {
+  clearTimeout(applyTimer)
+  editingId.value = ''
+  snapshot = null
+  store.clearSelection()
+  if (clearForm) resetForm(true)
+}
+
+/** 编辑已有图层：把 payload 回填到表单 */
+function enterEditing(payload: VectorLayerPayload) {
+  filling = true
+  clearTimeout(applyTimer)
+  // 编辑已保存图层时，先清掉未保存的预览，避免两套图形叠在一起
+  store.clearPreview()
+  editingId.value = payload.id
+  snapshot = { ...payload, style: JSON.parse(JSON.stringify(payload.style)) }
+  form.name = payload.name
+  form.createTime = payload.createTime
+  form.enabled = payload.enabled !== false
+  const style = payload.style as any
+  if (payload.type === 'point') {
+    form.image = style.image || DEFAULT_POINT_IMAGE
+    form.scale = style.scale ?? 1
+  } else if (payload.type === 'line') {
+    form.lineColor = style.color || '#2563eb'
+    form.lineWidth = style.width ?? 2
+    form.dashed = Boolean(style.dashed)
+  } else {
+    form.outlineColor = style.outlineColor || '#1d4ed8'
+    form.fillColor = style.fillColor || '#3b82f6'
+    form.fillAlpha = style.fillAlpha ?? 0.35
+    form.outlineDashed = Boolean(style.outlineDashed)
+    form.outlineWidth = style.outlineWidth ?? 2
+  }
+  type.value = payload.type
+  geo.value = payload.data
+  fileName.value = payload.name
+  nextTick(() => {
+    filling = false
+  })
+}
+
+// 图层列表点击名称 -> 选中并定位，同时进入编辑
+watch(
+  () => store.selectedId.value,
+  (id) => {
+    // 图层被删除 / 清空后退出编辑态
+    if (!id) {
+      if (editingId.value) leaveEditing()
+      return
+    }
+    if (id === editingId.value) return
+    const payload = store.getPayload(id)
+    if (payload) enterEditing(payload)
+  },
+)
+
+/** 新建：把预览固化成正式图层 */
+function submit() {
+  const payload = buildPayload()
+  if (!payload) return ElMessage.warning(t('vector.needFile'))
+  if (!form.name.trim()) return ElMessage.warning(t('vector.needName'))
+  if (!form.createTime) return ElMessage.warning(t('vector.needTime'))
+  if (type.value === 'point' && !form.image) return ElMessage.warning(t('vector.needImage'))
 
   const loaded = store.add(payload)
   if (!loaded) {
     ElMessage.error(store.error.value || t('vector.noFeatures'))
     return
   }
+  store.clearPreview()
   ElMessage.success(t('vector.added', { count: loaded.count }))
   // 保留样式配置，方便连续添加同类图层
-  geo.value = null
-  type.value = ''
-  fileName.value = ''
-  form.name = ''
-  form.createTime = nowText()
+  resetForm(true)
 }
 
+/** 编辑：参数已实时生效，这里只做收尾 */
+function finishEdit() {
+  if (editingId.value) {
+    const payload = buildPayload()
+    if (payload) store.update(editingId.value, payload)
+    ElMessage.success(t('vector.updated'))
+  }
+  leaveEditing()
+}
+
+/** 取消编辑：回滚到编辑前的参数 */
+function cancelEdit() {
+  if (editingId.value && snapshot) {
+    store.update(editingId.value, snapshot)
+  }
+  leaveEditing()
+}
+
+/** 重置（新建态）：清空表单与预览 */
+function reset() {
+  leaveEditing(false)
+  resetForm(false)
+}
+
+/* ---------------- 复制关键参数 ---------------- */
+
+function copyText(text: string) {
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(
+      () => ElMessage.success(t('vector.copied')),
+      () => legacyCopy(text),
+    )
+    return
+  }
+  legacyCopy(text)
+}
+
+function legacyCopy(text: string) {
+  try {
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.style.position = 'fixed'
+    ta.style.opacity = '0'
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+    ElMessage.success(t('vector.copied'))
+  } catch {
+    ElMessage.error(t('vector.copyFailed'))
+  }
+}
+
+/** 复制关键参数：图片用占位标记，避免把超长 dataURL 复制出去 */
+function copyParams() {
+  if (!paramsText.value) return
+  copyText(paramsText.value)
+}
+
+/* ---------------- 关键参数展示（随表单实时变化） ---------------- */
+
+/** 默认收起，标题行直接显示一行参数摘要；展开看完整 JSON */
+const paramsVisible = ref(false)
+
+const paramSnapshot = computed(() => {
+  if (!type.value) return null
+  const style = { ...(buildStyle() as any) }
+  if (type.value === 'point') {
+    style.image =
+      form.image === DEFAULT_POINT_IMAGE
+        ? '<default-point-icon>'
+        : form.image.startsWith('data:')
+          ? `<image:${form.image.slice(5, form.image.indexOf(';') || 20)}>`
+          : form.image
+  }
+  return {
+    name: form.name.trim() || t('vector.unnamed'),
+    createTime: form.createTime,
+    enabled: form.enabled,
+    type: type.value,
+    style,
+  }
+})
+
+/** 展示 / 复制的参数文本：与地图上当前预览的样式完全一致 */
+const paramsText = computed(() =>
+  paramSnapshot.value ? JSON.stringify(paramSnapshot.value, null, 2) : '',
+)
+
+/** 收起状态下的一行摘要：scale=1 · verticalOrigin=BOTTOM · image=<default-point-icon> */
+const paramsBrief = computed(() => {
+  const style = paramSnapshot.value?.style as Record<string, any> | undefined
+  if (!style) return ''
+  // image 可能是超长占位，放最后，关键数值优先展示
+  const keys = Object.keys(style).sort(
+    (a, b) => (a === 'image' ? 1 : 0) - (b === 'image' ? 1 : 0),
+  )
+  return keys.map((k) => `${k}=${style[k]}`).join(' · ')
+})
 </script>
 
 <template>
   <CesiumOverlay :title="t('vector.title')" class="absolute left-3 top-3 z-10" :width="308">
+    <p v-if="isEditing" class="edit-tip">{{ t('vector.editing') }}</p>
+
     <el-form label-width="78px" label-position="left" size="small" class="vec-form">
       <el-form-item :label="t('vector.name')">
         <el-input v-model="form.name" :placeholder="t('vector.namePlaceholder')" clearable />
@@ -276,10 +485,38 @@ function submit() {
     </el-form>
 
     <div class="actions">
-      <el-button size="small" type="primary" :disabled="!type" @click="submit">
-        {{ t('vector.add') }}
-      </el-button>
-      <el-button size="small" plain @click="reset">{{ t('vector.reset') }}</el-button>
+      <template v-if="isEditing">
+        <el-button size="small" type="primary" @click="finishEdit">
+          {{ t('vector.saveEdit') }}
+        </el-button>
+        <el-button size="small" plain @click="cancelEdit">{{ t('vector.cancelEdit') }}</el-button>
+      </template>
+      <template v-else>
+        <el-button size="small" type="primary" :disabled="!type" @click="submit">
+          {{ t('vector.add') }}
+        </el-button>
+        <el-button size="small" plain @click="reset">{{ t('vector.reset') }}</el-button>
+      </template>
+    </div>
+
+    <!-- 关键参数：随表单实时变化，直接可见也可一键复制 -->
+    <div v-if="type" class="params">
+      <div class="params-head">
+        <button
+          type="button"
+          class="params-toggle"
+          :title="paramsBrief"
+          @click="paramsVisible = !paramsVisible"
+        >
+          <el-icon class="params-arrow" :class="{ open: paramsVisible }">
+            <component :is="'ArrowRight'" />
+          </el-icon>
+          <span class="params-title">{{ t('vector.params') }}</span>
+          <span v-show="!paramsVisible" class="params-brief">{{ paramsBrief }}</span>
+        </button>
+        <el-button size="small" text @click="copyParams">{{ t('vector.copyParams') }}</el-button>
+      </div>
+      <pre v-show="paramsVisible" class="params-body">{{ paramsText }}</pre>
     </div>
 
     <p v-if="store.error.value" class="err">{{ store.error.value }}</p>
@@ -293,6 +530,15 @@ function submit() {
 .vec-form :deep(.el-form-item__label) {
   font-size: 12px;
   color: #6b7280;
+}
+.edit-tip {
+  margin: 0 0 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  font-size: 11px;
+  color: #1d4ed8;
 }
 .file-row,
 .img-row,
@@ -328,11 +574,72 @@ function submit() {
   font-size: 11px;
   color: #6b7280;
 }
+.params {
+  margin-top: 8px;
+  border: 1px solid #e6e8eb;
+  border-radius: 8px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+.params-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px 2px 8px;
+}
+.params-toggle {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 11px;
+  color: #4b5563;
+}
+.params-brief {
+  flex: 1;
+  min-width: 0;
+  margin-left: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  color: #94a3b8;
+  text-align: left;
+}
+.params-arrow {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+.params-arrow.open {
+  transform: rotate(90deg);
+}
+.params-body {
+  margin: 0;
+  padding: 8px 10px;
+  max-height: 132px;
+  overflow: auto;
+  border-top: 1px dashed #e6e8eb;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #334155;
+  background: #fff;
+  white-space: pre;
+}
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding-top: 8px;
   border-top: 1px dashed #e6e8eb;
+}
+.actions :deep(.el-button + .el-button) {
+  margin-left: 0;
 }
 .empty-type {
   margin: 0 0 8px;
@@ -348,5 +655,4 @@ function submit() {
   font-size: 11px;
   color: #ef4444;
 }
-
 </style>

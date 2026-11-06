@@ -20,6 +20,52 @@ const iconMap: Record<string, string> = {
 function onCheck(id: string, val: boolean | string | number) {
   store.setVisible(id, Boolean(val))
 }
+
+/** 样式值格式化：内联图片过长，用占位标记代替 */
+function fmtVal(v: any) {
+  if (typeof v === 'string' && v.startsWith('data:')) return '<inline-image>'
+  return String(v)
+}
+
+/** 样式字段展示顺序：把最关键的数值放前面，图片占位放最后 */
+const STYLE_KEYS = [
+  'scale',
+  'color',
+  'width',
+  'dashed',
+  'fillColor',
+  'fillAlpha',
+  'outlineColor',
+  'outlineWidth',
+  'outlineDashed',
+  'verticalOrigin',
+  'image',
+]
+
+function sortByStyleOrder(entries: [string, any][]) {
+  return entries.sort((a, b) => {
+    const ia = STYLE_KEYS.indexOf(a[0])
+    const ib = STYLE_KEYS.indexOf(b[0])
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)
+  })
+}
+
+/** 图层关键参数摘要（名称下方直接可见，hover 展示完整内容） */
+function styleSummary(id: string) {
+  const p = store.getPayload(id)
+  if (!p?.style) return ''
+  const entries = Object.entries(p.style as Record<string, any>).filter(
+    ([, v]) => v !== undefined && v !== null && v !== '',
+  )
+  return sortByStyleOrder(entries)
+    .map(([k, v]) => `${k}=${fmtVal(v)}`)
+    .join(' · ')
+}
+
+function rowTitle(id: string, name: string) {
+  const s = styleSummary(id)
+  return s ? `${name}\n${s}\n${t('vector.locate')}` : `${name}\n${t('vector.locate')}`
+}
 </script>
 
 <template>
@@ -34,7 +80,12 @@ function onCheck(id: string, val: boolean | string | number) {
     <p v-if="!total" class="empty">{{ t('vector.empty') }}</p>
 
     <ul v-else class="list">
-      <li v-for="item in items" :key="item.id" class="row" :class="{ off: !item.enabled }">
+      <li
+        v-for="item in items"
+        :key="item.id"
+        class="row"
+        :class="{ off: !item.enabled, active: store.selectedId.value === item.id }"
+      >
         <el-checkbox
           :model-value="item.enabled"
           size="small"
@@ -45,12 +96,20 @@ function onCheck(id: string, val: boolean | string | number) {
         </el-icon>
 
         <div class="meta">
-          <button type="button" class="name" :title="t('vector.locate')" @click="store.flyTo(item.id)">
+          <button
+            type="button"
+            class="name"
+            :title="rowTitle(item.id, item.name)"
+            @click="store.select(item.id)"
+          >
             {{ item.name }}
           </button>
           <span class="time">
             {{ item.createTime }}
             <em v-if="item.clamped" class="clamp">{{ t('vector.clampedTip') }}</em>
+          </span>
+          <span class="style-text" :title="styleSummary(item.id)">
+            {{ styleSummary(item.id) }}
           </span>
         </div>
 
@@ -102,6 +161,10 @@ function onCheck(id: string, val: boolean | string | number) {
 .row:hover {
   background: #f5f8ff;
 }
+.row.active {
+  background: #eef4ff;
+  box-shadow: inset 0 0 0 1px #cdddff;
+}
 .row.off .type-icon,
 .row.off .name {
   color: #b6bcc4;
@@ -142,6 +205,14 @@ function onCheck(id: string, val: boolean | string | number) {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.style-text {
+  font-size: 10px;
+  line-height: 1.3;
+  color: #94a3b8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .clamp {
   margin-left: 4px;

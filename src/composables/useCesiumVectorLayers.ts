@@ -24,6 +24,9 @@ export interface VectorLayerItem {
  */
 const CACHE_KEY = 'wg-vector-layers'
 
+/** 预览图层使用的固定 id（不进列表、不写缓存） */
+const PREVIEW_ID = '__vector-preview__'
+
 function readCache(): VectorLayerPayload[] {
   try {
     const raw = sessionStorage.getItem(CACHE_KEY)
@@ -43,36 +46,53 @@ function writeCache(list: VectorLayerPayload[]) {
 }
 
 /**
- * 矢量图层管理：新增 / 显隐 / 定位 / 删除
+ * 矢量图层管理：新增 / 实时预览 / 编辑更新 / 显隐 / 定位 / 删除
  * - 真正的 Cesium 对象存在 datasets 里，避免 Vue 深度代理
  * - 纯数据 payload 同步缓存到 sessionStorage，刷新后可恢复
- * - 卸载时销毁全部数据源（但保留缓存，下次进入再恢复）
+ * - 预览层独立于列表，调参数时只重建预览，不污染已保存数据
  */
 export function useCesiumVectorLayers() {
   const items = ref<VectorLayerItem[]>([])
   const error = ref('')
+  /** 当前选中的图层（用于列表高亮 + 表单联动编辑） */
+  const selectedId = ref('')
   const viewer = shallowRef<any>()
   const C = shallowRef<any>()
   const datasets = new Map<string, LoadedVectorLayer>()
   /** 与 items 对应的原始数据，用于缓存 / 重建 */
   const payloads = new Map<string, VectorLayerPayload>()
+  /** 未保存的预览图层 */
+  let previewLayer: LoadedVectorLayer | null = null
 
   function persist() {
     writeCache([...payloads.values()])
   }
 
-  /** 点击图层名称定位 */
-  function flyTo(id: string) {
+  /** 飞到某个已加载图层的范围 */
+  function flyToLayer(layer: LoadedVectorLayer | null) {
     const v = viewer.value
     const lib = C.value
-    const layer = datasets.get(id)
-    if (!v || v.isDestroyed?.() || !lib || !layer) return
-    if (!layer.boundingSphere) return
+    if (!v || v.isDestroyed?.() || !lib || !layer?.boundingSphere) return
     const radius = Math.max(layer.boundingSphere.radius, 80)
     v.camera.flyToBoundingSphere(layer.boundingSphere, {
       duration: 1.2,
       offset: new lib.HeadingPitchRange(0, lib.Math.toRadians(-55), radius * 3.2),
     })
+  }
+
+  /** 点击图层名称定位 */
+  function flyTo(id: string) {
+    flyToLayer(datasets.get(id) || null)
+  }
+
+  /** 选中并定位（图层列表点击名称） */
+  function select(id: string) {
+    selectedId.value = id
+    flyTo(id)
+  }
+
+  function clearSelection() {
+    selectedId.value = ''
   }
 
   /**
@@ -116,6 +136,87 @@ export function useCesiumVectorLayers() {
     }
   }
 
+  /**
+   * 更新已有图层（编辑属性 / 样式时实时生效）
+   * 会用新 payload 重建数据源，id 保持不变
+   */
+  function update(id: string, payload: VectorLayerPayload) {
+    error.value = ''
+    const v = viewer.value
+    const lib = C.value
+    const old = datasets.get(id)
+    if (!v || v.isDestroyed?.() || !lib || !old) {
+      error.value = '图层不存在'
+      return null
+    }
+    try {
+      v.dataSources.remove(old.dataSource, true)
+      datasets.delete(id)
+      const loaded = loadVectorLayer(v, lib, { ...payload, id })
+      if (!loaded.count) {
+        error.value = '没有可渲染的要素'
+        v.dataSources.remove(loaded.dataSource, true)
+        payloads.delete(id)
+        items.value = items.value.filter((it) => it.id !== id)
+        persist()
+        return null
+      }
+      datasets.set(id, loaded)
+      payloads.set(id, { ...payload, id })
+      items.value = items.value.map((it) =>
+        it.id === id
+          ? {
+              id,
+              name: loaded.name,
+              createTime: loaded.createTime,
+              type: loaded.type,
+              count: loaded.count,
+              enabled: payload.enabled !== false,
+              clamped: loaded.clamped,
+            }
+          : it,
+      )
+      persist()
+      return loaded
+    } catch (e: any) {
+      error.value = e?.message || '图层更新失败'
+      return null
+    }
+  }
+
+  /** 清掉预览图层 */
+  function clearPreview() {
+    const v = viewer.value
+    if (previewLayer && v && !v.isDestroyed?.()) v.dataSources.remove(previewLayer.dataSource, true)
+    previewLayer = null
+  }
+
+  /**
+   * 实时预览：样式变化时重建预览层，实现「边调参数边看效果」
+   * @param fly 是否飞到数据范围（新上传文件时 true，调样式时 false）
+   */
+  function preview(payload: VectorLayerPayload, fly = false) {
+    const v = viewer.value
+    const lib = C.value
+    if (!v || v.isDestroyed?.() || !lib) return null
+    error.value = ''
+    try {
+      clearPreview()
+      const loaded = loadVectorLayer(v, lib, { ...payload, id: PREVIEW_ID })
+      if (!loaded.count) {
+        v.dataSources.remove(loaded.dataSource, true)
+        error.value = '没有可渲染的要素'
+        return null
+      }
+      previewLayer = loaded
+      if (fly) flyToLayer(loaded)
+      return loaded
+    } catch (e: any) {
+      error.value = e?.message || '预览失败'
+      return null
+    }
+  }
+
   /** 从缓存恢复（刷新 / 重新进入页面时调用） */
   function restore() {
     const list = readCache()
@@ -148,6 +249,7 @@ export function useCesiumVectorLayers() {
     datasets.delete(id)
     payloads.delete(id)
     items.value = items.value.filter((it) => it.id !== id)
+    if (selectedId.value === id) selectedId.value = ''
     persist()
   }
 
@@ -163,8 +265,15 @@ export function useCesiumVectorLayers() {
     datasets.clear()
     payloads.clear()
     items.value = []
+    selectedId.value = ''
     error.value = ''
+    clearPreview()
     if (!keepCache) persist()
+  }
+
+  /** 取某个已保存图层的原始数据（编辑时回填表单） */
+  function getPayload(id: string) {
+    return payloads.get(id) || null
   }
 
   onCesiumReady((v, lib) => {
@@ -180,7 +289,23 @@ export function useCesiumVectorLayers() {
     }
   })
 
-  return { items, error, add, restore, setVisible, remove, clear, flyTo }
+  return {
+    items,
+    error,
+    selectedId,
+    add,
+    update,
+    preview,
+    clearPreview,
+    restore,
+    setVisible,
+    remove,
+    clear,
+    flyTo,
+    select,
+    clearSelection,
+    getPayload,
+  }
 }
 
 export type VectorLayersStore = ReturnType<typeof useCesiumVectorLayers>
