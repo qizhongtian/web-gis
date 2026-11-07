@@ -1,5 +1,14 @@
-import { reactive } from 'vue'
-import { getParticleTexture } from '@/utils/gis/textures'
+import { reactive, ref } from 'vue'
+import {
+  CLOUD_SHADER,
+  HAZE_SHADER,
+  LIGHTNING_SHADER,
+  NIGHT_SHADER,
+  RAIN_SHADER,
+  SAND_SHADER,
+  SNOW_SHADER,
+} from '@/utils/gis/weatherShaders'
+import { useCesiumPostStage } from './useCesiumPostStage'
 
 export type WeatherKey = 'rain' | 'snow' | 'fog' | 'cloud' | 'lightning' | 'sand' | 'night'
 
@@ -11,15 +20,25 @@ export interface WeatherState {
   lightning: boolean
   sand: boolean
   night: boolean
-  /** 雨/雪强度 0.2 ~ 2 */
+  /** 雨/雪/沙强度 0.2 ~ 2 */
   intensity: number
-  /** 雾浓度 0 ~ 0.005 */
+  /** 雾浓度 0 ~ 0.005（同时作用于 scene.fog 与雾霾着色器） */
   fogDensity: number
+  /** 云量 0.05 ~ 1 */
+  cloudCover: number
 }
+
+/** 场景默认雾浓度，关闭特效时还原 */
+const DEFAULT_FOG_DENSITY = 0.0002
 
 /**
  * 天气 / 环境特效：雨、雪、雾、云、闪电、沙尘、夜景
- * 粒子贴图由 canvas 运行时生成，粒子系统跟随相机，卸载时统一清理
+ *
+ * 全部基于 GLSL 片段着色器（`scene.postProcessStages` 自定义材质），由 useCesiumPostStage 封装：
+ * - 无粒子几何体，不随相机缩放变稀 / 穿模
+ * - 动态参数（时间、强度、雾浓度、云量、闪电亮度）以「每帧求值函数」传入 uniform
+ * - 阶段按「夜景 → 雾霾 → 云层 → 雨 / 雪 / 沙尘 → 闪电」顺序挂载，保证合成次序
+ * - 组件卸载时移除阶段并还原 scene.fog
  */
 export function useCesiumWeather() {
   const state = reactive<WeatherState>({
@@ -32,164 +51,125 @@ export function useCesiumWeather() {
     night: false,
     intensity: 1,
     fogDensity: 0.0008,
+    cloudCover: 0.6,
   })
 
+  /** 着色器动画时间（秒），交给 uniform 每帧读取，帧率无关 */
+  const time = () => performance.now() / 1000
+  /** 闪电瞬时亮度 0 ~ 1 */
+  const flash = ref(0)
+
   let viewer: any = null
-  let C: any = null
-  let preUpdate: any = null
-  let lightningTimer: number | null = null
 
-  /** weather key -> 粒子系统（雨/雪/云/沙尘） */
-  const particles = new Map<WeatherKey, any>()
+  // 阶段创建顺序即渲染顺序（Cesium 后处理链按加入顺序叠加）
+  const nightStage = useCesiumPostStage({
+    name: 'weather-night',
+    fragmentShader: NIGHT_SHADER,
+  })
+  const fogStage = useCesiumPostStage({
+    name: 'weather-haze',
+    fragmentShader: HAZE_SHADER,
+    uniforms: {
+      u_time: time,
+      u_density: () => state.fogDensity,
+    },
+  })
+  const cloudStage = useCesiumPostStage({
+    name: 'weather-cloud',
+    fragmentShader: CLOUD_SHADER,
+    uniforms: {
+      u_time: time,
+      u_cover: () => state.cloudCover,
+    },
+  })
+  const rainStage = useCesiumPostStage({
+    name: 'weather-rain',
+    fragmentShader: RAIN_SHADER,
+    uniforms: {
+      u_time: time,
+      u_intensity: () => state.intensity,
+    },
+  })
+  const snowStage = useCesiumPostStage({
+    name: 'weather-snow',
+    fragmentShader: SNOW_SHADER,
+    uniforms: {
+      u_time: time,
+      u_intensity: () => state.intensity,
+    },
+  })
+  const sandStage = useCesiumPostStage({
+    name: 'weather-sand',
+    fragmentShader: SAND_SHADER,
+    uniforms: {
+      u_time: time,
+      u_intensity: () => state.intensity,
+    },
+  })
+  const lightningStage = useCesiumPostStage({
+    name: 'weather-lightning',
+    fragmentShader: LIGHTNING_SHADER,
+    uniforms: {
+      u_flash: () => flash.value,
+    },
+  })
 
-  const scene = () => viewer?.scene
-  const cameraPosition = () => viewer.camera.positionWC
-
-  function followCamera() {
-    if (!viewer || viewer.isDestroyed?.()) return
-    const modelMatrix = C.Transforms.eastNorthUpToFixedFrame(cameraPosition())
-    particles.forEach((p) => {
-      if (p && !p.isDestroyed?.()) p.modelMatrix = modelMatrix
-    })
+  const stages: Record<WeatherKey, ReturnType<typeof useCesiumPostStage>> = {
+    night: nightStage,
+    fog: fogStage,
+    cloud: cloudStage,
+    rain: rainStage,
+    snow: snowStage,
+    sand: sandStage,
+    lightning: lightningStage,
   }
 
-  function buildParticles(key: WeatherKey) {
-    const image = getParticleTexture(key === 'sand' ? 'sand' : key === 'cloud' ? 'cloud' : key === 'snow' ? 'snow' : 'rain')
+  /* ------------------------------ 闪电时序 ------------------------------ */
 
-    const common = {
-      modelMatrix: C.Transforms.eastNorthUpToFixedFrame(cameraPosition()),
-      emitter: new C.CylinderEmitter(key === 'cloud' ? 2600 : 380, key === 'cloud' ? 260 : 420),
-      image,
-      emissionRate: 0,
-      lifetime: 16,
-      startScale: 1,
-      endScale: 1,
-      minimumParticleLife: 4,
-      maximumParticleLife: 9,
-      minimumSpeed: 0,
-      maximumSpeed: 0,
-      sizeInMeters: false,
-    }
+  let strikeTimer = 0
+  let decayTimer = 0
 
-    let options: any
-    if (key === 'rain') {
-      options = {
-        ...common,
-        emissionRate: 900 * state.intensity,
-        startScale: 0.55,
-        endScale: 0.9,
-        startColor: new C.Color(0.72, 0.84, 1.0, 0.85),
-        endColor: new C.Color(0.72, 0.84, 1.0, 0.15),
-        emitterModelMatrix: C.Matrix4.fromTranslation(new C.Cartesian3(0, 0, 200)),
-        updateCallback: (p: any) => {
-          p.velocity = new C.Cartesian3(2.5, 0, -45)
-        },
+  function scheduleStrike() {
+    strikeTimer = window.setTimeout(() => {
+      if (!state.lightning) return
+      flash.value = 0.85 + Math.random() * 0.15
+      // 常见双闪
+      if (Math.random() > 0.45) {
+        window.setTimeout(() => {
+          if (state.lightning) flash.value = 0.55 + Math.random() * 0.35
+        }, 130)
       }
-    } else if (key === 'snow') {
-      options = {
-        ...common,
-        emissionRate: 240 * state.intensity,
-        startScale: 0.7,
-        endScale: 1.35,
-        startColor: C.Color.WHITE,
-        endColor: new C.Color(1, 1, 1, 0.35),
-        emitterModelMatrix: C.Matrix4.fromTranslation(new C.Cartesian3(0, 0, 220)),
-        updateCallback: (p: any) => {
-          p.velocity = new C.Cartesian3(1.6, 0.6, -2.2)
-        },
-      }
-    } else if (key === 'sand') {
-      options = {
-        ...common,
-        emissionRate: 260,
-        startScale: 1.6,
-        endScale: 4.5,
-        startColor: new C.Color(0.86, 0.74, 0.5, 0.5),
-        endColor: new C.Color(0.76, 0.62, 0.38, 0),
-        emitterModelMatrix: C.Matrix4.fromTranslation(new C.Cartesian3(0, 0, 30)),
-        updateCallback: (p: any) => {
-          p.velocity = new C.Cartesian3(26, 6, 0.6)
-        },
-      }
-    } else {
-      options = {
-        ...common,
-        emissionRate: 24,
-        startScale: 42,
-        endScale: 78,
-        startColor: new C.Color(1, 1, 1, 0.32),
-        endColor: new C.Color(1, 1, 1, 0),
-        emitterModelMatrix: C.Matrix4.fromTranslation(new C.Cartesian3(0, 0, 620)),
-        updateCallback: (p: any) => {
-          p.velocity = new C.Cartesian3(4, 0, 0)
-        },
-      }
-    }
-
-    const ps = new C.ParticleSystem(options)
-    scene().primitives.add(ps)
-    particles.set(key, ps)
-  }
-
-  function removeParticles(key: WeatherKey) {
-    const ps = particles.get(key)
-    if (ps && !ps.isDestroyed?.()) scene()?.primitives.remove(ps)
-    particles.delete(key)
-  }
-
-  function setFog(on: boolean) {
-    if (!scene()) return
-    scene().fog.enabled = on
-    scene().fog.density = on ? state.fogDensity : 0.0002
-  }
-
-  function setNight(on: boolean) {
-    if (!scene()) return
-    const globe = scene().globe
-    globe.enableLighting = on
-    scene().skyAtmosphere.brightnessShift = on ? -0.35 : 0
-    scene().skyAtmosphere.saturationShift = on ? -0.3 : 0
-  }
-
-  function stopLightning() {
-    if (lightningTimer !== null) {
-      window.clearInterval(lightningTimer)
-      lightningTimer = null
-    }
-    if (scene()) scene().skyAtmosphere.brightnessShift = state.night ? -0.35 : 0
+      scheduleStrike()
+    }, 1400 + Math.random() * 2600)
   }
 
   function startLightning() {
     stopLightning()
-    lightningTimer = window.setInterval(() => {
-      if (!scene() || !state.lightning) return
-      const flash = () => {
-        if (!scene()) return
-        scene().skyAtmosphere.brightnessShift = 0.45
-        window.setTimeout(() => {
-          if (scene()) scene().skyAtmosphere.brightnessShift = state.night ? -0.35 : 0
-        }, 90)
-      }
-      flash()
-      if (Math.random() > 0.55) window.setTimeout(flash, 180)
-    }, 2600)
+    decayTimer = window.setInterval(() => {
+      if (flash.value > 0) flash.value = Math.max(0, flash.value - 0.22)
+    }, 60)
+    scheduleStrike()
+  }
+
+  function stopLightning() {
+    window.clearTimeout(strikeTimer)
+    window.clearInterval(decayTimer)
+    strikeTimer = 0
+    decayTimer = 0
+    flash.value = 0
+  }
+
+  /* ------------------------------ 开关 / 参数 ------------------------------ */
+
+  function applyFogDensityToScene() {
+    if (viewer && !viewer.isDestroyed?.()) viewer.scene.fog.density = state.fog ? state.fogDensity : DEFAULT_FOG_DENSITY
   }
 
   function set(key: WeatherKey, on: boolean) {
-    if (!viewer || !C) return
     state[key] = on
+    stages[key].enabled.value = on
 
-    if (key === 'rain' || key === 'snow' || key === 'cloud' || key === 'sand') {
-      if (on) {
-        if (!particles.has(key)) buildParticles(key)
-      } else {
-        removeParticles(key)
-      }
-      return
-    }
-
-    if (key === 'fog') setFog(on)
-    if (key === 'night') setNight(on)
+    if (key === 'fog') applyFogDensityToScene()
     if (key === 'lightning') {
       if (on) startLightning()
       else stopLightning()
@@ -200,32 +180,21 @@ export function useCesiumWeather() {
     set(key, !state[key])
   }
 
-  /** 强度变化后重建雨/雪粒子，使其立即生效 */
+  /** 强度通过 uniform 闭包实时生效，无需重建任何资源 */
   function applyIntensity(value: number) {
-    state.intensity = value
-    ;(['rain', 'snow'] as WeatherKey[]).forEach((key) => {
-      if (particles.has(key)) {
-        removeParticles(key)
-        buildParticles(key)
-      }
-    })
+    state.intensity = Math.min(2, Math.max(0.2, value))
   }
 
   function applyFogDensity(value: number) {
     state.fogDensity = value
-    if (state.fog && scene()) scene().fog.density = value
+    applyFogDensityToScene()
+  }
+
+  function applyCloudCover(value: number) {
+    state.cloudCover = Math.min(1, Math.max(0.05, value))
   }
 
   function reset() {
-    ;(['rain', 'snow', 'cloud', 'sand'] as WeatherKey[]).forEach(removeParticles)
-    stopLightning()
-    if (scene()) {
-      scene().fog.enabled = true
-      scene().fog.density = 0.0002
-      scene().globe.enableLighting = false
-      scene().skyAtmosphere.brightnessShift = 0
-      scene().skyAtmosphere.saturationShift = 0
-    }
     Object.assign(state, {
       rain: false,
       snow: false,
@@ -235,22 +204,24 @@ export function useCesiumWeather() {
       sand: false,
       night: false,
     })
+    ;(Object.keys(stages) as WeatherKey[]).forEach((key) => {
+      stages[key].enabled.value = false
+    })
+    stopLightning()
+    applyFogDensityToScene()
   }
 
-  onCesiumReady((v, lib) => {
+  onCesiumReady((v) => {
     viewer = v
-    C = lib
-    preUpdate = () => followCamera()
-    v.scene.preUpdate.addEventListener(preUpdate)
+    // 雾浓度与 scene.fog 联动，避免仅屏幕雾幕而远处地形无衰减
+    if (state.fog) applyFogDensityToScene()
 
     return () => {
-      if (preUpdate) v.scene.preUpdate.removeEventListener(preUpdate)
-      preUpdate = null
-      reset()
+      stopLightning()
+      if (!v.isDestroyed?.()) v.scene.fog.density = DEFAULT_FOG_DENSITY
       viewer = null
-      C = null
     }
   })
 
-  return { state, set, toggle, reset, applyIntensity, applyFogDensity }
+  return { state, set, toggle, reset, applyIntensity, applyFogDensity, applyCloudCover }
 }

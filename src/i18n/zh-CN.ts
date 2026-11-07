@@ -53,6 +53,8 @@ export default {
     latitude: '纬度',
     height: '高度',
     underground: '地下',
+    mode3d: '三维',
+    transparency: '透明度',
     to2d: '切换到二维',
     to3d: '切换到三维',
     undergroundOn: '开启地下模式',

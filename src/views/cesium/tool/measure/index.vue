@@ -6,10 +6,10 @@ import MeasurePanel from './MeasurePanel.vue'
 <template>
   <div class="h-full min-h-0 flex flex-col gap-2 p-2">
     <p class="demo-hint">
-      空间量算：左键连续加点，<b>双击 / 右键</b>结束；距离按段累加，面积用局部 ENU 投影计算，高度模式比较两次拾取的高差。
+      空间量算：<b>单击</b>取点，<b>双击</b>结束；节点可拖拽微调，测距每段标注距离并可点节点右上角 <b>×</b> 单独删除，测面标注边长与面积，测高标注高差 / 水平距离 / 斜距。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 120000]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :status-bar="false">
       <MeasurePanel />
     </CesiumViewer>
   </div>

@@ -53,6 +53,8 @@ export default {
     latitude: 'Lat',
     height: 'Height',
     underground: 'Underground',
+    mode3d: '3D',
+    transparency: 'Alpha',
     to2d: 'Switch to 2D',
     to3d: 'Switch to 3D',
     undergroundOn: 'Enable underground mode',

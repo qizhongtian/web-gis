@@ -158,6 +158,7 @@ declare global {
   const useCesiumDraw: typeof import('../composables/useCesiumDraw')['useCesiumDraw']
   const useCesiumGeoJson: typeof import('../composables/useCesiumGeoJson')['useCesiumGeoJson']
   const useCesiumGeoServer: typeof import('../composables/useCesiumGeoServer')['useCesiumGeoServer']
+  const useCesiumHkScene: typeof import('../composables/useCesiumHkScene')['useCesiumHkScene']
   const useCesiumLib: typeof import('../composables/useCesium')['useCesiumLib']
   const useCesiumMeasure: typeof import('../composables/useCesiumMeasure')['useCesiumMeasure']
   const useCesiumModel: typeof import('../composables/useCesiumModel')['useCesiumModel']
@@ -165,6 +166,7 @@ declare global {
   const useCesiumOptional: typeof import('../composables/useCesium')['useCesiumOptional']
   const useCesiumPointer: typeof import('../composables/useCesiumPointer')['useCesiumPointer']
   const useCesiumPoints: typeof import('../composables/useCesiumPoints')['useCesiumPoints']
+  const useCesiumPostStage: typeof import('../composables/useCesiumPostStage')['useCesiumPostStage']
   const useCesiumScene: typeof import('../composables/useCesiumScene')['useCesiumScene']
   const useCesiumTerrainSample: typeof import('../composables/useCesiumTerrainSample')['useCesiumTerrainSample']
   const useCesiumTileset: typeof import('../composables/useCesiumTileset')['useCesiumTileset']
@@ -495,6 +497,7 @@ declare module 'vue' {
     readonly useCesiumDraw: UnwrapRef<typeof import('../composables/useCesiumDraw')['useCesiumDraw']>
     readonly useCesiumGeoJson: UnwrapRef<typeof import('../composables/useCesiumGeoJson')['useCesiumGeoJson']>
     readonly useCesiumGeoServer: UnwrapRef<typeof import('../composables/useCesiumGeoServer')['useCesiumGeoServer']>
+    readonly useCesiumHkScene: UnwrapRef<typeof import('../composables/useCesiumHkScene')['useCesiumHkScene']>
     readonly useCesiumLib: UnwrapRef<typeof import('../composables/useCesium')['useCesiumLib']>
     readonly useCesiumMeasure: UnwrapRef<typeof import('../composables/useCesiumMeasure')['useCesiumMeasure']>
     readonly useCesiumModel: UnwrapRef<typeof import('../composables/useCesiumModel')['useCesiumModel']>
@@ -502,6 +505,7 @@ declare module 'vue' {
     readonly useCesiumOptional: UnwrapRef<typeof import('../composables/useCesium')['useCesiumOptional']>
     readonly useCesiumPointer: UnwrapRef<typeof import('../composables/useCesiumPointer')['useCesiumPointer']>
     readonly useCesiumPoints: UnwrapRef<typeof import('../composables/useCesiumPoints')['useCesiumPoints']>
+    readonly useCesiumPostStage: UnwrapRef<typeof import('../composables/useCesiumPostStage')['useCesiumPostStage']>
     readonly useCesiumScene: UnwrapRef<typeof import('../composables/useCesiumScene')['useCesiumScene']>
     readonly useCesiumTerrainSample: UnwrapRef<typeof import('../composables/useCesiumTerrainSample')['useCesiumTerrainSample']>
     readonly useCesiumTileset: UnwrapRef<typeof import('../composables/useCesiumTileset')['useCesiumTileset']>

@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
+import { useCesiumHkScene } from '@/composables/useCesiumHkScene'
 import { useCesiumWeather, type WeatherKey } from '@/composables/useCesiumWeather'
 
 const weather = useCesiumWeather()
 const { state } = weather
 
+// 与空间量算页一致的默认场景：香港影像 + 地形 + 倾斜摄影 + 倾斜视角
+useCesiumHkScene()
+
 const effects: { key: WeatherKey; label: string; desc: string }[] = [
-  { key: 'rain', label: '下雨', desc: '粒子系统 + 相机跟随' },
-  { key: 'snow', label: '下雪', desc: '慢速飘落粒子' },
-  { key: 'fog', label: '雾霾', desc: 'scene.fog 密度' },
-  { key: 'cloud', label: '云层', desc: '大尺寸云粒子' },
-  { key: 'lightning', label: '闪电', desc: '大气亮度闪烁' },
-  { key: 'sand', label: '沙尘', desc: '横向风场粒子' },
-  { key: 'night', label: '夜景', desc: '地表光照 + 大气压暗' },
+  { key: 'rain', label: '下雨', desc: '雨滴下落 + 风向偏移' },
+  { key: 'snow', label: '下雪', desc: '六角雪花 + 漂摆下落' },
+  { key: 'fog', label: '雾霾', desc: '雾幕着色器 + scene.fog' },
+  { key: 'cloud', label: '云层', desc: '双层 FBM 噪声云' },
+  { key: 'lightning', label: '闪电', desc: '随机双闪 + 冷白提亮' },
+  { key: 'sand', label: '沙尘', desc: '风场条纹 + 暖色沙幕' },
+  { key: 'night', label: '夜景', desc: '冷色映射 + 暗角' },
 ]
 
 function onIntensity(value: number | number[]) {
@@ -21,6 +25,10 @@ function onIntensity(value: number | number[]) {
 
 function onFogDensity(value: number | number[]) {
   weather.applyFogDensity(Number(Array.isArray(value) ? value[0] : value))
+}
+
+function onCloudCover(value: number | number[]) {
+  weather.applyCloudCover(Number(Array.isArray(value) ? value[0] : value))
 }
 </script>
 
@@ -38,12 +46,16 @@ function onFogDensity(value: number | number[]) {
 
     <div class="sliders">
       <div class="slider-row">
-        <span>雨雪强度</span>
+        <span>雨雪强度 · 大小/疏密</span>
         <el-slider :model-value="state.intensity" :min="0.2" :max="2" :step="0.1" size="small" @update:model-value="onIntensity" />
       </div>
       <div class="slider-row">
         <span>雾浓度</span>
         <el-slider :model-value="state.fogDensity" :min="0.0002" :max="0.005" :step="0.0002" size="small" @update:model-value="onFogDensity" />
+      </div>
+      <div class="slider-row">
+        <span>云量</span>
+        <el-slider :model-value="state.cloudCover" :min="0.05" :max="1" :step="0.05" size="small" @update:model-value="onCloudCover" />
       </div>
     </div>
 
