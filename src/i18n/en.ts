@@ -107,6 +107,7 @@ export default {
     cesiumFaqClamp: 'Clamp Point to Ground',
     cesiumFaqElevation: 'Point Elevation Sampling',
     cesiumFaqLabel: 'Label Declutter for Massive Points',
+    cesiumFaqPopup: 'Viewport-Aware Popup',
     openlayer: 'Openlayer',
     olBasic: 'Basic',
     olMap: 'Init Map',
