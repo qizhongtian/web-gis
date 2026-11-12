@@ -10,7 +10,7 @@ import ModelPanel from './ModelPanel.vue'
       默认加载 Khronos 官方示例模型。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 1500]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 1500]">
       <ModelPanel />
     </CesiumViewer>
   </div>

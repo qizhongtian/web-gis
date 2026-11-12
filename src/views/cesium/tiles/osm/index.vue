@@ -43,6 +43,6 @@ function applyToken() {
       <el-input v-model="token" size="small" class="!w-96" placeholder="Cesium ion Token（保存在 localStorage）" />
       <el-button size="small" type="primary" @click="applyToken">应用并刷新</el-button>
     </div>
-    <DemoBox class="flex-1" :loader="loadCesium" :init="init" />
+    <DemoBox class="flex-1" :loader="loadCesium" :init="init" status />
   </div>
 </template>

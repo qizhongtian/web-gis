@@ -10,7 +10,7 @@ import PointsPanel from './PointsPanel.vue'
       <b>EntityCluster</b> 聚合显示，样式修改后重建实体保证图标一致。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 42000]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 42000]">
       <PointsPanel />
     </CesiumViewer>
   </div>

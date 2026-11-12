@@ -57,6 +57,6 @@ async function init(Cesium: any, el: HTMLElement) {
         反算: {{ back.lon.toFixed(6) }}°, {{ back.lat.toFixed(6) }}°, {{ back.h.toFixed(2) }}m
       </div>
     </div>
-    <DemoBox class="flex-1" :loader="loadCesium" :init="init" />
+    <DemoBox class="flex-1" :loader="loadCesium" :init="init" status />
   </div>
 </template>

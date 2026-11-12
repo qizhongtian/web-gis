@@ -100,7 +100,11 @@ export function useCesiumTrackPlayback() {
 
     const highlight = C.Color.fromCssColorString('#f59e0b')
     moving = viewer.entities.add({
-      availability: new C.TimeInterval({ start: start.clone(), stop: stopTime.clone() }),
+      // availability 必须是 TimeIntervalCollection（TimeInterval 没有实例方法 contains，
+      // 否则渲染时 entity.isAvailable 会抛 “contains is not a function”）
+      availability: new C.TimeIntervalCollection([
+        new C.TimeInterval({ start: start.clone(), stop: stopTime.clone() }),
+      ]),
       position: property,
       point: {
         pixelSize: 12,

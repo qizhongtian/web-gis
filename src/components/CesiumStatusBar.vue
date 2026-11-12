@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, reactive, watch } from 'vue'
+import { computed, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useCesiumOptional } from '@/composables/useCesium'
+import { wgs84ToHk80 } from '@/utils/gis/coord'
 
 /**
- * Cesium 底部状态栏（科技风）
- * - 自动获取父级 <CesiumViewer> 的 viewer（也可通过 viewer 属性手动传入）
- * - 3D / 2D 开关、地下模式开关、地下透明度滑块、相机坐标与姿态实时展示
- * - 事件监听与 rAF 在卸载 / viewer 销毁时自动清理
+ * Cesium 状态工具条（科技风，默认位于场景右下角）
+ * - 自动获取父级 <CesiumViewer> 的 viewer（也可通过 viewer 属性手动传入，如 DemoBox 页面）
+ * - 经纬度 / 高度 / HK80 东向北向跟随鼠标移动实时拾取（rAF 节流）
+ * - 相机 ECEF 坐标与姿态实时展示
+ * - 3D / 2D 开关、地下模式开关、地下透明度滑块
+ * - 左侧收起 / 展开按钮；事件监听与 rAF 在卸载 / viewer 销毁时自动清理
  */
 const props = defineProps<{
   /** 手动传入 viewer；不传则自动注入上级 CesiumViewer 实例 */
@@ -18,7 +21,12 @@ const { t } = useI18n()
 const injected = useCesiumOptional()
 const viewerRef = computed<any>(() => props.viewer || injected?.value)
 
+/** 收起状态：只保留左侧按钮 */
+const collapsed = ref(false)
+
 const state = reactive({
+  /** 鼠标拾取是否有效（无效时坐标显示 '-'） */
+  pointer: false,
   lon: 0,
   lat: 0,
   height: 0,
@@ -37,13 +45,16 @@ const state = reactive({
 })
 
 const DEG = 180 / Math.PI
-const MERCATOR_R = 6378137
 /** 地表最小不透明度，避免地球完全消失 */
 const MIN_ALPHA = 0.1
 
 let off: (() => void) | null = null
 let cameraOff: (() => void) | null = null
+let pointerOff: (() => void) | null = null
 let rafId = 0
+let pointerRaf = 0
+/** 最近一次鼠标位置（canvas 绘制缓冲像素） */
+let pointerPos: { x: number; y: number } | null = null
 /** morph 动画期间忽略场景模式回读，避免开关状态回跳 */
 let morphing = false
 
@@ -51,18 +62,9 @@ function alphaOf(percent: number) {
   return Math.min(1, Math.max(MIN_ALPHA, 1 - percent / 100))
 }
 
-function read(v: any) {
+/** 相机位置 / 姿态 / 场景开关状态 */
+function readCamera(v: any) {
   const cam = v.camera
-  const carto = cam.positionCartographic
-  const lon = carto.longitude * DEG
-  const lat = carto.latitude * DEG
-
-  state.lon = lon
-  state.lat = lat
-  state.height = carto.height
-  // 墨卡托投影 E/N（米）
-  state.east = lon * (MERCATOR_R * Math.PI) / 180
-  state.north = Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360)) * MERCATOR_R
   // 相机 ECEF 笛卡尔坐标（米）
   const p = cam.positionWC
   state.x = p.x
@@ -83,13 +85,71 @@ function read(v: any) {
   }
 }
 
+/**
+ * 鼠标位置拾取：经纬度 / 高度 / HK80 东向北向
+ * 光标下有可拾取对象（3D Tiles / 模型 / 点线面）时取其渲染表面，
+ * 否则退回椭球面 + 地形高程（避免未写入深度的地表拾取到远平面）
+ */
+function readPointer(v: any, pos: { x: number; y: number }) {
+  const scene = v.scene
+  const ellipsoid = scene.globe?.ellipsoid
+  if (!ellipsoid) return
+
+  let cartesian: any
+  let onSurface = false
+  if (scene.mode === 3 && scene.pickPositionSupported && scene.pick(pos)) {
+    cartesian = scene.pickPosition(pos)
+    onSurface = !!cartesian
+  }
+  if (!cartesian) cartesian = scene.camera.pickEllipsoid(pos, ellipsoid)
+  if (!cartesian) return
+
+  const carto = ellipsoid.cartesianToCartographic(cartesian)
+  if (!carto) return
+
+  const lon = carto.longitude * DEG
+  const lat = carto.latitude * DEG
+  let height = carto.height
+  if (!onSurface) {
+    // 低层级瓦片用弦逼近球面，插值高程可能为负，只采用有效的地形高程
+    const terrain = scene.globe.getHeight(carto)
+    if (Number.isFinite(terrain) && terrain > 0) height = terrain
+  }
+  const [east, north] = wgs84ToHk80(lon, lat)
+  Object.assign(state, { pointer: true, lon, lat, height, east, north })
+}
+
 function schedule(v: any) {
   if (rafId) return
   rafId = requestAnimationFrame(() => {
     rafId = 0
     if (!v || v.isDestroyed?.()) return
-    read(v)
+    readCamera(v)
   })
+}
+
+/** 监听 canvas 鼠标移动，节流到每帧一次拾取 */
+function bindPointer(v: any) {
+  const canvas: HTMLCanvasElement = v.scene.canvas
+  const onMove = (e: MouseEvent) => {
+    const rect = canvas.getBoundingClientRect()
+    if (!rect.width || !rect.height) return
+    // 与 Cesium ScreenSpaceEventHandler 一致：换算到绘制缓冲像素
+    pointerPos = {
+      x: ((e.clientX - rect.left) / rect.width) * canvas.width,
+      y: ((e.clientY - rect.top) / rect.height) * canvas.height,
+    }
+    if (pointerRaf) return
+    pointerRaf = requestAnimationFrame(() => {
+      pointerRaf = 0
+      const pos = pointerPos
+      pointerPos = null
+      if (!pos || v.isDestroyed?.()) return
+      readPointer(v, pos)
+    })
+  }
+  canvas.addEventListener('mousemove', onMove)
+  return () => canvas.removeEventListener('mousemove', onMove)
 }
 
 function bindCamera(v: any) {
@@ -104,6 +164,7 @@ function bindCamera(v: any) {
 function bind(v: any) {
   if (!v || v.isDestroyed?.()) return
   cameraOff = bindCamera(v)
+  pointerOff = bindPointer(v)
 
   // 2D / 3D 切换过程中 Cesium 会重建相机，morph 完成后重新绑定
   const onMorph = () => {
@@ -118,7 +179,7 @@ function bind(v: any) {
     cameraOff?.()
     cameraOff = null
   }
-  read(v)
+  readCamera(v)
 }
 
 function unbind() {
@@ -126,9 +187,16 @@ function unbind() {
   off = null
   cameraOff?.()
   cameraOff = null
+  pointerOff?.()
+  pointerOff = null
+  pointerPos = null
   if (rafId) {
     cancelAnimationFrame(rafId)
     rafId = 0
+  }
+  if (pointerRaf) {
+    cancelAnimationFrame(pointerRaf)
+    pointerRaf = 0
   }
 }
 
@@ -185,103 +253,120 @@ function onTransparency(val: number | number[]) {
 }
 
 function fmt(v: number, digits: number) {
-  return Number.isFinite(v) ? v.toFixed(digits) : '-'
+  // v + 0 用于消除 -0 → "-0.00"
+  return Number.isFinite(v) ? (v + 0).toFixed(digits) : '-'
 }
 </script>
 
 <template>
-  <div class="cesium-status" :class="{ 'is-underground': state.underground }">
+  <div
+    class="cesium-status"
+    :class="{ 'is-underground': state.underground, 'is-collapsed': collapsed }"
+  >
     <i class="br br--tl" />
     <i class="br br--tr" />
     <i class="br br--bl" />
     <i class="br br--br" />
 
-    <div class="ctrl">
-      <span class="ctrl-item">
-        <span class="ctrl-label">{{ t('cesium.mode3d') }}</span>
-        <el-switch
-          class="tech-switch"
-          size="small"
-          :model-value="!state.is2d"
-          :aria-label="state.is2d ? t('cesium.to3d') : t('cesium.to2d')"
-          @change="toggleMode"
-        />
-      </span>
+    <button
+      type="button"
+      class="toggle"
+      :title="collapsed ? t('cesium.expand') : t('cesium.collapse')"
+      :aria-label="collapsed ? t('cesium.expand') : t('cesium.collapse')"
+      @click="collapsed = !collapsed"
+    >
+      <!-- 展开时点向右收起，收起时点向左展开 -->
+      <el-icon><ArrowLeft v-if="collapsed" /><ArrowRight v-else /></el-icon>
+    </button>
 
-      <span class="ctrl-item">
-        <span class="ctrl-label">{{ t('cesium.underground') }}</span>
-        <el-switch
-          class="tech-switch tech-switch--green"
-          size="small"
-          :model-value="state.underground"
-          :aria-label="state.underground ? t('cesium.undergroundOff') : t('cesium.undergroundOn')"
-          @change="toggleUnderground"
-        />
-      </span>
+    <template v-if="!collapsed">
+      <div class="ctrl">
+        <span class="ctrl-item">
+          <span class="ctrl-label">{{ t('cesium.mode3d') }}</span>
+          <el-switch
+            class="tech-switch"
+            size="small"
+            :model-value="!state.is2d"
+            :aria-label="state.is2d ? t('cesium.to3d') : t('cesium.to2d')"
+            @change="toggleMode"
+          />
+        </span>
 
-      <span v-if="state.underground" class="ctrl-item ctrl-item--alpha">
-        <span class="ctrl-label">{{ t('cesium.transparency') }}</span>
-        <el-slider
-          class="tech-slider"
-          size="small"
-          :model-value="state.transparency"
-          :min="0"
-          :max="90"
-          :step="1"
-          :show-tooltip="false"
-          @update:model-value="onTransparency"
-        />
-        <span class="ctrl-value">{{ Math.round(state.transparency) }}%</span>
-      </span>
-    </div>
+        <span class="ctrl-item">
+          <span class="ctrl-label">{{ t('cesium.underground') }}</span>
+          <el-switch
+            class="tech-switch tech-switch--green"
+            size="small"
+            :model-value="state.underground"
+            :aria-label="state.underground ? t('cesium.undergroundOff') : t('cesium.undergroundOn')"
+            @change="toggleUnderground"
+          />
+        </span>
 
-    <i class="v-sep" />
+        <span v-if="state.underground" class="ctrl-item ctrl-item--alpha">
+          <span class="ctrl-label">{{ t('cesium.transparency') }}</span>
+          <el-slider
+            class="tech-slider"
+            size="small"
+            :model-value="state.transparency"
+            :min="0"
+            :max="90"
+            :step="1"
+            :show-tooltip="false"
+            @update:model-value="onTransparency"
+          />
+          <span class="ctrl-value">{{ Math.round(state.transparency) }}%</span>
+        </span>
+      </div>
 
-    <div class="metrics">
-      <span class="live"><i /></span>
-      <span class="status-item">
-        <em>{{ t('cesium.longitude') }}</em><b>{{ fmt(state.lon, 6) }}</b>
-      </span>
-      <span class="status-item">
-        <em>{{ t('cesium.latitude') }}</em><b>{{ fmt(state.lat, 6) }}</b>
-      </span>
-      <span class="status-item">
-        <em>{{ t('cesium.height') }}</em><b>{{ fmt(state.height, 2) }} m</b>
-      </span>
+      <i class="v-sep" />
 
-      <i class="m-sep" />
+      <div class="metrics">
+        <span class="live"><i /></span>
+        <span class="status-item">
+          <em>{{ t('cesium.longitude') }}</em><b>{{ state.pointer ? fmt(state.lon, 6) : '-' }}</b>
+        </span>
+        <span class="status-item">
+          <em>{{ t('cesium.latitude') }}</em><b>{{ state.pointer ? fmt(state.lat, 6) : '-' }}</b>
+        </span>
+        <span class="status-item">
+          <em>{{ t('cesium.height') }}</em><b>{{ state.pointer ? `${fmt(state.height, 2)} m` : '-' }}</b>
+        </span>
 
-      <span class="status-item">
-        <em>HK_E</em><b>{{ fmt(state.east, 3) }} m</b>
-      </span>
-      <span class="status-item">
-        <em>HK_N</em><b>{{ fmt(state.north, 3) }} m</b>
-      </span>
+        <i class="m-sep" />
 
-      <i class="m-sep" />
+        <span class="status-item">
+          <em>HK_E</em><b>{{ state.pointer ? `${fmt(state.east, 3)} m` : '-' }}</b>
+        </span>
+        <span class="status-item">
+          <em>HK_N</em><b>{{ state.pointer ? `${fmt(state.north, 3)} m` : '-' }}</b>
+        </span>
 
-      <span class="status-item">
-        <em>X</em><b>{{ fmt(state.x, 3) }}</b>
-      </span>
-      <span class="status-item">
-        <em>Y</em><b>{{ fmt(state.y, 3) }}</b>
-      </span>
-      <span class="status-item">
-        <em>Z</em><b>{{ fmt(state.z, 3) }}</b>
-      </span>
+        <i class="m-sep" />
 
-      <i class="m-sep" />
+        <span class="status-item">
+          <em>X</em><b>{{ fmt(state.x, 3) }}</b>
+        </span>
+        <span class="status-item">
+          <em>Y</em><b>{{ fmt(state.y, 3) }}</b>
+        </span>
+        <span class="status-item">
+          <em>Z</em><b>{{ fmt(state.z, 3) }}</b>
+        </span>
 
-      <span class="status-item">
-        <em>H</em><b>{{ fmt(state.heading, 6) }}</b>
-      </span>
-      <span class="status-item">
-        <em>P</em><b>{{ fmt(state.pitch, 6) }}</b>
-      </span>
-      <span class="status-item">
-        <em>R</em><b>{{ fmt(state.roll, 6) }}</b>
-      </span>
-    </div>
+        <i class="m-sep" />
+
+        <span class="status-item">
+          <em>H</em><b>{{ fmt(state.heading, 6) }}</b>
+        </span>
+        <span class="status-item">
+          <em>P</em><b>{{ fmt(state.pitch, 6) }}</b>
+        </span>
+        <span class="status-item">
+          <em>R</em><b>{{ fmt(state.roll, 6) }}</b>
+        </span>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -293,9 +378,8 @@ function fmt(v: number, digits: number) {
   --tech-label: #6d8bab;
   --tech-text: #d8ecff;
   position: absolute;
-  left: 50%;
+  right: 12px;
   bottom: 12px;
-  transform: translateX(-50%);
   z-index: 10;
   display: flex;
   align-items: center;
@@ -370,6 +454,56 @@ function fmt(v: number, digits: number) {
   right: -1px;
   border-left: 0;
   border-top: 0;
+}
+
+/* 展开 / 收起按钮（工具条最左侧） */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  flex: none;
+  border-radius: 4px;
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  background: rgba(34, 211, 238, 0.14);
+  color: var(--tech-accent);
+  cursor: pointer;
+  animation: toggle-breath 2.4s ease-in-out infinite;
+  transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.toggle:hover {
+  color: #04141b;
+  background: var(--tech-accent);
+  border-color: var(--tech-accent);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.85);
+  animation: none;
+}
+.toggle .el-icon {
+  font-size: 15px;
+  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.75));
+}
+.toggle:hover .el-icon {
+  filter: none;
+}
+.cesium-status.is-collapsed {
+  gap: 0;
+  padding: 4px 6px;
+}
+.cesium-status.is-collapsed .toggle {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes toggle-breath {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(34, 211, 238, 0);
+  }
+  50% {
+    box-shadow: 0 0 9px rgba(34, 211, 238, 0.7);
+  }
 }
 
 .ctrl {

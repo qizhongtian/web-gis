@@ -48,6 +48,6 @@ function init(Cesium: any, el: HTMLElement) {
       <span class="text-xs text-[#7c8db0]">pitch: {{ pitch }}°</span>
       <el-slider v-model="pitch" :min="-90" :max="0" class="!w-40" />
     </div>
-    <DemoBox class="flex-1" :loader="loadCesium" :init="init" />
+    <DemoBox class="flex-1" :loader="loadCesium" :init="init" status />
   </div>
 </template>

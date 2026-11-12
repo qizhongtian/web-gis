@@ -23,7 +23,6 @@ const HK_HOME: [number, number, number] = [114.1694, 22.3193, 28000]
       :home="HK_HOME"
       :imagery-url="HK_IMAGERY"
       :imagery-max-level="18"
-      :status-bar="false"
     >
       <VectorContext />
     </CesiumViewer>

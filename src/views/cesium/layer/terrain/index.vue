@@ -10,7 +10,7 @@ import TerrainPanel from './TerrainPanel.vue'
       使用 <b>sampleTerrainMostDetailed</b> 获取最精细层级的地面高程。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 120000]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 120000]">
       <TerrainPanel />
     </CesiumViewer>
   </div>

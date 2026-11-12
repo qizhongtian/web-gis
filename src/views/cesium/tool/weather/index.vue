@@ -13,7 +13,7 @@ import WeatherPanel from './WeatherPanel.vue'
       封装为后处理材质挂到 <b>scene.postProcessStages</b>；时间、强度、雾浓度等参数以每帧求值函数注入 uniform，关闭或卸载时移除阶段并还原雾参数。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden">
       <WeatherPanel />
     </CesiumViewer>
   </div>

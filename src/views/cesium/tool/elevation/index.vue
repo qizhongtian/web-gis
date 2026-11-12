@@ -19,7 +19,6 @@ const HK_HOME: [number, number, number] = [114.1694, 22.3193, 42000]
       :home="HK_HOME"
       :imagery-url="DEFAULT_IMAGERY_URL"
       :imagery-max-level="DEFAULT_IMAGERY_MAX_LEVEL"
-      :status-bar="false"
     >
       <ElevationPanel />
     </CesiumViewer>

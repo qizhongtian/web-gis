@@ -55,6 +55,6 @@ async function init(Cesium: any, el: HTMLElement) {
         controls
       />
     </div>
-    <DemoBox class="flex-1" :loader="loadCesium" :init="init" />
+    <DemoBox class="flex-1" :loader="loadCesium" :init="init" status />
   </div>
 </template>

@@ -9,7 +9,7 @@ import ConvertPanel from './ConvertPanel.vue'
       香港 1980 方格网坐标转换：WGS84 经纬度与 HK80（EPSG:2326）东/北坐标互转，支持地图点选拾取经纬度。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 60000]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 60000]">
       <ConvertPanel />
     </CesiumViewer>
   </div>

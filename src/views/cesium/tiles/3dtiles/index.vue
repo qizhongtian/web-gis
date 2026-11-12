@@ -10,7 +10,7 @@ import TilesetPanel from './TilesetPanel.vue'
       左键点击构件读取 <b>Cesium3DTileFeature</b> 属性并高亮。默认示例为本地 <b>glTF 内容 tileset</b>（3D Tiles 1.1）。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 700]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 700]">
       <TilesetPanel />
     </CesiumViewer>
   </div>

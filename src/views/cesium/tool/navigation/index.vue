@@ -9,7 +9,7 @@ import NavigationPanel from './NavigationPanel.vue'
       导航控件：自绘 SVG 指北针（点击回正北）、动态比例尺、缩放/复位/二三维切换，全部基于 <b>camera.changed</b> 事件驱动。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 180000]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 180000]">
       <NavigationPanel />
     </CesiumViewer>
   </div>

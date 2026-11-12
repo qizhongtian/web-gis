@@ -87,9 +87,6 @@ const db = {
         group(213, '模型', 'Model', 'menus.cesiumModelGroup', 'Coordinate', '/cesium/model', [
           leaf(2130, 'glTF / GLB', 'glTF / GLB', 'menus.cesiumModel', '/cesium/model/gltf', 'cesium/model/gltf/index.vue'),
         ]),
-        group(26, '3D Tiles(优化速度)', '3D Tiles (Fast)', 'menus.cesiumTilesFast', 'Box', '/cesium/tiles-fast', [
-          leaf(2601, '加载性能优化', 'Load Optimize', 'menus.cesiumTilesSse', '/cesium/tiles-fast/sse', 'cesium/tiles-fast/sse/index.vue'),
-        ]),
         group(27, '飞入', 'Fly To', 'menus.cesiumFly', 'Promotion', '/cesium/fly', [
           leaf(2701, '城市漫游', 'City Roaming', 'menus.cesiumFlyTo', '/cesium/fly/city', 'cesium/fly/city/index.vue'),
         ]),
@@ -108,11 +105,9 @@ const db = {
         ]),
         group(212, '综合应用', 'Compose', 'menus.cesiumCompose', 'Odometer', '/cesium/compose', [
           leaf(2120, '综合示例', 'Compose Demo', 'menus.cesiumComposeDemo', '/cesium/compose/demo', 'cesium/compose/demo/index.vue'),
-        ]),
-        group(214, '应用示例', 'Applications', 'menus.cesiumApp', 'Promotion', '/cesium/application', [
-          leaf(2140, '轨迹回放', 'Track Playback', 'menus.cesiumTrack', '/cesium/application/trackplayback', 'cesium/application/trackplayback/index.vue'),
-          leaf(2141, '双屏联动', 'Dual Screen', 'menus.cesiumDual', '/cesium/application/dualscreen', 'cesium/application/dualscreen/index.vue'),
-          leaf(2142, '模型节点分层', 'Model Floors', 'menus.cesiumFloor', '/cesium/application/floor', 'cesium/application/floor/index.vue'),
+          leaf(2121, '轨迹回放', 'Track Playback', 'menus.cesiumTrack', '/cesium/compose/trackplayback', 'cesium/compose/trackplayback/index.vue'),
+          leaf(2122, '双屏联动', 'Dual Screen', 'menus.cesiumDual', '/cesium/compose/dualscreen', 'cesium/compose/dualscreen/index.vue'),
+          leaf(2123, '模型节点分层', 'Model Floors', 'menus.cesiumFloor', '/cesium/compose/floor', 'cesium/compose/floor/index.vue'),
         ]),
       ],
     },

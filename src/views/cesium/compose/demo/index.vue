@@ -78,6 +78,6 @@ onBeforeUnmount(() => {
   <div class="h-full flex flex-col p-2 gap-2">
     <p class="demo-hint">综合应用：GeoJSON + 实体标注 + 坐标拾取 + 相机定位的组合示例</p>
     <el-tag effect="dark" class="w-fit" type="info">{{ pickInfo }}</el-tag>
-    <DemoBox class="flex-1" :loader="loadCesium" :init="init" />
+    <DemoBox class="flex-1" :loader="loadCesium" :init="init" status />
   </div>
 </template>

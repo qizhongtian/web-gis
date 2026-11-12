@@ -9,7 +9,7 @@ import DrawPanel from './DrawPanel.vue'
       交互绘制：点 / 线 / 面 / 矩形 / 圆，双击或右键结束；结果实时导出为 <b>GeoJSON</b>（坐标含高程），可复制或下载。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 60000]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 60000]">
       <DrawPanel />
     </CesiumViewer>
   </div>

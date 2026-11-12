@@ -39,12 +39,12 @@ function toggleRightMode() {
 
     <div class="flex-1 min-h-0 grid grid-cols-2 gap-2">
       <div class="relative min-h-0 rounded-lg overflow-hidden">
-        <CesiumViewer class="h-full" :home="HOME" :status-bar="false" @ready="setLeft">
+        <CesiumViewer class="h-full" :home="HOME" @ready="setLeft">
           <div class="pane-badge">主视角 · 3D</div>
         </CesiumViewer>
       </div>
       <div class="relative min-h-0 rounded-lg overflow-hidden">
-        <CesiumViewer class="h-full" :home="HOME" :status-bar="false" @ready="setRight">
+        <CesiumViewer class="h-full" :home="HOME" @ready="setRight">
           <div class="pane-badge">{{ right2D ? '对比视角 · 2D' : '对比视角 · 3D' }}</div>
           <CameraSync :source="left" :enabled="linked" />
         </CesiumViewer>
@@ -63,8 +63,8 @@ function toggleRightMode() {
 }
 .pane-badge {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  top: 10px;
+  left: 10px;
   z-index: 10;
   padding: 3px 8px;
   border-radius: 999px;

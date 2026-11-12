@@ -10,7 +10,7 @@ import GeoServerPanel from './GeoServerPanel.vue'
       图层列表可单独移除，卸载时统一清理，不残留服务请求。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[-98, 39, 6000000]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[-98, 39, 6000000]">
       <GeoServerPanel />
     </CesiumViewer>
   </div>

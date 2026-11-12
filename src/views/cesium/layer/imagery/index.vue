@@ -9,7 +9,7 @@ import BasemapPanel from './BasemapPanel.vue'
       影像图层：<b>UrlTemplateImageryProvider</b> 动态切换底图（切换时先移除旧图层，避免图层堆叠），并支持地形服务与高程夸张。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 300000]" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :home="[114.1694, 22.3193, 300000]">
       <BasemapPanel />
     </CesiumViewer>
   </div>

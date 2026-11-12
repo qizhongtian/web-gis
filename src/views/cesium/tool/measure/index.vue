@@ -9,7 +9,7 @@ import MeasurePanel from './MeasurePanel.vue'
       空间量算：<b>单击</b>取点，<b>双击</b>结束；节点可拖拽微调，测距每段标注距离并可点节点右上角 <b>×</b> 单独删除，测面标注边长与面积，测高标注高差 / 水平距离 / 斜距。
     </p>
 
-    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden" :status-bar="false">
+    <CesiumViewer class="flex-1 min-h-0 rounded-lg overflow-hidden">
       <MeasurePanel />
     </CesiumViewer>
   </div>

@@ -54,6 +54,6 @@ function init(Cesium: any, el: HTMLElement) {
   <div class="h-full flex flex-col p-2 gap-2">
     <p class="demo-hint">空间分析(简化)：两点通视连线与直线距离（生产中可扩展地形遮挡分析）</p>
     <el-tag v-if="info" type="warning" effect="dark" class="w-fit">{{ info }}</el-tag>
-    <DemoBox class="flex-1" :loader="loadCesium" :init="init" />
+    <DemoBox class="flex-1" :loader="loadCesium" :init="init" status />
   </div>
 </template>

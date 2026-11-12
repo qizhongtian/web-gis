@@ -30,6 +30,8 @@ export function createViewer(Cesium: any, el: HTMLElement, options: Record<strin
   const viewer = new Cesium.Viewer(el, { ...getViewerOptions(Cesium), ...options })
   // 隐藏版权 DOM（演示用途，生产请保留）
   viewer.cesiumWidget.creditContainer.style.display = 'none'
+  // 挂到容器上，供通用容器（DemoBox）找到 viewer 并挂载状态工具条
+  ;(el as any).__cesiumViewer = viewer
   return viewer
 }
 

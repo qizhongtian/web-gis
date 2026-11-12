@@ -37,6 +37,6 @@ function init(Cesium: any, el: HTMLElement) {
   <div class="h-full flex flex-col p-2 gap-2">
     <p class="demo-hint">坐标拾取：点击地球表面，拾取经纬度与高程</p>
     <el-tag v-if="result" type="success" effect="dark" class="w-fit">{{ result }}</el-tag>
-    <DemoBox class="flex-1" :loader="loadCesium" :init="init" />
+    <DemoBox class="flex-1" :loader="loadCesium" :init="init" status />
   </div>
 </template>
