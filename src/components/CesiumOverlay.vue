@@ -6,17 +6,23 @@ const props = withDefaults(
     title: string
     /** 面板宽度，px */
     width?: number
+    /** 面板高度撑满父容器（需父级给定高度，如 top/bottom 定位） */
+    fill?: boolean
     collapsible?: boolean
     defaultCollapsed?: boolean
   }>(),
-  { width: 264, collapsible: true, defaultCollapsed: false },
+  { width: 264, fill: false, collapsible: true, defaultCollapsed: false },
 )
 
 const collapsed = ref(props.defaultCollapsed)
 </script>
 
 <template>
-  <section class="overlay-panel" :style="{ width: `${props.width}px` }">
+  <section
+    class="overlay-panel"
+    :class="{ 'is-fill': props.fill && !collapsed }"
+    :style="{ width: `${props.width}px` }"
+  >
     <header class="panel-head" @click="props.collapsible && (collapsed = !collapsed)">
       <i class="dot" />
       <span class="title">{{ props.title }}</span>
@@ -85,5 +91,17 @@ const collapsed = ref(props.defaultCollapsed)
   max-height: min(62vh, 560px);
   overflow: auto;
   padding: 12px;
+}
+.overlay-panel.is-fill {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.overlay-panel.is-fill .panel-body {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  display: flex;
+  flex-direction: column;
 }
 </style>

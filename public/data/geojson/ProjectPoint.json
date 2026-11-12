@@ -1,0 +1,6 @@
+{"type":"FeatureCollection", "features": [
+{"type":"Feature","geometry":{"type":"Point","coordinates":[114.26579372133085,22.321452554077666]},"properties":{"ID":"CV/2021/03","Name":"SITE FORMATION AND INFRASTRUCTURE WORKS FOR PUBLIC HOUSING DEVELOPMENTS AT TSEUNG KWAN O"}},
+{"type":"Feature","geometry":{"type":"Point","coordinates":[114.25873676916824,22.32590378674439]},"properties":{"ID":"CV/2021/03","Name":"SITE FORMATION AND INFRASTRUCTURE WORKS FOR PUBLIC HOUSING DEVELOPMENTS AT TSEUNG KWAN O"}},
+{"type":"Feature","geometry":{"type":"Point","coordinates":[114.2672900290778,22.313823979352435]},"properties":{"ID":"CV/2021/03","Name":"SITE FORMATION AND INFRASTRUCTURE WORKS FOR PUBLIC HOUSING DEVELOPMENTS AT TSEUNG KWAN O"}},
+{"type":"Feature","geometry":{"type":"Point","coordinates":[114.27406905995986,22.30408122071657]},"properties":{"ID":"CV/2021/03","Name":"SITE FORMATION AND INFRASTRUCTURE WORKS FOR PUBLIC HOUSING DEVELOPMENTS AT TSEUNG KWAN O"}}
+]}

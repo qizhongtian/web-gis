@@ -73,6 +73,7 @@ const db = {
           leaf(2304, '交互绘制', 'Draw', 'menus.cesiumDraw', '/cesium/tool/draw', 'cesium/tool/draw/index.vue'),
           leaf(2305, '天气特效', 'Weather', 'menus.cesiumWeather', '/cesium/tool/weather', 'cesium/tool/weather/index.vue'),
           leaf(2306, '矢量上传', 'Vector Upload', 'menus.cesiumVector', '/cesium/tool/vector', 'cesium/tool/vector/index.vue'),
+          leaf(2307, '高程提取', 'Surface Elevation', 'menus.cesiumElevation', '/cesium/tool/elevation', 'cesium/tool/elevation/index.vue'),
         ]),
         group(24, '图层', 'Layers', 'menus.cesiumLayer', 'Menu', '/cesium/layer', [
           leaf(2401, '影像图层切换', 'Imagery Switch', 'menus.cesiumImagery', '/cesium/layer/imagery', 'cesium/layer/imagery/index.vue'),

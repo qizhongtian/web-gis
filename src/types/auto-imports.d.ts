@@ -168,6 +168,7 @@ declare global {
   const useCesiumPoints: typeof import('../composables/useCesiumPoints')['useCesiumPoints']
   const useCesiumPostStage: typeof import('../composables/useCesiumPostStage')['useCesiumPostStage']
   const useCesiumScene: typeof import('../composables/useCesiumScene')['useCesiumScene']
+  const useCesiumSurfaceElevation: typeof import('../composables/useCesiumSurfaceElevation')['useCesiumSurfaceElevation']
   const useCesiumTerrainSample: typeof import('../composables/useCesiumTerrainSample')['useCesiumTerrainSample']
   const useCesiumTileset: typeof import('../composables/useCesiumTileset')['useCesiumTileset']
   const useCesiumTrackPlayback: typeof import('../composables/useCesiumTrackPlayback')['useCesiumTrackPlayback']
@@ -507,6 +508,7 @@ declare module 'vue' {
     readonly useCesiumPoints: UnwrapRef<typeof import('../composables/useCesiumPoints')['useCesiumPoints']>
     readonly useCesiumPostStage: UnwrapRef<typeof import('../composables/useCesiumPostStage')['useCesiumPostStage']>
     readonly useCesiumScene: UnwrapRef<typeof import('../composables/useCesiumScene')['useCesiumScene']>
+    readonly useCesiumSurfaceElevation: UnwrapRef<typeof import('../composables/useCesiumSurfaceElevation')['useCesiumSurfaceElevation']>
     readonly useCesiumTerrainSample: UnwrapRef<typeof import('../composables/useCesiumTerrainSample')['useCesiumTerrainSample']>
     readonly useCesiumTileset: UnwrapRef<typeof import('../composables/useCesiumTileset')['useCesiumTileset']>
     readonly useCesiumTrackPlayback: UnwrapRef<typeof import('../composables/useCesiumTrackPlayback')['useCesiumTrackPlayback']>
