@@ -106,6 +106,7 @@ export default {
     cesiumFaq: '常见问题解决',
     cesiumFaqClamp: '点位贴地(无高程)',
     cesiumFaqElevation: '点位高度取值',
+    cesiumFaqLabel: '海量 label 避让',
     openlayer: 'Openlayer',
     olBasic: '基础',
     olMap: '地图初始化',
