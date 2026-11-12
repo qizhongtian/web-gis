@@ -12,10 +12,26 @@ export interface ElevationSample extends TablePoint {
 }
 
 /**
+ * 倾斜表面采样模式
+ * - fast：tileset.getHeight()，同步射线拾取「当前已加载瓦片」，约 3ms/点，几千点几秒内完成
+ * - fine：Scene.sampleHeightMostDetailed()，为每个点排队一次最精细遍历，慢但精度最高
+ */
+export type TiltMode = 'fast' | 'fine'
+
+export interface ElevationSampleOptions {
+  terrain: boolean
+  tilt: boolean
+  /** 默认 fast */
+  tiltMode?: TiltMode
+}
+
+/**
  * 地形 / 倾斜模型表面高程采样
- * - 地形：Cesium.sampleTerrainMostDetailed，最精细层级
- * - 倾斜：Scene.sampleHeightMostDetailed，自动加载 3D Tiles 最精细层级
- * - 分批采样 + 进度回调，避免一次性请求过多瓦片导致页面卡死
+ * - 地形：Cesium.sampleTerrainMostDetailed，最精细层级，按 300 点一片提交
+ *   （片太小会反复做 0..N 层探测；5000 点用 10 点一片会产生 500 次层级探测，是主要的“卡死”来源）
+ * - 倾斜：默认 tileset.getHeight() 同步拾取已加载瓦片，
+ *   避免 sampleHeightMostDetailed 每批都等全场景最精细瓦片加载完
+ * - 全程分片 + 让出主线程 + 可取消，采样期间 UI 不冻结
  */
 export function useCesiumSurfaceElevation() {
   const terrainLoaded = ref(false)
@@ -36,13 +52,21 @@ export function useCesiumSurfaceElevation() {
 
   let viewer: any = null
   let C: any = null
-  let ds: any = null
+  /** 结果点位：点图元集合，上千点也只是一次绘制，比 Entity 轻得多 */
+  let markers: any = null
   let tileset: any = null
 
-  /** 每批采样点数：控制单帧瓦片请求量，同时让进度更细粒度 */
-  const CHUNK_SIZE = 10
-  /** 倾斜表面采样超时（毫秒），超时的批次按无高程处理，避免整批卡住 */
-  const TILT_TIMEOUT = 90_000
+  /** 采样任务序号：取消 / 重新开始时，旧的 await 回来后不再写结果 */
+  let runSeq = 0
+
+  /** 地形每片点数：sampleTerrainMostDetailed 内部逐层级请求瓦片，片太大记忆涨幅明显 */
+  const TERRAIN_CHUNK = 300
+  /** 快速倾斜每片点数：getHeight 是同步射线拾取，约 3ms/点，120 点一片 ≈ 360ms */
+  const MESH_CHUNK = 120
+  /** 精细倾斜每片点数：sampleHeightMostDetailed 每个点都会排队一次最精细遍历，不能一次丢太多 */
+  const FINE_CHUNK = 20
+  /** 单批精细采样超时（毫秒），超时按无高程处理，避免整轮卡住 */
+  const FINE_TIMEOUT = 20_000
 
   const round2 = (value: number) => Math.round(value * 100) / 100
 
@@ -163,30 +187,100 @@ export function useCesiumSurfaceElevation() {
     tiltError.value = ''
   }
 
-  /* ---------------- 采样 ---------------- */
+  /* ---------------- 结果与标记 ---------------- */
+
+  /** 两者取高作为最终高度 */
+  function composeAltitude(item: ElevationSample) {
+    const terrainHeight = item.terrainHeight
+    const meshHeight = item.meshHeight
+    if (terrainHeight !== null && meshHeight !== null) {
+      if (meshHeight > terrainHeight) {
+        item.altitude = meshHeight
+        item.source = 'mesh'
+      } else {
+        item.altitude = terrainHeight
+        item.source = 'terrain'
+      }
+    } else if (terrainHeight !== null) {
+      item.altitude = terrainHeight
+      item.source = 'terrain'
+    } else if (meshHeight !== null) {
+      item.altitude = meshHeight
+      item.source = 'mesh'
+    }
+  }
 
   function addMarkers(list: ElevationSample[]) {
-    if (!ds || !C) return
-    ds.entities.removeAll()
+    if (!markers || !C) return
+    markers.removeAll()
     for (const item of list) {
       if (item.altitude === null) continue
-      const isMesh = item.source === 'mesh'
-      ds.entities.add({
+      markers.add({
         position: C.Cartesian3.fromDegrees(item.lon, item.lat, item.altitude),
-        point: {
-          pixelSize: 8,
-          color: C.Color.fromCssColorString(isMesh ? '#f59e0b' : '#2563eb'),
-          outlineColor: C.Color.WHITE,
-          outlineWidth: 2,
-          disableDepthTestDistance: Number.POSITIVE_INFINITY,
-        },
+        pixelSize: 8,
+        color: C.Color.fromCssColorString(item.source === 'mesh' ? '#f59e0b' : '#2563eb'),
+        outlineColor: C.Color.WHITE,
+        outlineWidth: 2,
+        disableDepthTestDistance: Number.POSITIVE_INFINITY,
       })
     }
   }
 
+  function flyToResults(list: ElevationSample[]) {
+    if (!viewer || viewer.isDestroyed?.() || !C) return
+    const positions: any[] = []
+    for (const item of list) {
+      if (item.altitude === null) continue
+      positions.push(C.Cartesian3.fromDegrees(item.lon, item.lat, item.altitude))
+    }
+    if (!positions.length) return
+    const sphere = C.BoundingSphere.fromPoints(positions)
+    viewer.camera.flyToBoundingSphere(sphere, {
+      duration: 1.2,
+      offset: new C.HeadingPitchRange(0, C.Math.toRadians(-60), Math.max(sphere.radius * 2.2, 800)),
+    })
+  }
+
+  /** 把本片采样到的 height 回填到结果 */
+  function applyHeights(
+    output: ElevationSample[],
+    key: 'terrain' | 'mesh',
+    start: number,
+    cartos: any[],
+  ) {
+    for (let i = 0; i < cartos.length; i++) {
+      const h = cartos[i]?.height
+      if (!Number.isFinite(h)) continue
+      const item = output[start + i]
+      if (!item) continue
+      if (key === 'terrain') item.terrainHeight = round2(h)
+      else item.meshHeight = round2(h)
+      composeAltitude(item)
+    }
+  }
+
+  /** 快速倾斜：同步射线拾取当前已加载瓦片，返回本片是否有结果 */
+  function sampleMeshFast(cartos: any[]) {
+    if (!tileset || !viewer) return
+    const scene = viewer.scene
+    for (const carto of cartos) {
+      let h: number | undefined
+      try {
+        h = tileset.getHeight(carto, scene)
+      } catch {
+        h = undefined
+      }
+      if (Number.isFinite(h)) carto.height = h
+    }
+  }
+
+  /**
+   * 采样主流程
+   * 地形阶段占 45% 进度，倾斜阶段占 55%（只勾一个时各占 100%）
+   */
   async function sample(
     list: TablePoint[],
-    options: { terrain: boolean; tilt: boolean },
+    options: ElevationSampleOptions,
   ): Promise<void> {
     sampleError.value = ''
     if (!viewer || viewer.isDestroyed?.() || !C) {
@@ -205,20 +299,25 @@ export function useCesiumSurfaceElevation() {
       sampleError.value = '倾斜模型尚未加载'
       return
     }
-    if (options.tilt && !viewer.scene.sampleHeightSupported) {
-      sampleError.value = '当前显卡/浏览器不支持表面深度采样'
+    const tiltMode: TiltMode = options.tiltMode ?? 'fast'
+    if (options.tilt && tiltMode === 'fine' && !viewer.scene.sampleHeightSupported) {
+      sampleError.value = '当前显卡/浏览器不支持表面深度采样，请改用快速模式'
       return
     }
     if (!list.length || sampling.value) return
+
+    const seq = ++runSeq
+    const count = list.length
+    const alive = () => seq === runSeq && !cancelled.value && !!viewer && !!C
 
     sampling.value = true
     cancelled.value = false
     progress.value = 0
     processed.value = 0
-    total.value = list.length
+    total.value = count
     stage.value = ''
     results.value = []
-    if (ds) ds.entities.removeAll()
+    addMarkers([])
 
     const output: ElevationSample[] = list.map((point) => ({
       ...point,
@@ -227,86 +326,80 @@ export function useCesiumSurfaceElevation() {
       altitude: null,
       source: '',
     }))
+    const cartos: any[] = list.map((point) => C.Cartographic.fromDegrees(point.lon, point.lat))
+
+    const both = options.terrain && options.tilt
+    const terrainSpan = both ? 45 : 100
+    const tiltBase = both ? 45 : 0
+    const tiltSpan = both ? 55 : 100
+
+    const publish = (until: number, percent: number) => {
+      processed.value = until
+      progress.value = Math.min(99, Math.round(percent))
+      results.value = output.slice(0, until)
+    }
 
     try {
-      for (let start = 0; start < list.length; start += CHUNK_SIZE) {
-        if (cancelled.value) break
-        const chunk = list.slice(start, start + CHUNK_SIZE)
-
-        // 地形：最精细层级
-        const terrainCartos = chunk.map((point) => C.Cartographic.fromDegrees(point.lon, point.lat))
-        if (options.terrain) {
-          stage.value = 'terrain'
+      /* 1) 地形：大分片，避免每个小片都重新做「0 层 → 最精细层」探测 */
+      if (options.terrain) {
+        stage.value = 'terrain'
+        for (let start = 0; start < count; start += TERRAIN_CHUNK) {
+          if (!alive()) return
+          const end = Math.min(start + TERRAIN_CHUNK, count)
+          const chunk = cartos.slice(start, end)
           try {
-            await C.sampleTerrainMostDetailed(viewer.terrainProvider, terrainCartos)
+            await C.sampleTerrainMostDetailed(viewer.terrainProvider, chunk)
           } catch (e: any) {
             if (!sampleError.value) sampleError.value = `地形采样失败：${e?.message || e}`
           }
+          if (!alive()) return
+          applyHeights(output, 'terrain', start, chunk)
+          publish(end, (terrainSpan * end) / count)
+          await nextFrame()
         }
-
-        // 倾斜：取场景（地形 + 3D Tiles）可见表面，自动加载最精细瓦片
-        let surfaceCartos: any[] = []
-        if (options.tilt) {
-          stage.value = 'tilt'
-          surfaceCartos = chunk.map((point) => C.Cartographic.fromDegrees(point.lon, point.lat))
-          try {
-            await withTimeout(viewer.scene.sampleHeightMostDetailed(surfaceCartos), TILT_TIMEOUT)
-          } catch (e: any) {
-            if (!sampleError.value) sampleError.value = `倾斜表面采样失败：${e?.message || e}`
-          }
-        }
-
-        for (let i = 0; i < chunk.length; i++) {
-          const item = output[start + i]
-          if (options.terrain) {
-            const h = terrainCartos[i]?.height
-            if (Number.isFinite(h)) item.terrainHeight = round2(h)
-          }
-          if (options.tilt) {
-            const h = surfaceCartos[i]?.height
-            if (Number.isFinite(h)) item.meshHeight = round2(h)
-          }
-
-          const terrainHeight = item.terrainHeight
-          const meshHeight = item.meshHeight
-          if (terrainHeight !== null && meshHeight !== null) {
-            if (meshHeight > terrainHeight) {
-              item.altitude = meshHeight
-              item.source = 'mesh'
-            } else {
-              item.altitude = terrainHeight
-              item.source = 'terrain'
-            }
-          } else if (terrainHeight !== null) {
-            item.altitude = terrainHeight
-            item.source = 'terrain'
-          } else if (meshHeight !== null) {
-            item.altitude = meshHeight
-            item.source = 'mesh'
-          }
-        }
-
-        processed.value = Math.min(start + CHUNK_SIZE, total.value)
-        progress.value = Math.round((processed.value / total.value) * 100)
-        results.value = output.slice(0, processed.value)
-        await nextFrame()
       }
-    } finally {
-      const finished = results.value
-      sampling.value = false
-      stage.value = ''
-      addMarkers(finished)
-      if (!cancelled.value && ds && ds.entities.values.length) {
-        try {
-          await viewer.flyTo(ds, { duration: 1.2 })
-        } catch {
-          /* 视图飞行失败不影响结果 */
+
+      /* 2) 倾斜：快速模式同步拾取已加载瓦片；精细模式分批走最精细遍历 */
+      if (options.tilt) {
+        stage.value = 'tilt'
+        const chunkSize = tiltMode === 'fine' ? FINE_CHUNK : MESH_CHUNK
+        for (let start = 0; start < count; start += chunkSize) {
+          if (!alive()) return
+          const end = Math.min(start + chunkSize, count)
+          const chunk = cartos.slice(start, end)
+          if (tiltMode === 'fine') {
+            try {
+              await withTimeout(viewer.scene.sampleHeightMostDetailed(chunk), FINE_TIMEOUT)
+            } catch (e: any) {
+              if (!sampleError.value) sampleError.value = `倾斜表面采样失败：${e?.message || e}`
+            }
+          } else {
+            sampleMeshFast(chunk)
+          }
+          if (!alive()) return
+          applyHeights(output, 'mesh', start, chunk)
+          publish(count, tiltBase + (tiltSpan * end) / count)
+          await nextFrame()
         }
+      }
+
+      if (!alive()) return
+      progress.value = 100
+      processed.value = count
+      results.value = output
+    } finally {
+      if (seq === runSeq) {
+        const finished = results.value
+        sampling.value = false
+        stage.value = ''
+        addMarkers(finished)
+        if (!cancelled.value && finished.length) flyToResults(finished)
       }
     }
   }
 
   function cancel() {
+    // 只置取消标记：正在 await 的采样回来后由 alive() 判断退出，并正常收尾
     if (sampling.value) cancelled.value = true
   }
 
@@ -327,7 +420,7 @@ export function useCesiumSurfaceElevation() {
 
   function clear() {
     cancelled.value = true
-    if (ds) ds.entities.removeAll()
+    addMarkers([])
     results.value = []
     processed.value = 0
     total.value = 0
@@ -339,17 +432,18 @@ export function useCesiumSurfaceElevation() {
   onCesiumReady((v, lib) => {
     viewer = v
     C = lib
-    ds = new lib.CustomDataSource('surface-elevation')
-    v.dataSources.add(ds)
+    markers = new lib.PointPrimitiveCollection()
+    v.scene.primitives.add(markers)
     resetView()
 
     return () => {
       cancelled.value = true
+      runSeq++
       if (!v.isDestroyed?.()) {
-        if (ds) v.dataSources.remove(ds, true)
+        if (markers) v.scene.primitives.remove(markers)
         if (tileset) v.scene.primitives.remove(tileset)
       }
-      ds = null
+      markers = null
       tileset = null
       viewer = null
       C = null

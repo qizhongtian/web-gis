@@ -3,7 +3,7 @@ import { computed, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
-import { useCesiumSurfaceElevation } from '@/composables/useCesiumSurfaceElevation'
+import { useCesiumSurfaceElevation, type TiltMode } from '@/composables/useCesiumSurfaceElevation'
 import { defaultMeshTilesetUrl } from '@/utils/gis/cesiumConfig'
 import { parseGeoJsonPoints, rowsToPoints, type TablePoint } from '@/utils/gis/pointTable'
 import { buildXlsxBlob, parseCsv, readXlsxRows, type XlsxRow } from '@/utils/gis/xlsx'
@@ -43,10 +43,16 @@ const terrainUrl = ref(DEFAULT_TERRAIN_URL)
 const tiltUrl = ref(defaultMeshTilesetUrl)
 const useTerrain = ref(false)
 const useTilt = ref(false)
+/** 倾斜采样精度：fast 只取已加载瓦片（快），fine 走最精细遍历（慢） */
+const tiltMode = ref<TiltMode>('fast')
 
 const points = shallowRef<TablePoint[]>([])
 const sourceName = ref('')
 const maxPoints = ref(5000)
+
+/** 表格最多渲染多少行：上千行 DOM 会拖死主线程，导出仍用完整结果 */
+const TABLE_ROWS = 200
+const tableRows = computed(() => results.value.slice(0, TABLE_ROWS))
 
 const geoInput = ref<HTMLInputElement>()
 const excelInput = ref<HTMLInputElement>()
@@ -159,7 +165,11 @@ async function startSampling() {
     ElMessage.warning(t('elevation.needSurface'))
     return
   }
-  await sample(points.value, { terrain: useTerrain.value, tilt: useTilt.value })
+  await sample(points.value, {
+    terrain: useTerrain.value,
+    tilt: useTilt.value,
+    tiltMode: tiltMode.value,
+  })
   if (sampleError.value) ElMessage.error(sampleError.value)
   else ElMessage.success(t('elevation.done', { count: results.value.length }))
 }
@@ -366,6 +376,14 @@ function downloadExcel() {
         <el-checkbox v-model="useTerrain" size="small">{{ t('elevation.sampleTerrain') }}</el-checkbox>
         <el-checkbox v-model="useTilt" size="small">{{ t('elevation.sampleTilt') }}</el-checkbox>
       </div>
+      <div v-if="useTilt" class="row">
+        <span class="meta">{{ t('elevation.tiltMode') }}</span>
+        <el-radio-group v-model="tiltMode" size="small">
+          <el-radio-button value="fast">{{ t('elevation.tiltModeFast') }}</el-radio-button>
+          <el-radio-button value="fine">{{ t('elevation.tiltModeFine') }}</el-radio-button>
+        </el-radio-group>
+      </div>
+      <p v-if="useTilt && tiltMode === 'fast'" class="tip-line">{{ t('elevation.tiltModeFastTip') }}</p>
       <div class="row">
         <el-button
           size="small"
@@ -397,7 +415,7 @@ function downloadExcel() {
         <span class="meta">{{ results.length }} / {{ points.length }}</span>
       </div>
       <div class="result-table-wrap">
-        <el-table :data="results" size="small" height="100%" class="result-table" border>
+        <el-table :data="tableRows" size="small" height="100%" class="result-table" border>
           <el-table-column prop="id" :label="t('elevation.colId')" width="44" />
           <el-table-column :label="t('elevation.colLon')" width="92">
             <template #default="{ row }">{{ formatCoord(row.lon) }}</template>
@@ -430,6 +448,9 @@ function downloadExcel() {
           </el-table-column>
         </el-table>
       </div>
+      <p v-if="results.length > TABLE_ROWS" class="meta table-more">
+        {{ t('elevation.tableLimit', { count: results.length, limit: TABLE_ROWS }) }}
+      </p>
       <div class="row download">
         <el-button size="small" plain :disabled="!canDownload" @click="downloadGeoJson">
           {{ t('elevation.downloadGeoJson') }}
@@ -504,6 +525,12 @@ function downloadExcel() {
   font-size: 11px;
   color: #64748b;
 }
+.tip-line {
+  margin: 4px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #94a3b8;
+}
 .err {
   margin: 6px 0 0;
   font-size: 11px;
@@ -536,5 +563,10 @@ function downloadExcel() {
 }
 .download {
   margin-top: 8px;
+}
+.table-more {
+  flex: none;
+  margin: 4px 0 0;
+  text-align: right;
 }
 </style>
