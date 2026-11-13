@@ -96,6 +96,7 @@ export default {
     cesiumVideoProject: 'Video Projection',
     cesiumCluster: 'Cluster',
     cesiumClusterPoints: 'Point Cluster',
+    cesiumClusterDetail: 'Cluster Details',
     cesiumAnalysis: 'Spatial Analysis',
     cesiumAnalysisPick: 'Pick & Sight',
     cesiumCompose: 'Compose',

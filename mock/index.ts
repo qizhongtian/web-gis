@@ -99,6 +99,7 @@ const db = {
         ]),
         group(210, '聚合', 'Cluster', 'menus.cesiumCluster', 'Grid', '/cesium/cluster', [
           leaf(2100, '点位聚合', 'Point Cluster', 'menus.cesiumClusterPoints', '/cesium/cluster/points', 'cesium/cluster/points/index.vue'),
+          leaf(2101, '聚合点详情', 'Cluster Details', 'menus.cesiumClusterDetail', '/cesium/cluster/detail', 'cesium/cluster/detail/index.vue'),
         ]),
         group(211, '空间分析', 'Spatial Analysis', 'menus.cesiumAnalysis', 'DataAnalysis', '/cesium/analysis', [
           leaf(2110, '拾取与通视', 'Pick & Sight', 'menus.cesiumAnalysisPick', '/cesium/analysis/pick', 'cesium/analysis/pick/index.vue'),

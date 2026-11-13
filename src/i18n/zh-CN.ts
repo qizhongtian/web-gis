@@ -96,6 +96,7 @@ export default {
     cesiumVideoProject: '视频投影(简化)',
     cesiumCluster: '聚合',
     cesiumClusterPoints: '点位聚合',
+    cesiumClusterDetail: '聚合点详情',
     cesiumAnalysis: '空间分析',
     cesiumAnalysisPick: '拾取与通视',
     cesiumCompose: '综合应用',

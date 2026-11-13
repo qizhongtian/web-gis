@@ -20,11 +20,11 @@ export interface DemoPoint {
 }
 
 /** public/image 下的图钉：跳过不存在的 map-pin-01 */
-const ICONS = [0, ...Array.from({ length: 23 }, (_, i) => i + 2)].map(
+export const ICONS = [0, ...Array.from({ length: 23 }, (_, i) => i + 2)].map(
   (n) => `/image/map-pin-${String(n).padStart(2, '0')}.png`,
 )
 /** 图钉原图 108x124，按宽度等比换算高度 */
-const ICON_RATIO = 124 / 108
+export const ICON_RATIO = 124 / 108
 
 /** label 统一风格：黄字 + 黑描边 */
 const LABEL_FILL = '#ffd400'
@@ -47,7 +47,7 @@ function tierColors(n: number): [string, string] {
  * 按最终显示像素 1:1 排版、再乘 2 倍分辨率绘制，缩小后文字依然清晰；
  * 画一次缓存起来，同数量复用。
  */
-function makeClusterBadge(n: number): ClusterBadge {
+export function makeClusterBadge(n: number): ClusterBadge {
   const size = Math.round(56 + Math.min(22, Math.log2(n) * 4.5)) // 显示尺寸 58~78
   const dpr = 2
   const S = size * dpr

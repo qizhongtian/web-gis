@@ -11,6 +11,8 @@ declare global {
   const CESIUM_VIEWER_KEY: typeof import('../composables/useCesium')['CESIUM_VIEWER_KEY']
   const DEFAULT_TRACK: typeof import('../composables/useCesiumTrackPlayback')['DEFAULT_TRACK']
   const EffectScope: typeof import('vue')['EffectScope']
+  const ICONS: typeof import('../composables/useCesiumPoints')['ICONS']
+  const ICON_RATIO: typeof import('../composables/useCesiumPoints')['ICON_RATIO']
   const VECTOR_LAYERS_KEY: typeof import('../composables/useCesiumVectorLayers')['VECTOR_LAYERS_KEY']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
@@ -55,6 +57,7 @@ declare global {
   const isRef: typeof import('vue')['isRef']
   const loadCss: typeof import('../utils/loadScript')['loadCss']
   const loadScript: typeof import('../utils/loadScript')['loadScript']
+  const makeClusterBadge: typeof import('../composables/useCesiumPoints')['makeClusterBadge']
   const makeDestructurable: typeof import('@vueuse/core')['makeDestructurable']
   const mapActions: typeof import('pinia')['mapActions']
   const mapGetters: typeof import('pinia')['mapGetters']
@@ -351,6 +354,8 @@ declare module 'vue' {
     readonly CESIUM_VIEWER_KEY: UnwrapRef<typeof import('../composables/useCesium')['CESIUM_VIEWER_KEY']>
     readonly DEFAULT_TRACK: UnwrapRef<typeof import('../composables/useCesiumTrackPlayback')['DEFAULT_TRACK']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly ICONS: UnwrapRef<typeof import('../composables/useCesiumPoints')['ICONS']>
+    readonly ICON_RATIO: UnwrapRef<typeof import('../composables/useCesiumPoints')['ICON_RATIO']>
     readonly VECTOR_LAYERS_KEY: UnwrapRef<typeof import('../composables/useCesiumVectorLayers')['VECTOR_LAYERS_KEY']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
@@ -395,6 +400,7 @@ declare module 'vue' {
     readonly isRef: UnwrapRef<typeof import('vue')['isRef']>
     readonly loadCss: UnwrapRef<typeof import('../utils/loadScript')['loadCss']>
     readonly loadScript: UnwrapRef<typeof import('../utils/loadScript')['loadScript']>
+    readonly makeClusterBadge: UnwrapRef<typeof import('../composables/useCesiumPoints')['makeClusterBadge']>
     readonly makeDestructurable: UnwrapRef<typeof import('@vueuse/core')['makeDestructurable']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>
