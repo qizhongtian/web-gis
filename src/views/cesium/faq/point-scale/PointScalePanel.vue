@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { onCesiumReady } from '@/composables/useCesium'
+import { assetUrl } from '@/utils/publicUrl'
 
 /**
  * 常见问题：大量点 + 视角拉近拉远，图标（和 label）要近大远小
@@ -17,7 +18,7 @@ type ScaleMode = 'distance' | 'pixel'
 
 /** public/image 下的图钉（跳过不存在的 map-pin-01） */
 const IMAGE_URLS = [0, ...Array.from({ length: 23 }, (_, i) => i + 2)].map(
-  (n) => `/image/map-pin-${String(n).padStart(2, '0')}.png`,
+  (n) => assetUrl(`image/map-pin-${String(n).padStart(2, '0')}.png`),
 )
 
 const COUNT_TIERS = [

@@ -3,6 +3,7 @@ import { computed, ref, shallowRef, watch } from 'vue'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { onCesiumReady } from '@/composables/useCesium'
 import { defaultMeshTilesetUrl } from '@/utils/gis/cesiumConfig'
+import { assetUrl } from '@/utils/publicUrl'
 
 /**
  * 常见问题：海量点位 label 互相压字（重叠）
@@ -58,13 +59,15 @@ const LABEL_OUTLINE_WIDTH = 4
 
 /** 点位图标：public/image 下的 map-pin 系列（没有 map-pin-01） */
 const PIN_IMAGES = [0, ...Array.from({ length: 23 }, (_, i) => i + 2)].map(
-  (n) => `/image/map-pin-${String(n).padStart(2, '0')}.png`,
+  (n) => assetUrl(`image/map-pin-${String(n).padStart(2, '0')}.png`),
 )
 
 /** 默认地址与「工具 → 高程提取」「点位贴地」页保持一致 */
-const DEFAULT_TERRAIN_URL = import.meta.env.DEV
-  ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
-  : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp'
+const DEFAULT_TERRAIN_URL =
+  import.meta.env.VITE_HK_TERRAIN_URL ||
+  (import.meta.env.DEV
+    ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
+    : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp')
 const DEFAULT_TILT_URL = defaultMeshTilesetUrl
 /** 碰撞网格边长，越小越精确越慢；32px 对 13px 文字够用 */
 const CELL = 32

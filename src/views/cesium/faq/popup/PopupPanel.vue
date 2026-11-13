@@ -2,6 +2,7 @@
 import { computed, nextTick, onMounted, ref, shallowRef, watch } from 'vue'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { onCesiumReady } from '@/composables/useCesium'
+import { assetUrl } from '@/utils/publicUrl'
 
 /**
  * 常见问题：点击点 / 线 / 面弹出信息窗
@@ -38,7 +39,7 @@ const FEATURES: DemoFeature[] = [
     name: '中环码头',
     type: 'point',
     coord: [114.16218, 22.28698],
-    pin: '/image/map-pin-02.png',
+    pin: assetUrl('image/map-pin-02.png'),
     color: '#2563eb',
     rows: [['类型', '监控点位'], ['经纬度', '114.16218, 22.28698'], ['状态', '在线']],
     text: '码头前沿的客流监控点位，接入 4 路视频与 1 路客流统计。人流高峰时段建议配合「点位贴地」页面的高度策略一起使用。',
@@ -48,7 +49,7 @@ const FEATURES: DemoFeature[] = [
     name: '尖沙咀钟楼',
     type: 'point',
     coord: [114.1694, 22.293],
-    pin: '/image/map-pin-05.png',
+    pin: assetUrl('image/map-pin-05.png'),
     color: '#2563eb',
     rows: [['类型', '地标'], ['经纬度', '114.16940, 22.29300'], ['状态', '正常']],
     text: '维港沿岸地标点位：点击后弹窗跟随相机移动，锚点靠近屏幕上边缘时会自动翻到点位下方。',
@@ -58,7 +59,7 @@ const FEATURES: DemoFeature[] = [
     name: '金紫荆广场',
     type: 'point',
     coord: [114.1733, 22.2839],
-    pin: '/image/map-pin-09.png',
+    pin: assetUrl('image/map-pin-09.png'),
     color: '#2563eb',
     rows: [['类型', '地标'], ['经纬度', '114.17330, 22.28390'], ['状态', '正常']],
     text: '把点位拖到屏幕右下角，能看到弹窗被水平 clamp 后箭头仍然指着点位。',

@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { onCesiumReady } from '@/composables/useCesium'
+import { assetUrl } from '@/utils/publicUrl'
 
 /**
  * 常见问题：BillboardCollection / LabelCollection 建好之后，
@@ -18,7 +19,7 @@ type PickMode = 'image' | 'tint'
 
 /** public/image 下的图钉（跳过不存在的 map-pin-01） */
 const IMAGE_URLS = [0, ...Array.from({ length: 23 }, (_, i) => i + 2)].map(
-  (n) => `/image/map-pin-${String(n).padStart(2, '0')}.png`,
+  (n) => assetUrl(`image/map-pin-${String(n).padStart(2, '0')}.png`),
 )
 /** 选中时换的贴图：固定用最后一张，和「只改 color」形成对照 */
 const SELECT_IMAGE = IMAGE_URLS[IMAGE_URLS.length - 1]

@@ -1,11 +1,12 @@
 import { loadCss } from '@/utils/loadScript'
+import { assetUrl } from '@/utils/publicUrl'
 
 /**
  * OpenLayers 加载器：完全本地化（npm 包 + public/vendor/ol/ol.css），不依赖 CDN
  * - 首次打开示例页时才加载（Vite 单独分包），不影响首屏
  * - 返回对象结构与官方命名空间一致：ol.Map / ol.layer.Vector / ol.proj.fromLonLat …
  */
-const CSS_URL = '/vendor/ol/ol.css'
+const CSS_URL = assetUrl('vendor/ol/ol.css')
 
 let promise: Promise<any> | null = null
 

@@ -10,10 +10,15 @@ import { buildXlsxBlob, parseCsv, readXlsxRows, type XlsxRow } from '@/utils/gis
 
 const { t } = useI18n()
 
-/** 香港 DEM 地形服务，可用输入框换成其它 Cesium 地形地址 */
-const DEFAULT_TERRAIN_URL = import.meta.env.DEV
-  ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
-  : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp'
+/**
+ * 香港 DEM 地形服务，可用输入框换成其它 Cesium 地形地址
+ * dev 走 vite 代理绕开源站重复的 CORS 头；生产环境可用 VITE_HK_TERRAIN_URL 指向自己的反向代理
+ */
+const DEFAULT_TERRAIN_URL =
+  import.meta.env.VITE_HK_TERRAIN_URL ||
+  (import.meta.env.DEV
+    ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
+    : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp')
 
 const {
   terrainLoaded,

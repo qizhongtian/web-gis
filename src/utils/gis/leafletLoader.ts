@@ -1,10 +1,11 @@
 import { loadCss } from '@/utils/loadScript'
+import { assetUrl } from '@/utils/publicUrl'
 
 /**
  * Leaflet 加载器：完全本地化（npm 包 + public/vendor/leaflet），不依赖 CDN
  * 返回全局 `L` 命名空间对象
  */
-const CSS_URL = '/vendor/leaflet/leaflet.css'
+const CSS_URL = assetUrl('vendor/leaflet/leaflet.css')
 
 let promise: Promise<any> | null = null
 

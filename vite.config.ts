@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -14,7 +14,11 @@ const terrainAgent = new https.Agent({ keepAlive: true, maxSockets: 32 })
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production'
+  // 部署子路径（GitHub Pages 项目站点为 /<仓库名>/）：CI 环境变量 > .env.[mode] > 根路径
+  const env = loadEnv(mode, process.cwd(), '')
+  const base = (process.env.VITE_BASE || env.VITE_BASE || '/').replace(/\/?$/, '/')
   return {
+    base,
     plugins: [
       vue(),
       UnoCSS(),

@@ -1,10 +1,11 @@
 import { loadCss, loadScript } from '@/utils/loadScript'
+import { assetUrl } from '@/utils/publicUrl'
 
 /**
  * Cesium 加载器：使用本地静态文件（public/cesium，由 scripts/sync-vendor.mjs 从 npm 包复制）
  * 不依赖 CDN，离线/内网部署同样可用
  */
-const BASE = '/cesium/'
+const BASE = assetUrl('cesium/')
 
 let promise: Promise<any> | null = null
 

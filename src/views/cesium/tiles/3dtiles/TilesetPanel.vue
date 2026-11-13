@@ -4,8 +4,9 @@ import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { useCesiumTileset } from '@/composables/useCesiumTileset'
 import { useCesiumLib } from '@/composables/useCesium'
+import { assetUrl } from '@/utils/publicUrl'
 
-const DEFAULT_URL = '/data/tiles/duck/tileset.json'
+const DEFAULT_URL = assetUrl('data/tiles/duck/tileset.json')
 
 const tileset = useCesiumTileset()
 const Cesium = useCesiumLib()

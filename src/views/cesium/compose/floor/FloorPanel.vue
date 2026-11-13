@@ -3,8 +3,9 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { useCesiumModelNodes } from '@/composables/useCesiumModelNodes'
+import { assetUrl } from '@/utils/publicUrl'
 
-const DEFAULT_URL = '/data/models/CesiumMilkTruck.glb'
+const DEFAULT_URL = assetUrl('data/models/CesiumMilkTruck.glb')
 
 const nodes = useCesiumModelNodes()
 const url = ref(DEFAULT_URL)

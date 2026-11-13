@@ -15,6 +15,7 @@ declare global {
   const ICON_RATIO: typeof import('../composables/useCesiumPoints')['ICON_RATIO']
   const VECTOR_LAYERS_KEY: typeof import('../composables/useCesiumVectorLayers')['VECTOR_LAYERS_KEY']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
+  const assetUrl: typeof import('../utils/publicUrl')['assetUrl']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
   const computed: typeof import('vue')['computed']
@@ -358,6 +359,7 @@ declare module 'vue' {
     readonly ICON_RATIO: UnwrapRef<typeof import('../composables/useCesiumPoints')['ICON_RATIO']>
     readonly VECTOR_LAYERS_KEY: UnwrapRef<typeof import('../composables/useCesiumVectorLayers')['VECTOR_LAYERS_KEY']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
+    readonly assetUrl: UnwrapRef<typeof import('../utils/publicUrl')['assetUrl']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>

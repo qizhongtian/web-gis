@@ -4,8 +4,9 @@ import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { useCesium } from '@/composables/useCesium'
 import { useCesiumModel, type ModelOptions } from '@/composables/useCesiumModel'
+import { assetUrl } from '@/utils/publicUrl'
 
-const DEFAULT_URL = '/data/models/Duck.glb'
+const DEFAULT_URL = assetUrl('data/models/Duck.glb')
 
 const viewer = useCesium()
 const model = useCesiumModel()

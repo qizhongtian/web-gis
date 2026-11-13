@@ -4,6 +4,7 @@ import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { onCesiumReady } from '@/composables/useCesium'
 import { defaultMeshTilesetUrl } from '@/utils/gis/cesiumConfig'
+import { assetUrl } from '@/utils/publicUrl'
 
 /**
  * 常见问题：点位只有经纬度、没有高程，怎么始终贴在地形 / 倾斜摄影上
@@ -22,12 +23,14 @@ interface DemoPoint {
 
 /** 默认地址与「工具 → 高程提取」页面保持一致 */
 const DEFAULT_TILT_URL = defaultMeshTilesetUrl
-const DEFAULT_TERRAIN_URL = import.meta.env.DEV
-  ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
-  : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp'
+const DEFAULT_TERRAIN_URL =
+  import.meta.env.VITE_HK_TERRAIN_URL ||
+  (import.meta.env.DEV
+    ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
+    : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp')
 
 /** 点位图标（图片） */
-const PIN_IMAGE = '/image/map-pin-02.png'
+const PIN_IMAGE = assetUrl('image/map-pin-02.png')
 
 /** mock：香港区域点位，只有经纬度，没有高程 */
 const RAW_POINTS = [

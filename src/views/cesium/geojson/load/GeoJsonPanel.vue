@@ -3,8 +3,9 @@ import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { useCesiumGeoJson, type GeoJsonStyle } from '@/composables/useCesiumGeoJson'
+import { assetUrl } from '@/utils/publicUrl'
 
-const DEFAULT_URL = '/data/geojson/us-states.json'
+const DEFAULT_URL = assetUrl('data/geojson/us-states.json')
 
 const geo = useCesiumGeoJson()
 const url = ref(DEFAULT_URL)

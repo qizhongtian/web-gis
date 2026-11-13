@@ -1,4 +1,5 @@
 import { reactive, shallowRef } from 'vue'
+import { assetUrl } from '@/utils/publicUrl'
 
 export interface PointStyle {
   color: string
@@ -21,7 +22,7 @@ export interface DemoPoint {
 
 /** public/image 下的图钉：跳过不存在的 map-pin-01 */
 export const ICONS = [0, ...Array.from({ length: 23 }, (_, i) => i + 2)].map(
-  (n) => `/image/map-pin-${String(n).padStart(2, '0')}.png`,
+  (n) => assetUrl(`image/map-pin-${String(n).padStart(2, '0')}.png`),
 )
 /** 图钉原图 108x124，按宽度等比换算高度 */
 export const ICON_RATIO = 124 / 108
