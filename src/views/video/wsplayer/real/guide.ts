@@ -28,18 +28,19 @@ export const guideBlocks: CodeBlock[] = [
     code: `import { assetUrl } from '@/utils/publicUrl'
 import { loadCss, loadScript } from '@/utils/loadScript'
 
-// 部署到子路径（如 GitHub Pages）也不会 404
-// 注意去掉前导斜杠：播放器内部会自己拼一个 '/'，否则变成 //wsplayer
-export const WS_PLAYER_PREFIX = assetUrl('wsplayer').replace(/^\\/+/, '')
+// 注入 script/link 用「带前导斜杠」的绝对路径，否则 /web-gis/ 子路径下会变成 /web-gis/web-gis/...
+export const WS_PLAYER_BASE = assetUrl('wsplayer')            // /web-gis/wsplayer
+// 传给播放器的 prefixUrl 要去掉前导斜杠：它内部会自己拼 '/'，否则变成 //wsplayer
+export const WS_PLAYER_PREFIX = WS_PLAYER_BASE.replace(/^\\/+/, '')
 
 let libPromise = null
 export function loadWSPlayerLib() {
   if (typeof window.WSPlayer === 'function') return Promise.resolve(window.WSPlayer)
   if (libPromise) return libPromise
   libPromise = (async () => {
-    await loadCss(WS_PLAYER_PREFIX + '/WSPlayer/player.css')
-    await loadScript(WS_PLAYER_PREFIX + '/WSPlayer/PlaySDKInterface.js')
-    await loadScript(WS_PLAYER_PREFIX + '/WSPlayer/WSPlayer.js')
+    await loadCss(WS_PLAYER_BASE + '/WSPlayer/player.css')
+    await loadScript(WS_PLAYER_BASE + '/WSPlayer/PlaySDKInterface.js')
+    await loadScript(WS_PLAYER_BASE + '/WSPlayer/WSPlayer.js')
     const mod = window.WSPlayer
     window.WSPlayer = mod.WSPlayer || mod.default || mod // 统一成构造函数
     return window.WSPlayer

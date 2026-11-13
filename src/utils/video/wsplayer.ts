@@ -9,12 +9,21 @@ import { loadCss, loadScript } from '@/utils/loadScript'
 import { assetUrl } from '@/utils/publicUrl'
 
 /**
- * 解码库前缀，对应 new WSPlayer({ prefixUrl })；形如 /web-gis/wsplayer
+ * 解码库目录的「绝对路径」，只用于我们自己注入 script / link；
+ * 形如 /web-gis/wsplayer、开发环境 /wsplayer
+ *
+ * 必须是带前导斜杠的根路径：写成相对路径（web-gis/wsplayer/...）时，
+ * 部署在 /web-gis/ 子路径下会被解析成 /web-gis/web-gis/... 直接 404。
+ */
+export const WS_PLAYER_BASE = assetUrl('wsplayer')
+
+/**
+ * 传给 new WSPlayer({ prefixUrl }) 的前缀；形如 web-gis/wsplayer
  *
  * 注意：WSPlayer 内部 processPrefixUrl 会把前缀拼成 `/${prefixUrl}`，
  * 因此这里必须去掉前导斜杠，否则会变成 //wsplayer（被浏览器当成协议相对地址）。
  */
-export const WS_PLAYER_PREFIX = assetUrl('wsplayer').replace(/^\/+/, '')
+export const WS_PLAYER_PREFIX = WS_PLAYER_BASE.replace(/^\/+/, '')
 
 /**
  * 从 ws 地址推断协议；地址没写协议时返回 null
@@ -109,13 +118,13 @@ export function loadWSPlayerLib(): Promise<new (options: any) => WsPlayerInstanc
   if (libPromise) return libPromise
 
   libPromise = (async () => {
-    await loadCss(`${WS_PLAYER_PREFIX}/WSPlayer/player.css`)
-    await loadScript(`${WS_PLAYER_PREFIX}/WSPlayer/PlaySDKInterface.js`)
-    await loadScript(`${WS_PLAYER_PREFIX}/WSPlayer/WSPlayer.js`)
+    await loadCss(`${WS_PLAYER_BASE}/WSPlayer/player.css`)
+    await loadScript(`${WS_PLAYER_BASE}/WSPlayer/PlaySDKInterface.js`)
+    await loadScript(`${WS_PLAYER_BASE}/WSPlayer/WSPlayer.js`)
     const mod = globalObj.WSPlayer
     const ctor = mod?.WSPlayer ?? mod?.default ?? mod
     if (typeof ctor !== 'function') {
-      throw new Error(`WSPlayer 解码库加载失败，请检查 ${WS_PLAYER_PREFIX}/WSPlayer 是否存在`)
+      throw new Error(`WSPlayer 解码库加载失败，请检查 ${WS_PLAYER_BASE}/WSPlayer 是否存在`)
     }
     // 统一收敛成构造函数，页面后续判断只需 typeof === 'function'
     globalObj.WSPlayer = ctor
