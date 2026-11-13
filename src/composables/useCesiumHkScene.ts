@@ -4,10 +4,11 @@ import {
   DEFAULT_IMAGERY_MAX_LEVEL,
   DEFAULT_IMAGERY_URL,
   applyIonToken,
+  createTerrainProvider,
   defaultMeshTilesetUrl,
+  defaultTerrainServiceUrl,
   defaultTerrainUrl,
   getDefaultCamera,
-  globalTerrainUrl,
 } from '@/utils/gis/cesiumConfig'
 
 export interface HkSceneOptions {
@@ -50,15 +51,8 @@ export function useCesiumHkScene(options: HkSceneOptions = {}) {
   async function applyTerrain(C: any, v: any) {
     terrainLoading.value = true
     try {
-      let provider: any = null
-      if (defaultTerrainUrl && C.CesiumTerrainProvider?.fromUrl) {
-        provider = await C.CesiumTerrainProvider.fromUrl(defaultTerrainUrl, { requestVertexNormals: true })
-      } else if (C.ArcGISTiledElevationTerrainProvider?.fromUrl) {
-        provider = await C.ArcGISTiledElevationTerrainProvider.fromUrl(globalTerrainUrl)
-      } else if (C.ArcGISTiledElevationTerrainProvider) {
-        provider = new C.ArcGISTiledElevationTerrainProvider({ url: globalTerrainUrl })
-      }
-      if (!provider) throw new Error('当前 Cesium 版本不支持高程服务')
+      // 有自建地址用自建，否则用全球高程服务；provider 类型由工厂按地址判断
+      const provider = await createTerrainProvider(C, defaultTerrainUrl || defaultTerrainServiceUrl)
       if (v.isDestroyed?.()) return
       v.terrainProvider = provider
     } catch (e: any) {

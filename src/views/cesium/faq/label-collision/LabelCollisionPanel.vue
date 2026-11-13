@@ -2,7 +2,7 @@
 import { computed, ref, shallowRef, watch } from 'vue'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { onCesiumReady } from '@/composables/useCesium'
-import { defaultMeshTilesetUrl } from '@/utils/gis/cesiumConfig'
+import { createTerrainProvider, defaultMeshTilesetUrl, defaultTerrainServiceUrl } from '@/utils/gis/cesiumConfig'
 import { assetUrl } from '@/utils/publicUrl'
 
 /**
@@ -63,11 +63,7 @@ const PIN_IMAGES = [0, ...Array.from({ length: 23 }, (_, i) => i + 2)].map(
 )
 
 /** 默认地址与「工具 → 高程提取」「点位贴地」页保持一致 */
-const DEFAULT_TERRAIN_URL =
-  import.meta.env.VITE_HK_TERRAIN_URL ||
-  (import.meta.env.DEV
-    ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
-    : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp')
+const DEFAULT_TERRAIN_URL = defaultTerrainServiceUrl
 const DEFAULT_TILT_URL = defaultMeshTilesetUrl
 /** 碰撞网格边长，越小越精确越慢；32px 对 13px 文字够用 */
 const CELL = 32
@@ -674,7 +670,7 @@ async function loadTerrain() {
   terrainError.value = ''
   loadingTerrain.value = true
   try {
-    const provider = await C.CesiumTerrainProvider.fromUrl(url, { requestVertexNormals: true })
+    const provider = await createTerrainProvider(C, url)
     if (!terrainOn.value || !viewer) return
     viewer.terrainProvider = provider
   } catch (e) {

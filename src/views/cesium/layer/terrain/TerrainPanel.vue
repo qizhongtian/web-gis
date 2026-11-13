@@ -101,7 +101,7 @@ onCesiumReady((viewer, C) => {
       />
     </div>
 
-    <el-input v-model="terrain.url" size="small" class="!mt-2" placeholder="留空使用世界地形（需 Token）" />
+    <el-input v-model="terrain.url" size="small" class="!mt-2" placeholder="留空使用全球高程（ArcGIS，免 Token）" />
 
     <div class="exaggeration">
       <span>高程夸张</span>

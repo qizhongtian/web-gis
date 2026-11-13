@@ -3,7 +3,7 @@ import { computed, nextTick, ref, shallowRef, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { onCesiumReady } from '@/composables/useCesium'
-import { defaultMeshTilesetUrl } from '@/utils/gis/cesiumConfig'
+import { createTerrainProvider, defaultMeshTilesetUrl, defaultTerrainServiceUrl } from '@/utils/gis/cesiumConfig'
 import { assetUrl } from '@/utils/publicUrl'
 
 /**
@@ -27,13 +27,9 @@ interface DemoPoint {
   source: Source
 }
 
-/** 默认地址与「工具 → 高程提取」页面保持一致 */
+/** 默认地址与「工具 → 高程提取」页面保持一致：全球高程服务 */
 const DEFAULT_TILT_URL = defaultMeshTilesetUrl
-const DEFAULT_TERRAIN_URL =
-  import.meta.env.VITE_HK_TERRAIN_URL ||
-  (import.meta.env.DEV
-    ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
-    : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp')
+const DEFAULT_TERRAIN_URL = defaultTerrainServiceUrl
 
 const PIN_IMAGE = assetUrl('image/map-pin-02.png')
 
@@ -378,7 +374,7 @@ async function loadTerrain(needResolve = true) {
   terrainError.value = ''
   loadingTerrain.value = true
   try {
-    const provider = await C.CesiumTerrainProvider.fromUrl(url, { requestVertexNormals: true })
+    const provider = await createTerrainProvider(C, url)
     if (!terrainOn.value || !viewer) return
     viewer.terrainProvider = provider
     // 地形瓦片铺满后再取一次，避免用低层级高程（误差几十米）

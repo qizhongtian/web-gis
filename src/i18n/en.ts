@@ -210,7 +210,7 @@ export default {
   },
   elevation: {
     title: 'Surface Elevation',
-    hint: 'Hong Kong DEM terrain and the Lands Department imagery load by default; add a tilted photogrammetry model when needed. Upload a GeoJSON / Excel point table (ID, Longitude, Latitude) to sample in batches. Terrain and tilted surface heights are reported separately and the higher value is used as the final Altitude; results can be exported to GeoJSON / Excel.',
+    hint: 'The global elevation service (ArcGIS, no key needed) and the Lands Department imagery load by default; add a tilted photogrammetry model when needed. Upload a GeoJSON / Excel point table (ID, Longitude, Latitude) to sample in batches. Terrain and tilted surface heights are reported separately and the higher value is used as the final Altitude; results can be exported to GeoJSON / Excel.',
     terrain: 'Terrain',
     terrainUrl: 'Terrain service URL',
     tilt: 'Tilted model',

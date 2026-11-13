@@ -30,6 +30,46 @@ export const globalTerrainUrl
   = 'https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer'
 
 /**
+ * 页面默认使用的地形服务：优先 VITE_HK_TERRAIN_URL（自建 / 反代的 quantized-mesh 地址），
+ * 未配置时直接用全球高程服务（ArcGIS，免密钥、无跨域问题）。
+ * 所有示例页的默认地形地址都从这里取，改一处即可全站生效。
+ */
+export const defaultTerrainServiceUrl = import.meta.env.VITE_HK_TERRAIN_URL || globalTerrainUrl
+
+/**
+ * 是否为 ArcGIS 高程服务地址。
+ * ImageServer 只能用 ArcGISTiledElevationTerrainProvider，
+ * 用 CesiumTerrainProvider 去请求 layer.json 会直接 404。
+ */
+export function isArcGisTerrainUrl(url: string) {
+  return /arcgis\.com|ImageServer|elevation3d/i.test(url)
+}
+
+/**
+ * 按地址创建地形 provider，全项目统一入口：
+ * - ArcGIS ImageServer → ArcGISTiledElevationTerrainProvider
+ * - 其它（quantized-mesh，带 layer.json）→ CesiumTerrainProvider
+ */
+export async function createTerrainProvider(Cesium: any, url: string): Promise<any> {
+  const target = (url || '').trim()
+  if (!target) throw new Error('请填写地形服务地址')
+
+  if (isArcGisTerrainUrl(target) && Cesium?.ArcGISTiledElevationTerrainProvider) {
+    const ArcGisProvider = Cesium.ArcGISTiledElevationTerrainProvider
+    return ArcGisProvider.fromUrl ? await ArcGisProvider.fromUrl(target) : new ArcGisProvider({ url: target })
+  }
+
+  const Provider = Cesium?.CesiumTerrainProvider
+  if (!Provider?.fromUrl) throw new Error('当前 Cesium 版本不支持地形服务')
+  try {
+    return await Provider.fromUrl(target, { requestVertexNormals: true })
+  } catch {
+    // 部分服务不支持法线参数，去掉后重试一次
+    return await Provider.fromUrl(target)
+  }
+}
+
+/**
  * 香港地政总署 3D 网格模型（倾斜摄影建筑，带真实楼体与地表起伏）。
  * 可用 `VITE_CESIUM_MESH_URL` 覆盖，或传空字符串关闭。
  */

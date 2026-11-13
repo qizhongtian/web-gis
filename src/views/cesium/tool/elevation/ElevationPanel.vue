@@ -4,21 +4,17 @@ import { useI18n } from 'vue-i18n'
 import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
 import { useCesiumSurfaceElevation, type TiltMode } from '@/composables/useCesiumSurfaceElevation'
-import { defaultMeshTilesetUrl } from '@/utils/gis/cesiumConfig'
+import { defaultMeshTilesetUrl, defaultTerrainServiceUrl } from '@/utils/gis/cesiumConfig'
 import { parseGeoJsonPoints, rowsToPoints, type TablePoint } from '@/utils/gis/pointTable'
 import { buildXlsxBlob, parseCsv, readXlsxRows, type XlsxRow } from '@/utils/gis/xlsx'
 
 const { t } = useI18n()
 
 /**
- * 香港 DEM 地形服务，可用输入框换成其它 Cesium 地形地址
- * dev 走 vite 代理绕开源站重复的 CORS 头；生产环境可用 VITE_HK_TERRAIN_URL 指向自己的反向代理
+ * 默认地形服务：全球高程（ArcGIS，免密钥、可直接跨域），
+ * 也可在输入框换成其它 Cesium 地形地址，或用 VITE_HK_TERRAIN_URL 指定自建服务
  */
-const DEFAULT_TERRAIN_URL =
-  import.meta.env.VITE_HK_TERRAIN_URL ||
-  (import.meta.env.DEV
-    ? '/hk-terrain/gis/SMPstatic/20251011HKdemqp'
-    : 'https://bk.mediumvis.com:8090/gis/SMPstatic/20251011HKdemqp')
+const DEFAULT_TERRAIN_URL = defaultTerrainServiceUrl
 
 const {
   terrainLoaded,

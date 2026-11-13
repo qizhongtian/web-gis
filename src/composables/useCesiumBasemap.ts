@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { createTerrainProvider, globalTerrainUrl } from '@/utils/gis/cesiumConfig'
 
 export interface BasemapOption {
   id: string
@@ -70,7 +71,7 @@ export function useCesiumBasemap() {
     loading: false,
     error: '',
     exaggeration: 1,
-    // 留空表示使用 Cesium 世界地形（需在 .env 配置 VITE_CESIUM_TOKEN）
+    // 留空表示使用全球高程服务（ArcGIS，免 Token）
     url: '',
   })
 
@@ -103,22 +104,13 @@ export function useCesiumBasemap() {
 
     terrain.value.loading = true
     try {
-      let provider: any
-      if (terrain.value.url) {
-        provider = await C.CesiumTerrainProvider.fromUrl(terrain.value.url, {
-          requestVertexNormals: true,
-        })
-      } else if (C.createWorldTerrainAsync) {
-        provider = await C.createWorldTerrainAsync()
-      } else {
-        throw new Error('请填写地形服务地址，或配置 VITE_CESIUM_TOKEN 使用 Cesium 世界地形')
-      }
+      // 留空即用全球高程服务（ArcGIS，免密钥）；填了地址则按类型自动选 provider
+      const provider = await createTerrainProvider(C, terrain.value.url.trim() || globalTerrainUrl)
       if (!viewer || viewer.isDestroyed?.()) return
       viewer.terrainProvider = provider
       terrain.value.enabled = true
     } catch (e: any) {
-      terrain.value.error =
-        e?.message || '地形服务加载失败：请填写自建地形地址，或配置 VITE_CESIUM_TOKEN 使用 Cesium 世界地形'
+      terrain.value.error = e?.message || '地形服务加载失败：可留空使用全球高程服务，或填写 quantized-mesh 地址'
       terrain.value.enabled = false
       if (viewer && !viewer.isDestroyed?.()) viewer.terrainProvider = new C.EllipsoidTerrainProvider()
     } finally {

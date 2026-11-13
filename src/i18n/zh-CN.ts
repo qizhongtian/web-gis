@@ -210,7 +210,7 @@ export default {
   },
   elevation: {
     title: '表面高程提取',
-    hint: '默认加载香港 DEM 地形与地政总署影像，可再按需加载倾斜模型。上传 GeoJSON / Excel 点表（ID、Longitude、Latitude）后分批采样，分别得到地形高程与倾斜表面高程，并取较高值作为最终 Altitude；结果可导出为 GeoJSON / Excel。',
+    hint: '默认加载全球高程（ArcGIS，免密钥）与地政总署影像，可再按需加载倾斜模型。上传 GeoJSON / Excel 点表（ID、Longitude、Latitude）后分批采样，分别得到地形高程与倾斜表面高程，并取较高值作为最终 Altitude；结果可导出为 GeoJSON / Excel。',
     terrain: '地形',
     terrainUrl: '地形服务地址',
     tilt: '倾斜模型',

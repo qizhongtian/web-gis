@@ -1,4 +1,5 @@
 import { ref, shallowRef } from 'vue'
+import { createTerrainProvider } from '@/utils/gis/cesiumConfig'
 import type { TablePoint } from '@/utils/gis/pointTable'
 
 export interface ElevationSample extends TablePoint {
@@ -115,13 +116,8 @@ export function useCesiumSurfaceElevation() {
     terrainLoading.value = true
     terrainError.value = ''
     try {
-      let provider: any
-      try {
-        provider = await C.CesiumTerrainProvider.fromUrl(target, { requestVertexNormals: true })
-      } catch {
-        // 部分服务不支持法线参数，去掉后重试一次
-        provider = await C.CesiumTerrainProvider.fromUrl(target)
-      }
+      // 统一工厂：ArcGIS 全球高程走 ImageServer，自建 / 反代的 quantized-mesh 走 layer.json
+      const provider = await createTerrainProvider(C, target)
       if (!viewer || viewer.isDestroyed?.()) return false
       viewer.terrainProvider = provider
       terrainLoaded.value = true

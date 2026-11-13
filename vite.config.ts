@@ -5,11 +5,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { resolve } from 'node:path'
-import https from 'node:https'
 import mockServer from './mock'
-
-/** 复用 TLS 连接，避免地形瓦片逐块握手导致代理缓慢 */
-const terrainAgent = new https.Agent({ keepAlive: true, maxSockets: 32 })
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -81,16 +77,9 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       open: false,
       // 真实后端场景下走代理（本项目使用本地 mock 中间件，无需代理）
+      // 地形默认走全球高程（ArcGIS，免密钥、可直接跨域），开发环境也不需要地形代理
       proxy: {
         // '/api': { target: 'http://localhost:3000', changeOrigin: true },
-        // 香港 DEM 地形服务：源站返回重复的 CORS 头，浏览器直连会被拦截，开发环境走代理
-        '/hk-terrain': {
-          target: 'https://bk.mediumvis.com:8090',
-          changeOrigin: true,
-          secure: true,
-          agent: terrainAgent,
-          rewrite: (path) => path.replace(/^\/hk-terrain/, ''),
-        },
       },
     },
     esbuild: {

@@ -184,7 +184,7 @@ const ts = await C.Cesium3DTileset.fromUrl(url, {
 })
 viewer.scene.primitives.add(ts)
 
-// 地形（quantized-mesh）
+// 地形（quantized-mesh 用 CesiumTerrainProvider；ArcGIS ImageServer 用 ArcGISTiledElevationTerrainProvider）
 const provider = await C.CesiumTerrainProvider.fromUrl(url, {
   requestVertexNormals: true,
 })
