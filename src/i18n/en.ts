@@ -143,6 +143,8 @@ export default {
     videoWsplayer: 'WSPlayer',
     videoRealtime: 'Realtime',
     videoPlayback: 'Playback',
+    videoFlv: 'Flv.js',
+    videoHls: 'Hls.js',
     system: 'System',
     systemUser: 'Users',
     systemRole: 'Roles',

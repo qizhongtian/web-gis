@@ -49,6 +49,8 @@ export default defineConfig(({ mode }) => {
       include: [
         'three',
         'leaflet',
+        'flv.js',
+        'hls.js',
         'ol/Map.js',
         'ol/View.js',
         'ol/layer/Tile.js',

@@ -143,6 +143,8 @@ export default {
     videoWsplayer: 'WSPlayer',
     videoRealtime: '实时画面',
     videoPlayback: '历史回放',
+    videoFlv: 'Flv.js',
+    videoHls: 'Hls.js',
     system: '系统管理',
     systemUser: '用户管理',
     systemRole: '角色管理',

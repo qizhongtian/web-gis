@@ -264,6 +264,8 @@ export const mockMenus: MockMenu[] = [
           'video/wsplayer/record/index.vue',
         ),
       ]),
+      leaf(8201, 'Flv.js', 'Flv.js', 'menus.videoFlv', '/video/flv', 'video/flv/index.vue'),
+      leaf(8301, 'Hls.js', 'Hls.js', 'menus.videoHls', '/video/hls', 'video/hls/index.vue'),
     ],
   },
   {
