@@ -3,6 +3,14 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.4",
+    "npm": ">=10.8.2"
+  },
+  "volta": {
+    "node": "20.19.4",
+    "npm": "10.8.2"
+  },
   "scripts": {
     "postinstall": "node scripts/sync-vendor.mjs",
     "sync:vendor": "node scripts/sync-vendor.mjs --force",

@@ -65,8 +65,8 @@ web-gis/
 
 ### 环境要求
 
-- Node.js >= 18（推荐 20 LTS）
-- pnpm / npm / yarn 均可
+- Node.js >= 20.19.4（推荐 20 LTS；`.nvmrc` / `.node-version` 已标记 `20.19.4`，`package.json` 的 `engines` / `volta` 同步固定，`nvm use` / `fnm use` 即可切换）
+- npm >= 10.8.2（lockfile 由 npm 10 生成，CI 使用 `npm ci`；pnpm / yarn 也能装，但请勿提交其它包管理器的 lockfile）
 
 ```bash
 # 安装依赖
