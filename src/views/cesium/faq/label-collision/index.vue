@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CesiumViewer from '@/components/CesiumViewer.vue'
-import CodePanel, { type CodeBlock } from '@/components/CodePanel.vue'
+import GuidePanel from '@/components/GuidePanel.vue'
+import type { NoteItem } from '@/components/GuidePanel.vue'
+import type { CodeBlock } from '@/components/CodePanel.vue'
 import LabelCollisionPanel from './LabelCollisionPanel.vue'
 
 /** 默认视角：香港全景（点位铺满各区，最容易看出压字） */
@@ -254,6 +256,29 @@ ds.entities.add({ position, billboard: {...}, label: {...} })`,
  */`,
   },
 ]
+
+const notes: NoteItem[] = [
+  {
+    title: 'Cesium 不自带文字避让',
+    body: 'label 默认全部显示，`disableDepthTestDistance` 只管深度遮挡，点一多必然互相压字。想让名字都读得出来，只能在屏幕空间自己算矩形碰撞。',
+  },
+  {
+    title: '文字宽度必须先量准',
+    body: '按字数估宽在长短名混排时一定错位。用 canvas 的 `measureText`，font 与 label 的 font 保持一致（字号 + 字重 + 字族），量出来的像素宽才可信。',
+  },
+  {
+    title: '碰撞别写 O(n²)',
+    body: '把屏幕按固定大小分网格，每个 label 只跟邻近格子里的矩形比较；5000 点时单次布局可以从几十毫秒降到几毫秒。',
+  },
+  {
+    title: '重排要节流',
+    body: '放进 `camera.changed` 里触发，再叠一层时间阈值或 `requestAnimationFrame` 合并；塞进 `postRender` 每帧排，等于把相机操作卡死。',
+  },
+  {
+    title: '渲染层用 LabelCollection',
+    body: '几千个 label 用 Entity 会逐条求值；`LabelCollection` 一次提交，文字相同还能复用字形图集。再配合 `distanceDisplayCondition` 把远处的字直接剔掉。',
+  },
+]
 </script>
 
 <template>
@@ -270,7 +295,15 @@ ds.entities.add({ position, billboard: {...}, label: {...} })`,
       </CesiumViewer>
     </section>
 
-    <CodePanel class="code-pane" :blocks="blocks" title="关键代码" :default-open="[0]" />
+    <GuidePanel
+      class="code-pane"
+      title="实现要点"
+      :blocks="blocks"
+      blocks-title="关键代码"
+      guide-label="关键代码"
+      :notes="notes"
+      notes-tip="以下是自研避让最容易踩的几处，按「先能量、再排布、再压耗时」的顺序整理。"
+    />
   </div>
 </template>
 

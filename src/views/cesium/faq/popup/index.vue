@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CesiumViewer from '@/components/CesiumViewer.vue'
-import CodePanel, { type CodeBlock } from '@/components/CodePanel.vue'
+import GuidePanel from '@/components/GuidePanel.vue'
+import type { NoteItem } from '@/components/GuidePanel.vue'
+import type { CodeBlock } from '@/components/CodePanel.vue'
 import { DEFAULT_IMAGERY_MAX_LEVEL, DEFAULT_IMAGERY_URL } from '@/utils/gis/cesiumConfig'
 import PopupPanel from './PopupPanel.vue'
 
@@ -190,6 +192,29 @@ Cesium 里点击点 / 线 / 面弹出信息窗，窗口跟随场景视口移动�
 - 弹窗出视口还留着：用户会误以为它还在描述某个要素`,
   },
 ]
+
+const notes: NoteItem[] = [
+  {
+    title: '只监听 camera.changed 会漏更新',
+    body: '缩放、惯性滑行、瓦片细化、容器尺寸变化都不一定触发它，弹窗就会停在旧位置。定位逻辑挂在 `scene.postRender` 上逐帧算，再用 dirty 标志跳过没变化的帧，成本比漏更新低得多。',
+  },
+  {
+    title: '屏幕坐标要换算，先判断可见再 clamp',
+    body: '`cartesianToCanvasCoordinates` 返回的是画布像素，要除以 `window.devicePixelRatio` 才是 CSS 像素；相机转到地球背面时返回值没有意义，先用 `EllipsoidalOccluder` 判断遮挡，再决定显示还是隐藏。',
+  },
+  {
+    title: '尺寸别每帧量',
+    body: '每帧读 `offsetHeight` 会强制同步布局，拖动地图时直接掉帧。用 `ResizeObserver` 观察弹窗，尺寸真的变了再更新缓存。',
+  },
+  {
+    title: '超长内容要内部滚动',
+    body: '给内容区 `max-height` + `overflow: auto`，弹窗整体始终留在视口内；靠把弹窗撑高来展示全文，必然溢出。',
+  },
+  {
+    title: '卸载时把监听全部收掉',
+    body: '`postRender` 回调要移除、`ScreenSpaceEventHandler.destroy()`、`ResizeObserver.disconnect()`，少一个都会在切页面后继续跑，控制台还会报错。',
+  },
+]
 </script>
 
 <template>
@@ -211,7 +236,15 @@ Cesium 里点击点 / 线 / 面弹出信息窗，窗口跟随场景视口移动�
       </CesiumViewer>
     </section>
 
-    <CodePanel class="code-pane" :blocks="blocks" title="关键代码" :default-open="[0]" />
+    <GuidePanel
+      class="code-pane"
+      title="实现要点"
+      :blocks="blocks"
+      blocks-title="关键代码"
+      guide-label="关键代码"
+      :notes="notes"
+      notes-tip="以下是落地时最容易踩的几处，按「先能跟、再跟稳、再收尾」的顺序整理。"
+    />
   </div>
 </template>
 

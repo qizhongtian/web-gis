@@ -361,6 +361,7 @@ onBeforeUnmount(() => {
     :logs="logs"
     :blocks="guideBlocks"
     :notes="notes"
+    notes-tip="以下为 HTTP-FLV / WebSocket-FLV 的高频问题，按「先能播、再播好、再排错」的顺序整理。"
     error-tip="检查 flv 地址能否直接访问、服务端是否放行 `Access-Control-Allow-Origin`，以及流是否为 H.264 + AAC 编码。"
     @retry="reload"
     @clear="logs = []"

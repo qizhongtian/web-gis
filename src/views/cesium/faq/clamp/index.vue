@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CesiumViewer from '@/components/CesiumViewer.vue'
-import CodePanel, { type CodeBlock } from '@/components/CodePanel.vue'
+import GuidePanel from '@/components/GuidePanel.vue'
+import type { NoteItem } from '@/components/GuidePanel.vue'
+import type { CodeBlock } from '@/components/CodePanel.vue'
 import ClampPanel from './ClampPanel.vue'
 
 /** 默认视角：香港全景 */
@@ -209,6 +211,29 @@ scene.clampToHeightMostDetailed / scene.sampleHeightMostDetailed：
 - 需要导出 / 传接口的高程数值，走「点位高度取值」页（同一套预计算）`,
   },
 ]
+
+const notes: NoteItem[] = [
+  {
+    title: 'CLAMP_TO_GROUND 是每帧贴地，点数一多就掉帧',
+    body: '每帧都要按当前瓦片重算高度：1000 点以内还跑得动，5000 点实测掉到个位数帧率。超过 1000 点就该降级为预计算高度。',
+  },
+  {
+    title: '降级方案：预计算高度 + NONE',
+    body: '一次性用 `sampleTerrainMostDetailed` 或 `tileset.getHeight` 算出绝对高度写进点位，渲染时 `heightReference: NONE`，之后每帧零成本。代价是瓦片细化后要手动重新取值。',
+  },
+  {
+    title: '开关切档只改 heightReference',
+    body: '`billboard.heightReference = Cesium.HeightReference.CLAMP_TO_GROUND` 改完就会重新贴，不需要重建集合或重建实体。',
+  },
+  {
+    title: 'billboard 和 label 各自贴',
+    body: 'label 不会跟着 billboard 的 heightReference 走，两个都要单独设；只设置其中一个，文字就会浮在半空或陷进地里。',
+  },
+  {
+    title: '没数据源时贴到的是椭球面',
+    body: '`CLAMP_TO_GROUND` 依赖 `viewer.terrainProvider` 或倾斜摄影瓦片，两者都没开时会贴到光滑椭球上，看起来"贴了但没完全贴"，这是预期表现。',
+  },
+]
 </script>
 
 <template>
@@ -225,7 +250,15 @@ scene.clampToHeightMostDetailed / scene.sampleHeightMostDetailed：
       </CesiumViewer>
     </section>
 
-    <CodePanel class="code-pane" :blocks="blocks" title="关键代码" :default-open="[0]" />
+    <GuidePanel
+      class="code-pane"
+      title="实现要点"
+      :blocks="blocks"
+      blocks-title="关键代码"
+      guide-label="关键代码"
+      :notes="notes"
+      notes-tip="以下是贴地最常见的几处坑，按「先贴上、再贴准、再控帧率」的顺序整理。"
+    />
   </div>
 </template>
 

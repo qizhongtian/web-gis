@@ -1,11 +1,23 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import CodePanel, { type CodeBlock } from '@/components/CodePanel.vue'
-import type { NoteItem } from './guide-types'
+<script lang="ts">
+/** 说明面板里的一条注意事项，正文用反引号包住的部分会渲染成行内代码 */
+export interface NoteItem {
+  title: string
+  body: string
+}
+</script>
 
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import CodePanel, { type CodeBlock } from '@/components/CodePanel.vue'
+
+/**
+ * 右侧说明面板：「代码 / 注意事项」两个页签
+ * - 代码页签内部仍是一组可折叠的代码块，默认全部收起
+ * - 注意事项默认全部展开，支持一键全部展开 / 收起
+ */
 const props = withDefaults(
   defineProps<{
-    /** 使用说明里的代码块 */
+    /** 代码页签里的代码块 */
     blocks: CodeBlock[]
     /** 注意事项条目 */
     notes: NoteItem[]
@@ -13,15 +25,26 @@ const props = withDefaults(
     title?: string
     /** 代码块分组标题 */
     blocksTitle?: string
+    /** 代码页签文案 */
+    guideLabel?: string
+    /** 注意事项页签文案 */
+    notesLabel?: string
+    /** 注意事项页签顶部的说明条，留空则不显示 */
+    notesTip?: string
   }>(),
   {
     title: '集成说明',
     blocksTitle: '集成步骤',
+    guideLabel: '使用说明',
+    notesLabel: '注意事项',
+    notesTip: '',
   },
 )
 
 const tab = ref<'guide' | 'notes'>('guide')
-const openNotes = ref<number[]>([0])
+const openNotes = ref<number[]>(props.notes.map((_, i) => i))
+
+const allNotesOpen = computed(() => props.notes.length > 0 && openNotes.value.length === props.notes.length)
 
 function isOpen(i: number) {
   return openNotes.value.includes(i)
@@ -29,6 +52,10 @@ function isOpen(i: number) {
 
 function toggle(i: number) {
   openNotes.value = isOpen(i) ? openNotes.value.filter((n) => n !== i) : [...openNotes.value, i]
+}
+
+function toggleAllNotes() {
+  openNotes.value = allNotesOpen.value ? [] : props.notes.map((_, i) => i)
 }
 
 /** 用反引号切分正文，奇数段渲染成行内代码 */
@@ -43,24 +70,22 @@ function splitCode(text: string) {
       <i class="dot" />
       <span class="panel-title">{{ props.title }}</span>
       <div class="seg">
-        <button type="button" :class="{ on: tab === 'guide' }" @click="tab = 'guide'">使用说明</button>
-        <button type="button" :class="{ on: tab === 'notes' }" @click="tab = 'notes'">注意事项</button>
+        <button type="button" :class="{ on: tab === 'guide' }" @click="tab = 'guide'">{{ props.guideLabel }}</button>
+        <button type="button" :class="{ on: tab === 'notes' }" @click="tab = 'notes'">{{ props.notesLabel }}</button>
       </div>
     </header>
 
     <div class="panel-body">
-      <CodePanel
-        v-show="tab === 'guide'"
-        class="guide-code"
-        :blocks="props.blocks"
-        :title="props.blocksTitle"
-        :default-open="[0]"
-      />
+      <CodePanel v-show="tab === 'guide'" class="guide-code" :blocks="props.blocks" :title="props.blocksTitle" />
 
       <div v-show="tab === 'notes'" class="notes">
-        <p class="notes-tip">
-          以下为对接大华无插件播放器时的高频问题，按「先能播、再播好、再排错」的顺序整理。
-        </p>
+        <div v-if="props.notesTip || props.notes.length" class="notes-bar">
+          <p v-if="props.notesTip" class="notes-tip">{{ props.notesTip }}</p>
+          <button v-if="props.notes.length" type="button" class="all-btn" @click="toggleAllNotes">
+            {{ allNotesOpen ? '全部收起' : '全部展开' }}
+          </button>
+        </div>
+
         <article v-for="(n, i) in props.notes" :key="n.title" class="note" :class="{ open: isOpen(i) }">
           <header class="note-head" @click="toggle(i)">
             <span class="idx">{{ i + 1 }}</span>
@@ -121,6 +146,9 @@ function splitCode(text: string) {
   font-size: 13px;
   font-weight: 600;
   color: #1f2328;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .seg {
   display: flex;
@@ -165,8 +193,15 @@ function splitCode(text: string) {
   padding: 2px;
   overflow: auto;
 }
+.notes-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
 .notes-tip {
-  margin: 0 0 8px;
+  flex: 1;
+  margin: 0;
   padding: 7px 9px;
   border-radius: 8px;
   border: 1px solid #dbeafe;
@@ -174,6 +209,21 @@ function splitCode(text: string) {
   color: #1d4ed8;
   font-size: 11.5px;
   line-height: 1.55;
+}
+.all-btn {
+  flex: none;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.all-btn:hover {
+  color: #2563eb;
+  background: #eff6ff;
 }
 .note {
   margin-bottom: 6px;

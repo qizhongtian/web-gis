@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CesiumViewer from '@/components/CesiumViewer.vue'
-import CodePanel, { type CodeBlock } from '@/components/CodePanel.vue'
+import GuidePanel from '@/components/GuidePanel.vue'
+import type { NoteItem } from '@/components/GuidePanel.vue'
+import type { CodeBlock } from '@/components/CodePanel.vue'
 import { DEFAULT_IMAGERY_MAX_LEVEL, DEFAULT_IMAGERY_URL } from '@/utils/gis/cesiumConfig'
 import PointPickPanel from './PointPickPanel.vue'
 
@@ -86,6 +88,29 @@ function resetOne(i) {
 //   一次 setter 换整套，不用逐条改。`,
   },
 ]
+
+const notes: NoteItem[] = [
+  {
+    title: '用 drillPick，不用 pick',
+    body: '`scene.pick` 只返回最上层对象，被别的模型挡住时拿到的是"挡路的那个"；`scene.drillPick(position)` 返回按深度排好的列表，再按 id 里的标记过滤出自己的集合。',
+  },
+  {
+    title: '下标塞进 id，别遍历反查',
+    body: '`id: { type: "point", index: i }`，pick 回来直接 `collection.get(index)`，O(1)；按位置反查要遍历几千条，点击都会有延迟感。',
+  },
+  {
+    title: '选中只改这一条的属性',
+    body: '`collection.get(i).image / color / scale` 这类 setter 只把这一条标脏；但一次改 5000 条就是 5000 次 dirty，耗时和重建集合差不多。',
+  },
+  {
+    title: '取消选中要还原',
+    body: '换贴图模式下原图已经被覆盖，必须建集合时缓存 `baseImages[i]`；否则取消选中后图钉回不去，只能整组重建。',
+  },
+  {
+    title: '事件处理器记得销毁',
+    body: '`ScreenSpaceEventHandler` 不 `destroy()` 的话，离开页面后点击地球还在响应，控制台也会报空引用。',
+  },
+]
 </script>
 
 <template>
@@ -109,7 +134,15 @@ function resetOne(i) {
       </CesiumViewer>
     </section>
 
-    <CodePanel class="code-pane" :blocks="blocks" title="关键代码" :default-open="[0]" />
+    <GuidePanel
+      class="code-pane"
+      title="实现要点"
+      :blocks="blocks"
+      blocks-title="关键代码"
+      guide-label="关键代码"
+      :notes="notes"
+      notes-tip="以下是拾取与逐条改属性最容易踩的几处，按「先点中、再改对、再收尾」的顺序整理。"
+    />
   </div>
 </template>
 

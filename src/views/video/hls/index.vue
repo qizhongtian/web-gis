@@ -356,6 +356,7 @@ onBeforeUnmount(() => {
     :logs="logs"
     :blocks="guideBlocks"
     :notes="notes"
+    notes-tip="以下为 HLS 拉流的高频问题，按「先能播、再拉多码率、再排错」的顺序整理。"
     error-tip="检查 m3u8 地址能否访问、列表与分片是否带 `Access-Control-Allow-Origin`，https 页面还要确认流也是 https。"
     @retry="load(true)"
     @clear="logs = []"

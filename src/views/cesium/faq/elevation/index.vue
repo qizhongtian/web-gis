@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CesiumViewer from '@/components/CesiumViewer.vue'
-import CodePanel, { type CodeBlock } from '@/components/CodePanel.vue'
+import GuidePanel from '@/components/GuidePanel.vue'
+import type { NoteItem } from '@/components/GuidePanel.vue'
+import type { CodeBlock } from '@/components/CodePanel.vue'
 import ElevationPanel from './ElevationPanel.vue'
 
 /** 默认视角：香港全景 */
@@ -128,6 +130,29 @@ const summary = computed(() => {
  */`,
   },
 ]
+
+const notes: NoteItem[] = [
+  {
+    title: 'sampleTerrainMostDetailed 是异步的，点位多要分片',
+    body: '它返回 Promise，内部按点去请求对应层级的瓦片；一次丢 5000 个进去会堵住请求队列，页面像卡死。按几百个一批 `Promise.all` 顺序跑，边跑边往表格里填。',
+  },
+  {
+    title: 'tileset.getHeight 依赖瓦片已加载',
+    body: '瓦片没加载到的地方会返回 `undefined`，先 `await tileset.readyPromise`，必要时把相机飞到目标区域让它先加载，再取值。',
+  },
+  {
+    title: '两种来源的高度基准不一样',
+    body: '倾斜摄影取的是模型表面高度，地形取的是地形表面高度。合并时按「倾斜优先、地形兜底」，都取不到再回退到 0，并在页面上标出数据来源，避免数值对不上。',
+  },
+  {
+    title: '拿到绝对高度后 heightReference 必须用 NONE',
+    body: '已经算出了精确高度，再叠 `CLAMP_TO_GROUND` 会二次贴地、来回抖；渲染时直接 `height = 绝对高` + `heightReference = NONE`。',
+  },
+  {
+    title: '瓦片细化后数值会变',
+    body: '`getHeight` 取的是当前已加载瓦片的高度，拉远时是粗层结果，重新取值才会变细。重算时机放在切档位、开关数据源、瓦片加载完成后，别绑 `camera.changed`，那等于每帧重算。',
+  },
+]
 </script>
 
 <template>
@@ -144,7 +169,15 @@ const summary = computed(() => {
       </CesiumViewer>
     </section>
 
-    <CodePanel class="code-pane" :blocks="blocks" title="关键代码" :default-open="[0]" />
+    <GuidePanel
+      class="code-pane"
+      title="实现要点"
+      :blocks="blocks"
+      blocks-title="关键代码"
+      guide-label="关键代码"
+      :notes="notes"
+      notes-tip="以下是取高程最常见的几处坑，按「先取到、再取准、再控耗时」的顺序整理。"
+    />
   </div>
 </template>
 

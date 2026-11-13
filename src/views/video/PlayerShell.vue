@@ -5,7 +5,7 @@
  * 实时画面/回放已经自带一套，这里抽出来给 FLV.js、HLS.js 两个页面复用，
  * 页面只需要提供 stage（video/容器）与 controls（表单）两个插槽。
  */
-import GuidePanel from './GuidePanel.vue'
+import GuidePanel from '@/components/GuidePanel.vue'
 import type { CodeBlock } from '@/components/CodePanel.vue'
 import type { NoteItem, PlayLogItem } from './guide-types'
 
@@ -25,10 +25,13 @@ const props = withDefaults(
     notes: NoteItem[]
     /** 错误态下方的排查建议（纯文本，可用反引号包行内代码） */
     errorTip?: string
+    /** 注意事项页签顶部的说明条 */
+    notesTip?: string
   }>(),
   {
     errorMsg: '',
     errorTip: '',
+    notesTip: '',
   },
 )
 
@@ -89,7 +92,7 @@ function splitCode(text: string) {
       </div>
     </section>
 
-    <GuidePanel class="side-pane" :blocks="props.blocks" :notes="props.notes" />
+    <GuidePanel class="side-pane" :blocks="props.blocks" :notes="props.notes" :notes-tip="props.notesTip" />
   </div>
 </template>
 

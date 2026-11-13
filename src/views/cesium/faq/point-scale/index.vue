@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CesiumViewer from '@/components/CesiumViewer.vue'
-import CodePanel, { type CodeBlock } from '@/components/CodePanel.vue'
+import GuidePanel from '@/components/GuidePanel.vue'
+import type { NoteItem } from '@/components/GuidePanel.vue'
+import type { CodeBlock } from '@/components/CodePanel.vue'
 import { DEFAULT_IMAGERY_MAX_LEVEL, DEFAULT_IMAGERY_URL } from '@/utils/gis/cesiumConfig'
 import PointScalePanel from './PointScalePanel.vue'
 
@@ -192,6 +194,29 @@ Entity + billboard + label
 label 想要不卡，就三件事：单独一个集合、文字复用、按距离剔远。`,
   },
 ]
+
+const notes: NoteItem[] = [
+  {
+    title: '缩放交给 NearFarScalar，别自己按高度算',
+    body: '`scaleByDistance = new Cesium.NearFarScalar(near, nearValue, far, farValue)`，中间线性插值、两端自动夹在给定值上，不需要在 `postRender` 里算。想加透明度就用 `translucencyByDistance`，同一套思路。',
+  },
+  {
+    title: '上千个点必须用集合，不要用 Entity',
+    body: '`BillboardCollection` / `LabelCollection` 一次提交一个批次，Entity 则每条都要逐帧求值：5000 点时 Entity 方案肉眼可见掉帧。',
+  },
+  {
+    title: '贴图和文字都要复用',
+    body: '每多一张贴图就多一个批次，换成合图集能明显减少 draw call；label 文本相同才会复用字形，文案全不一样时首帧要建字形图集，会多花 1~3 秒。',
+  },
+  {
+    title: '调参只改属性，不要重建集合',
+    body: '`billboard.scaleByDistance = ...` 这类 setter 只标脏这一条，改完立即生效；重建 collection 会把批次全部打散，几千点时会卡一下。',
+  },
+  {
+    title: 'label 单独一个集合 + 剔远',
+    body: 'label 不要塞进 billboard 的同一批，单独 `LabelCollection` 后配 `distanceDisplayCondition` 把远处的字剔掉，是收益最大的优化。',
+  },
+]
 </script>
 
 <template>
@@ -213,7 +238,15 @@ label 想要不卡，就三件事：单独一个集合、文字复用、按距�
       </CesiumViewer>
     </section>
 
-    <CodePanel class="code-pane" :blocks="blocks" title="关键代码" :default-open="[0]" />
+    <GuidePanel
+      class="code-pane"
+      title="实现要点"
+      :blocks="blocks"
+      blocks-title="关键代码"
+      guide-label="关键代码"
+      :notes="notes"
+      notes-tip="以下是点位一多就暴露的几处性能坑，按「先能看、再看好、再压帧率」的顺序整理。"
+    />
   </div>
 </template>
 

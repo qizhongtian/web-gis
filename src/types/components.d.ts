@@ -51,6 +51,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     GisLoading: typeof import('./../components/GisLoading.vue')['default']
+    GuidePanel: typeof import('./../components/GuidePanel.vue')['default']
     LangSwitch: typeof import('./../components/LangSwitch.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

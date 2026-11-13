@@ -15,6 +15,7 @@ import { computed, ref } from 'vue'
  * 关键代码面板：多个代码块，每块可单独展开 / 收起
  * - 无第三方高亮依赖，内置轻量 token 着色（注释 / 字符串 / 数字 / 关键字 / 类名）
  * - 折叠状态按块独立维护，支持一键全部展开 / 收起
+ * - 代码块默认全部收起，避免右侧面板一进来就被大段代码占满
  */
 const props = withDefaults(
   defineProps<{
@@ -23,7 +24,7 @@ const props = withDefaults(
     /** 默认展开的块下标 */
     defaultOpen?: number[]
   }>(),
-  { title: '关键代码', defaultOpen: () => [0] },
+  { title: '关键代码', defaultOpen: () => [] },
 )
 
 const openIndex = ref<number[]>([...props.defaultOpen])

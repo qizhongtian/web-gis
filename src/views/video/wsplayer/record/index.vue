@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import GuidePanel from '../../GuidePanel.vue'
+import GuidePanel from '@/components/GuidePanel.vue'
 import { guideBlocks, notes } from './guide'
 import { WsPlayerHost, wsProtocolOf, type WsPlayerAdapter, type WsRecordFile } from '@/utils/video/wsplayer'
 
@@ -420,7 +420,13 @@ const stageStatusText = () => {
       </div>
     </section>
 
-    <GuidePanel class="side-pane" title="回放说明" :blocks="guideBlocks" :notes="notes" />
+    <GuidePanel
+      class="side-pane"
+      title="回放说明"
+      :blocks="guideBlocks"
+      :notes="notes"
+      notes-tip="以下为对接大华无插件播放器时的高频问题，按「先能播、再播好、再排错」的顺序整理。"
+    />
   </div>
 </template>
 
