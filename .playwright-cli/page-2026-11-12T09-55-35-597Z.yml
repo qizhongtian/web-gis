@@ -1,0 +1,60 @@
+- generic [ref=f1e18]:
+  - banner [ref=f1e19]:
+    - button "收起菜单" [ref=f1e20] [cursor=pointer]
+    - generic [ref=f1e24] [cursor=pointer]:
+      - img "WebGIS" [ref=f1e25]
+      - generic [ref=f1e29]: WebGIS 示例管理平台
+    - button "English" [ref=f1e30] [cursor=pointer]
+    - button "超 超级管理员" [ref=f1e36] [cursor=pointer]:
+      - generic [ref=f1e37]: 超
+      - generic [ref=f1e38]: 超级管理员
+  - generic [ref=f1e41]:
+    - complementary [ref=f1e42]:
+      - menubar [ref=f1e46]:
+        - menuitem [ref=f1e47] [cursor=pointer]
+        - menuitem "Cesium" [ref=f1e51]
+        - menuitem "Openlayer" [ref=f1e60]
+        - menuitem "Three" [ref=f1e70]
+        - menuitem "Leaflet" [ref=f1e80]
+        - menuitem "系统管理" [ref=f1e91]
+    - main [ref=f1e100]:
+      - generic [ref=f1e101]:
+        - navigation "面包屑" [ref=f1e102]:
+          - link "首页" [ref=f1e104]
+        - generic [ref=f1e105]: /home
+      - generic [ref=f1e108]:
+        - generic [ref=f1e109]:
+          - heading "你好，超级管理员！" [level=1] [ref=f1e110]
+          - paragraph [ref=f1e111]: 这是一个基于 Vue3 + TS + Pinia + Element Plus + UnoCSS 的 WebGIS 示例管理平台
+        - generic [ref=f1e112]:
+          - button "1 首页" [ref=f1e113]:
+            - generic [ref=f1e114]: "1"
+            - generic [ref=f1e119]: 首页
+          - button "32 Cesium" [ref=f1e120]:
+            - generic [ref=f1e121]: "32"
+            - generic [ref=f1e126]: Cesium
+          - button "5 Openlayer" [ref=f1e127]:
+            - generic [ref=f1e128]: "5"
+            - generic [ref=f1e133]: Openlayer
+          - button "4 Three" [ref=f1e134]:
+            - generic [ref=f1e135]: "4"
+            - generic [ref=f1e140]: Three
+          - button "4 Leaflet" [ref=f1e141]:
+            - generic [ref=f1e142]: "4"
+            - generic [ref=f1e147]: Leaflet
+        - generic [ref=f1e148]:
+          - generic [ref=f1e149]:
+            - heading "当前角色" [level=3] [ref=f1e150]
+            - generic [ref=f1e151]: admin
+          - generic [ref=f1e154]:
+            - heading "当前按钮权限" [level=3] [ref=f1e155]
+            - generic [ref=f1e156]:
+              - generic [ref=f1e157]: sys:user:add
+              - generic [ref=f1e159]: sys:user:delete
+              - generic [ref=f1e161]: sys:role:edit
+              - generic [ref=f1e163]: sys:menu:edit
+              - generic [ref=f1e165]: gis:measure
+              - generic [ref=f1e167]: gis:draw
+        - generic [ref=f1e169]:
+          - heading "使用说明" [level=3] [ref=f1e170]
+          - paragraph [ref=f1e171]: 左侧菜单由后端菜单接口按角色动态下发并实时注册为路由，支持多级与收起。GIS 示例库（Cesium / OpenLayers / Leaflet / Three.js）按需从 CDN 加载，首次打开相应示例会有短暂等待。

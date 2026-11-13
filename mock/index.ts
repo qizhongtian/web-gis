@@ -114,6 +114,8 @@ const db = {
           leaf(2152, '点位高度取值', 'Point Elevation Sampling', 'menus.cesiumFaqElevation', '/cesium/faq/elevation', 'cesium/faq/elevation/index.vue'),
           leaf(2153, '海量 label 避让', 'Label Declutter', 'menus.cesiumFaqLabel', '/cesium/faq/label', 'cesium/faq/label-collision/index.vue'),
           leaf(2154, '弹窗跟随与边缘避让', 'Viewport Popup', 'menus.cesiumFaqPopup', '/cesium/faq/popup', 'cesium/faq/popup/index.vue'),
+          leaf(2155, '海量点图标随视角缩放', 'Point Scale by Distance', 'menus.cesiumFaqPointScale', '/cesium/faq/pointscale', 'cesium/faq/point-scale/index.vue'),
+          leaf(2156, '点选高亮单条', 'Highlight Picked Point', 'menus.cesiumFaqPointPick', '/cesium/faq/pointpick', 'cesium/faq/point-pick/index.vue'),
         ]),
       ],
     },

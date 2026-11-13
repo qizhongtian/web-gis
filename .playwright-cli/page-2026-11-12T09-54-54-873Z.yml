@@ -1,0 +1,33 @@
+- generic [ref=e20]:
+  - generic [ref=e21]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - img "WebGIS" [ref=e24]
+        - generic [ref=e28]: WebGIS 示例管理平台
+      - heading "把地理可视化示例，放进一个清爽的后台" [level=2] [ref=e29]
+      - paragraph [ref=e30]: 统一浏览、调试与管理二维 / 三维地图示例，内置权限与国际化能力。
+    - list [ref=e31]:
+      - listitem [ref=e32]: 动态路由 + 角色权限菜单
+      - listitem [ref=e37]: 按钮级权限控制
+      - listitem [ref=e42]: 中英文一键切换
+  - generic [ref=e47]:
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - heading "WebGIS 示例管理平台" [level=1] [ref=e50]
+        - paragraph [ref=e51]: Cesium · OpenLayers · Leaflet · Three.js 示例一体化管理
+      - button "English" [ref=e52] [cursor=pointer]
+    - generic [ref=e56]:
+      - textbox "用户名" [ref=e65]: admin
+      - generic [ref=e69]:
+        - textbox "密码" [ref=e75]: "123456"
+        - generic [ref=e77] [cursor=pointer]
+      - button "登 录" [ref=e81] [cursor=pointer]
+    - generic [ref=e83]:
+      - paragraph [ref=e84]: 演示账号（点击填入）
+      - generic [ref=e85]:
+        - button "管理员 admin / 123456" [ref=e86]:
+          - generic [ref=e87]: 管理员
+          - generic [ref=e88]: admin / 123456
+        - button "只读用户 viewer / 123456" [ref=e89]:
+          - generic [ref=e90]: 只读用户
+          - generic [ref=e91]: viewer / 123456

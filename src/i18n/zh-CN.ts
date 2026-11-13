@@ -108,6 +108,8 @@ export default {
     cesiumFaqElevation: '点位高度取值',
     cesiumFaqLabel: '海量 label 避让',
     cesiumFaqPopup: '弹窗跟随与边缘避让',
+    cesiumFaqPointScale: '海量点图标随视角缩放',
+    cesiumFaqPointPick: '点选高亮单条',
     openlayer: 'Openlayer',
     olBasic: '基础',
     olMap: '地图初始化',

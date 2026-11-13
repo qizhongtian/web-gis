@@ -31,15 +31,20 @@ onCesiumReady(() => {
     <div class="row">
       <span class="label">图标</span>
       <el-radio-group :model-value="points.style.icon" size="small" @update:model-value="(v) => setStyle('icon', v as PointStyle['icon'])">
-        <el-radio-button value="pin">图钉</el-radio-button>
+        <el-radio-button value="image">图片</el-radio-button>
         <el-radio-button value="circle">圆点</el-radio-button>
       </el-radio-group>
     </div>
 
-    <div class="row">
+    <div class="row" :class="{ dim: points.style.icon !== 'circle' }">
       <span class="label">颜色</span>
-      <el-color-picker :model-value="points.style.color" size="small" @change="(v) => setStyle('color', String(v || '#2563eb'))" />
-      <span class="value">{{ points.style.color }}</span>
+      <el-color-picker
+        :model-value="points.style.color"
+        size="small"
+        :disabled="points.style.icon !== 'circle'"
+        @change="(v) => setStyle('color', String(v || '#2563eb'))"
+      />
+      <span class="value">{{ points.style.icon === 'circle' ? points.style.color : '仅圆点生效' }}</span>
     </div>
 
     <div class="slider-row">
@@ -73,7 +78,8 @@ onCesiumReady(() => {
 
     <p class="hint">
       当前 <b>{{ points.points.value.length }}</b> 个点位，使用 <b>CustomDataSource</b> 承载，聚合由
-      <b>EntityCluster</b> 统一开合。
+      <b>EntityCluster</b> 统一开合。每个点随机取一张 <code>/image/map-pin-*.png</code>，label 贴在图标上方（黄字黑描边，
+      相机 12 km 内才显示）；聚合气泡按数量分档配色，越大越显眼。
     </p>
   </CesiumOverlay>
 </template>
@@ -89,6 +95,9 @@ onCesiumReady(() => {
   margin-top: 4px;
   padding-top: 8px;
   border-top: 1px dashed #e6e8eb;
+}
+.row.dim {
+  opacity: 0.55;
 }
 .label {
   flex: 0 0 44px;
@@ -129,5 +138,12 @@ onCesiumReady(() => {
 }
 .hint b {
   color: #6b7280;
+}
+.hint code {
+  padding: 0 3px;
+  border-radius: 3px;
+  background: rgba(37, 99, 235, 0.08);
+  font-size: 10px;
+  color: #2563eb;
 }
 </style>

@@ -1,0 +1,167 @@
+- generic [ref=f2e18]:
+  - banner [ref=f2e19]:
+    - button "收起菜单" [ref=f2e20] [cursor=pointer]
+    - generic [ref=f2e24] [cursor=pointer]:
+      - img "WebGIS" [ref=f2e25]
+      - generic [ref=f2e29]: WebGIS 示例管理平台
+    - button "English" [ref=f2e30] [cursor=pointer]
+    - button "超 超级管理员" [ref=f2e36] [cursor=pointer]:
+      - generic [ref=f2e37]: 超
+      - generic [ref=f2e38]: 超级管理员
+  - generic [ref=f2e41]:
+    - complementary [ref=f2e42]:
+      - menubar [ref=f2e46]:
+        - menuitem [ref=f2e47] [cursor=pointer]
+        - menuitem "Cesium" [expanded] [ref=f2e51]:
+          - menu [ref=f2e60]:
+            - menuitem "基础" [ref=f2e61]
+            - menuitem "Geojson" [ref=f2e73]
+            - menuitem "工具" [ref=f2e82]
+            - menuitem "图层" [ref=f2e91]
+            - menuitem "3D Tiles" [ref=f2e100]
+            - menuitem "模型" [ref=f2e111]
+            - menuitem "飞入" [ref=f2e121]
+            - menuitem "坐标转换" [ref=f2e130]
+            - menuitem "视频融合" [ref=f2e139]
+            - menuitem "聚合" [ref=f2e148]
+            - menuitem "空间分析" [ref=f2e157]
+            - menuitem "综合应用" [ref=f2e166]
+            - menuitem "常见问题解决" [expanded] [ref=f2e177]:
+              - menu [ref=f2e186]:
+                - menuitem "点位贴地(无高程)" [ref=f2e187] [cursor=pointer]
+                - menuitem "点位高度取值" [ref=f2e188] [cursor=pointer]
+                - menuitem "海量 label 避让" [ref=f2e189] [cursor=pointer]
+                - menuitem "弹窗跟随与边缘避让" [ref=f2e190] [cursor=pointer]
+                - menuitem "海量点图标随视角缩放" [ref=f2e191] [cursor=pointer]
+                - menuitem "点选高亮单条" [ref=f2e192] [cursor=pointer]
+        - menuitem "Openlayer" [ref=f2e193]
+        - menuitem "Three" [ref=f2e203]
+        - menuitem "Leaflet" [ref=f2e213]
+        - menuitem "系统管理" [ref=f2e224]
+    - main [ref=f2e233]:
+      - generic [ref=f2e234]:
+        - navigation "面包屑" [ref=f2e235]:
+          - generic [ref=f2e236]:
+            - link "Cesium" [ref=f2e237]
+            - text: /
+          - generic [ref=f2e238]:
+            - link "常见问题解决" [ref=f2e239]
+            - text: /
+          - link "点选高亮单条" [ref=f2e241]
+        - generic [ref=f2e242]: /cesium/faq/pointpick
+      - generic [ref=f2e244]:
+        - generic [ref=f2e245]:
+          - generic [ref=f2e250]:
+            - code [ref=f2e251]: BillboardCollection
+            - text: /
+            - code [ref=f2e252]: LabelCollection
+            - text: 建好之后，仍然可以逐条改属性： 点图钉 →
+            - code [ref=f2e253]: collection.get(i)
+            - text: → 改
+            - code [ref=f2e254]: image
+            - text: /
+            - code [ref=f2e255]: color
+            - text: /
+            - code [ref=f2e256]: scale
+            - text: ，setter 只把这一条标脏。左上角可切换「换贴图 / 只改 color」对比两种改法的区别。
+          - generic [ref=f2e257]:
+            - generic [ref=f2e263]:
+              - generic [ref=f2e264] [cursor=pointer]: 点中某条：只改这一条
+              - generic [ref=f2e269]:
+                - paragraph [ref=f2e270]:
+                  - text: 点地图上的图钉选中，再点一次或点空白取消。只改被点中的那条
+                  - code [ref=f2e271]: Billboard
+                  - text: /
+                  - code [ref=f2e272]: Label
+                  - text: ，不重建集合。
+                - generic [ref=f2e273]:
+                  - generic [ref=f2e274]: 点击效果
+                  - radiogroup "radio-group" [ref=f2e275]:
+                    - generic [ref=f2e276]:
+                      - radio "换贴图" [checked] [ref=f2e277]
+                      - generic [ref=f2e278] [cursor=pointer]: 换贴图
+                    - generic [ref=f2e279]:
+                      - radio "只改 color" [ref=f2e280]
+                      - generic [ref=f2e281] [cursor=pointer]: 只改 color
+                - generic [ref=f2e282]:
+                  - generic [ref=f2e283]: 选中
+                  - generic [ref=f2e284]: 无
+                - generic [ref=f2e286]:
+                  - button "取消选中" [disabled] [ref=f2e287]
+                  - button "回到初始视角" [ref=f2e289] [cursor=pointer]
+                - paragraph [ref=f2e291]: 换贴图 = 往 textureAtlas 里分配一张图；只改 color = 只更新顶点颜色。 两者 setter 都只把这一条标脏，下一帧只重建它的顶点，和集合里有多少点无关。
+            - generic [ref=f2e292]:
+              - button "收起工具条" [ref=f2e293] [cursor=pointer]
+              - generic [ref=f2e297]:
+                - generic [ref=f2e298]:
+                  - generic [ref=f2e299]: 三维
+                  - generic [ref=f2e300]:
+                    - switch "切换到二维" [checked]
+                    - generic [ref=f2e301] [cursor=pointer]
+                - generic [ref=f2e303]:
+                  - generic [ref=f2e304]: 地下
+                  - generic [ref=f2e305]:
+                    - switch "开启地下模式"
+                    - generic [ref=f2e306] [cursor=pointer]
+              - generic [ref=f2e309]:
+                - generic [ref=f2e312]:
+                  - emphasis [ref=f2e313]: 经度
+                  - generic [ref=f2e314]: "-"
+                - generic [ref=f2e315]:
+                  - emphasis [ref=f2e316]: 纬度
+                  - generic [ref=f2e317]: "-"
+                - generic [ref=f2e318]:
+                  - emphasis [ref=f2e319]: 高度
+                  - generic [ref=f2e320]: "-"
+                - generic [ref=f2e322]:
+                  - emphasis [ref=f2e323]: HK_E
+                  - generic [ref=f2e324]: "-"
+                - generic [ref=f2e325]:
+                  - emphasis [ref=f2e326]: HK_N
+                  - generic [ref=f2e327]: "-"
+                - generic [ref=f2e329]:
+                  - emphasis [ref=f2e330]: X
+                  - generic [ref=f2e331]: "-2419656.549"
+                - generic [ref=f2e332]:
+                  - emphasis [ref=f2e333]: "Y"
+                  - generic [ref=f2e334]: "5391528.377"
+                - generic [ref=f2e335]:
+                  - emphasis [ref=f2e336]: Z
+                  - generic [ref=f2e337]: "2409888.296"
+                - generic [ref=f2e339]:
+                  - emphasis [ref=f2e340]: H
+                  - generic [ref=f2e341]: "360.000000"
+                - generic [ref=f2e342]:
+                  - emphasis [ref=f2e343]: P
+                  - generic [ref=f2e344]: "-90.000000"
+                - generic [ref=f2e345]:
+                  - emphasis [ref=f2e346]: R
+                  - generic [ref=f2e347]: "0.000000"
+        - generic [ref=f2e348]:
+          - generic [ref=f2e349]:
+            - generic [ref=f2e351]: 关键代码
+            - button "全部展开" [ref=f2e352] [cursor=pointer]
+          - generic [ref=f2e353]:
+            - article [ref=f2e354]:
+              - generic [ref=f2e355] [cursor=pointer]:
+                - generic [ref=f2e356]: "1"
+                - generic [ref=f2e357]: add 时把下标塞进 id，pick 回来就知道是第几个
+              - paragraph [ref=f2e360]: 比"遍历集合按位置反查"快得多，也不用额外维护一张索引表
+              - generic [ref=f2e361]:
+                - button "复制" [ref=f2e362] [cursor=pointer]
+                - code [ref=f2e364]: "// BillboardCollection / LabelCollection 都支持 id // id 带个标记对象：场景里可能有别的 primitive，靠标记认出自己的点 const bb = collection.add({ position, image: '/image/map-pin-02.png', id: { pick: i }, verticalOrigin: C.VerticalOrigin.BOTTOM, }) // label 用同一个下标：点到文字也能定位到点 labels.add({ position, text, id: { pick: i }, ... })"
+            - article [ref=f2e365]:
+              - generic [ref=f2e366] [cursor=pointer]:
+                - generic [ref=f2e367]: "2"
+                - generic [ref=f2e368]: 点击：drillPick 只认自己的集合
+              - paragraph [ref=f2e371]: scene.pick 只返回最上面那一个，场景里有 3D Tiles 时经常先命中建筑
+            - article [ref=f2e372]:
+              - generic [ref=f2e373] [cursor=pointer]:
+                - generic [ref=f2e374]: "3"
+                - generic [ref=f2e375]: 选中：只改这一条的属性，两种改法
+              - paragraph [ref=f2e378]: 换 image 走纹理图集，改 color 只更新顶点颜色；都由 setter 把该条标脏
+            - article [ref=f2e379]:
+              - generic [ref=f2e380] [cursor=pointer]:
+                - generic [ref=f2e381]: "4"
+                - generic [ref=f2e382]: 取消选中要还原，大量高亮别逐条改
+              - paragraph [ref=f2e385]: 换图模式下 image 已被改掉，原始贴图要自己缓存；几千条同时高亮用双集合更划算

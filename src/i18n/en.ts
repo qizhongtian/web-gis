@@ -108,6 +108,8 @@ export default {
     cesiumFaqElevation: 'Point Elevation Sampling',
     cesiumFaqLabel: 'Label Declutter for Massive Points',
     cesiumFaqPopup: 'Viewport-Aware Popup',
+    cesiumFaqPointScale: 'Point Scale by Distance',
+    cesiumFaqPointPick: 'Highlight Picked Point',
     openlayer: 'Openlayer',
     olBasic: 'Basic',
     olMap: 'Init Map',

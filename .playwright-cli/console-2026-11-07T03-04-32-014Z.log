@@ -1,2 +1,0 @@
-[ 1649915ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://data.map.gov.hk/api/3d-data/meshmodel/WGS84/tileset.json?key=ad5940a63bd344c48b0351ef1c7a905e:0
-[ 1651583ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_CLOSED @ https://data.map.gov.hk/api/3d-data/meshmodel/WGS84/tileset.json?key=ad5940a63bd344c48b0351ef1c7a905e:0
