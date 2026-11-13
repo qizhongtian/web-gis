@@ -266,6 +266,14 @@ export const mockMenus: MockMenu[] = [
       ]),
       leaf(8201, 'Flv.js', 'Flv.js', 'menus.videoFlv', '/video/flv', 'video/flv/index.vue'),
       leaf(8301, 'Hls.js', 'Hls.js', 'menus.videoHls', '/video/hls', 'video/hls/index.vue'),
+      leaf(
+        8401,
+        'EasyPlayer.js',
+        'EasyPlayer.js',
+        'menus.videoEasyplayer',
+        '/video/easyplayer',
+        'video/easyplayer/index.vue',
+      ),
     ],
   },
   {

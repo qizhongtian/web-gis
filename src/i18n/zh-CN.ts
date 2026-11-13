@@ -145,6 +145,7 @@ export default {
     videoPlayback: '历史回放',
     videoFlv: 'Flv.js',
     videoHls: 'Hls.js',
+    videoEasyplayer: 'EasyPlayer.js',
     system: '系统管理',
     systemUser: '用户管理',
     systemRole: '角色管理',

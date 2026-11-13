@@ -145,6 +145,7 @@ export default {
     videoPlayback: 'Playback',
     videoFlv: 'Flv.js',
     videoHls: 'Hls.js',
+    videoEasyplayer: 'EasyPlayer.js',
     system: 'System',
     systemUser: 'Users',
     systemRole: 'Roles',
