@@ -75,6 +75,9 @@ npm install
 # 启动开发服务（Mock 内置）
 npm run dev          # http://localhost:5173
 
+# 本地 HTTPS（自签证书，需浏览器手动信任一次）
+npm run dev:https    # https://localhost:5173
+
 # 类型检查
 npm run typecheck
 
@@ -93,7 +96,11 @@ npm run preview
 | ------------------ | -------------------------- | ------ |
 | `VITE_API_BASE`    | 接口基础路径               | `/api` |
 | `VITE_PORT`        | 开发端口                   | `5173` |
+| `VITE_HTTPS`       | 开发服务启用自签 HTTPS（`.env.https`） | -      |
 | `VITE_CESIUM_TOKEN`| Cesium ion Token（可选）   | -      |
+
+> `npm run dev:https` 会以 `mode=https` 加载 `.env.https`（内含 `VITE_HTTPS=1`），Vite 用自签证书起 `https://localhost:5173`；
+> 页面变成 https 后，视频监控的两个页面会自动把默认 ws 地址切成 `wss`（实时 9102 / 回放 9322），需要流媒体服务器同步提供 wss 并让证书可信。
 
 > 3D Tiles（OSM 建筑）示例需要在 [Cesium ion](https://cesium.com/ion/) 免费申请 Token，可在页面内输入（存入 localStorage）或配置环境变量。
 > 接入真实后端时，删除 `vite.config.ts` 中的 `mockServer()` 并启用 `server.proxy` 代理 `/api` 即可，业务代码无需改动。

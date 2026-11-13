@@ -237,6 +237,36 @@ export const mockMenus: MockMenu[] = [
     ],
   },
   {
+    id: 8,
+    label: '视频监控',
+    labelEn: 'Video Monitor',
+    key: 'menus.video',
+    icon: 'VideoCamera',
+    path: '/video',
+    component: '',
+    roles: ['admin', 'viewer'],
+    children: [
+      group(81, 'WSPlayer', 'WSPlayer', 'menus.videoWsplayer', 'VideoPlay', '/video/wsplayer', [
+        leaf(
+          8101,
+          '实时画面',
+          'Realtime',
+          'menus.videoRealtime',
+          '/video/wsplayer/real',
+          'video/wsplayer/real/index.vue',
+        ),
+        leaf(
+          8102,
+          '历史回放',
+          'Playback',
+          'menus.videoPlayback',
+          '/video/wsplayer/record',
+          'video/wsplayer/record/index.vue',
+        ),
+      ]),
+    ],
+  },
+  {
     id: 5,
     label: '系统管理',
     labelEn: 'System',

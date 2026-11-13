@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="fullscreen" transform="translate(-633 -57)">
+    <rect id="矩形_1" data-name="矩形 1" width="20" height="20" transform="translate(633 57)" fill="red" opacity="0"/>
+    <path id="矢量_27" data-name="矢量 27" d="M8,4.5V3H3V8H4.5V5.561L7.47,8.53,8.53,7.47,5.561,4.5Zm4,0V3h5V8H15.5V5.561L12.53,8.53,11.47,7.47l2.97-2.97ZM4.5,14.439l2.97-2.97L8.53,12.53,5.561,15.5H8V17H3V12H4.5Zm8.03-2.97,2.97,2.97V12H17v5H12V15.5h2.439l-2.97-2.97Z" transform="translate(633 57)" fill-rule="evenodd"/>
+  </g>
+</svg>

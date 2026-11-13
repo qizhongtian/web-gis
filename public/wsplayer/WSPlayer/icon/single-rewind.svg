@@ -1,0 +1,5 @@
+<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20.000000" height="20.000000" fill="none">
+	<rect id="svg" width="20.000000" height="20.000000" x="0.000000" y="0.000000" />
+	<rect id="rect" width="20.000000" height="20.000000" x="0.000000" y="0.000000" opacity="0" fill="#B2BAC2" transform="matrix(-1,-1.22465e-16,1.22465e-16,-1,20,20)" />
+	<path id="合并" d="M5 17L5 3L3 3L3 17L5 17ZM16.2 16.4L7.6 10.4C7.3 10.2 7.3 9.8 7.6 9.6L16.2 3.6C16.5 3.4 17 3.6 17 4L17 16C17 16.4 16.5 16.6 16.2 16.4Z" fill="#15171a" fill-rule="evenodd" />
+</svg>

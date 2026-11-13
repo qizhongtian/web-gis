@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="filtrate-filled" transform="translate(-353 -611)">
+    <rect id="矩形_90" data-name="矩形 90" width="20" height="20" transform="translate(353 611)" fill="red" opacity="0"/>
+    <path id="path" d="M16,2.75H4v3.6a.908.908,0,0,0,.3.7l3.2,3.2v6a1,1,0,0,0,1,1,.755.755,0,0,0,.4-.1l3-1.2a.961.961,0,0,0,.6-.9v-4.8l3.2-3.2a.908.908,0,0,0,.3-.7Z" transform="translate(353 611)"/>
+  </g>
+</svg>

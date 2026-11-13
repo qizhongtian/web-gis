@@ -1,0 +1,12 @@
+<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20.000000" height="20.000000" fill="none" customFrame="#006fff">
+	<g id="southWest-n">
+		<g style="mix-blend-mode:normal">
+			<rect id="矩形 3026" width="20.000000" height="20.000000" x="0.000000" y="0.000000" fill="rgb(255,255,255)" fill-opacity="0" />
+			<rect id="矩形 3026" width="19.000000" height="19.000000" x="0.500000" y="0.500000" stroke="rgb(112,112,112)" stroke-opacity="0" stroke-width="1" />
+		</g>
+		<g style="mix-blend-mode:normal">
+			<path id="southWest-n" d="M4 3L8 3C8.552 3 9 3.448 9 4L4 9C3.448 9 3 8.552 3 8L3 4C3 3.448 3.448 3 4 3Z" fill="#006fff" fill-rule="evenodd" />
+			<path id="southWest-n" d="M8 3C8.552 3 9 3.448 9 4L4 9C3.448 9 3 8.552 3 8L3 4C3 3.448 3.448 3 4 3L8 3Z" fill-rule="evenodd" stroke="rgb(112,112,112)" stroke-opacity="0" stroke-width="1" />
+		</g>
+	</g>
+</svg>

@@ -1,0 +1,252 @@
+:root {
+    --ws-player-custom-division-background: #fff; /* 自定义分屏背景色 */
+    --ws-player-custom-division-title-background: transparent; /* 自定义标题背景色 */
+    --ws-player-custom-division-title-color: #15171a; /* 标题颜色 */
+    --ws-player-custom-division-title-fontsize: 14px; /* 标题字号 */
+    --ws-player-custom-division-title-fontweight: unset; /* 标题加粗 */
+    --ws-player-custom-division-title-fontstyle: unset; /* 标题字体风格 */
+    --ws-player-custom-division-box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),0 3px 6px -4px rgba(0, 0, 0, 0.12),0 9px 28px 8px rgba(0, 0, 0, 0.05); /* 自定义分屏的边框阴影 */
+    --ws-player-custom-division-default-left-list-hover-background: rgba(0,111,255,0.1); /* 左侧列表项hover背景色 */
+    --ws-player-custom-division-default-left-list-color: #15171a; /* 左侧列表项hover背景色 */
+    --ws-player-custom-division-default-left-list-active-color: #006fff; /* 左侧列表项hover背景色 */
+    --ws-player-custom-division-border-color: #e5e7ea; /* 自定义分屏的边框颜色 */
+    --ws-player-custom-division-modal-mask: rgba(0, 0, 0, 0.2); /* 模态框遮罩背景 */
+    --ws-player-custom-division-item-border: #aaa; /* 分屏窗口边框 */
+    --ws-player-custom-division-item-background: #161a1e; /* 分屏窗口背景 */
+    --ws-player-custom-division-btn-info-bg: #ffffff; /* 信息按钮背景 */
+    --ws-player-custom-division-btn-info-color: #445160; /* 信息按钮文字 */
+    --ws-player-custom-division-btn-info-hover-color: #298dff; /* 信息按钮文字 */
+    --ws-player-custom-division-btn-primary-bg: #1c79f4; /* 主按钮背景 */
+    --ws-player-custom-division-btn-primary-hover-bg: #298dff; /* 主按钮背景 */
+    --ws-player-custom-division-btn-primary-color: #fff; /* 主按钮文字 */
+    --ws-player-custom-division-btn-info-border: 1px solid #d9dce0;
+    --ws-player-custom-division-btn-info-hover-border: 1px solid #298dff;
+    --ws-player-custom-division-btn-primary-border: none;
+    --ws-player-top-more-close-icon-color: #15171a;
+    --ws-player-top-more-close-icon-hover-color: #006fff;
+    --ws-player-top-more-close-icon-container-hover-background: #e4e6e9;
+}
+
+.custom-division-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.custom-division-modal-container {
+  position: absolute;
+  top: 100px;
+  left: calc(50% - 412px);
+  width: 824px;
+  height: 540px;
+  box-shadow: var(--ws-player-custom-division-box-shadow);
+  pointer-events: auto;
+  z-index: 999;
+  overflow: hidden;
+  background-color: var(--ws-player-custom-division-background);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-division-container .custom-division-modal-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--ws-player-custom-division-modal-mask);
+}
+
+.custom-division-container .custom-division-title {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 8px 8px 16px;
+    background: var(--ws-player-custom-division-title-background);
+    border-bottom: 1px solid var(--ws-player-custom-division-border-color);
+}
+.custom-division-container .custom-division-title span {
+    color: var(--ws-player-custom-division-title-color);
+    font-family: var(--ws-player-custom-division-title-fontFamily);
+    font-size: var(--ws-player-custom-division-title-fontsize);
+    font-weight: var(--ws-player-custom-division-title-fontweight);
+    line-height: 32px;
+    letter-spacing: 1px;
+    text-align: left;
+    font-style: var(--ws-player-custom-division-title-fontstyle);
+}
+
+
+.custom-division-container .custom-division-title .close-icon-container{
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-division-container .custom-division-title .close-icon-container:hover {
+    background-color: var(--ws-player-top-more-close-icon-container-hover-background);
+}
+
+.custom-division-container .custom-division-title .close-icon-container .close-icon {
+    width: 20px;
+    height: 20px;
+    mask-image: var(--ws-player-top-more-close-icon);
+    -webkit-mask-image: var(--ws-player-top-close-icon);
+    background-color: var(--ws-player-top-more-close-icon-color);
+}
+
+.custom-division-container .custom-division-content {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+.custom-division-container .custom-division-content .custom-division-left-list{
+    width: 200px;
+    padding: 12px 8px 12px 16px;
+    border-right: 1px solid var(--ws-player-custom-division-border-color);
+}
+.custom-division-container .custom-division-left-list .custom-division-left-item{
+    width: 176px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+}
+.custom-division-container .custom-division-left-list .custom-division-left-item:hover{
+    background-color: var(--ws-player-custom-division-default-left-list-hover-background);
+}
+.custom-division-container .custom-division-left-list .custom-division-left-item .custom-division-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    background-color: var(--ws-player-custom-division-default-left-list-color);
+}
+.custom-division-container .custom-division-left-list .custom-division-left-item:hover .custom-division-icon {
+    background-color: var(--ws-player-custom-division-default-left-list-active-color);
+}
+.custom-division-container .custom-division-left-list .custom-division-left-item .custom-division-text {
+    color: var(--ws-player-custom-division-default-left-list-color);
+}
+.custom-division-container .custom-division-left-list .custom-division-left-item:hover .custom-division-text {
+    color: var(--ws-player-custom-division-default-left-list-active-color);
+}
+.custom-division-container .custom-division-content .custom-division-right-split-window {
+    position: relative;
+    flex: 1;
+    padding: 16px 8px;;
+}
+.custom-division-container .custom-division-content .custom-division-right-split-window>div{
+    position: relative;
+    height: 100%;
+}
+
+
+
+/* .ws-player .custom-division-container.ws-record-player{
+  height: calc(100% - var(--ws-record-bottom-control-height));
+}
+.ws-player .custom-division-container.ws-real-player{
+  height: calc(100% - var(--ws-real-bottom-control-height));
+} */
+
+.dom-item {
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid var(--ws-player-custom-division-item-border);
+    background: var(--ws-player-custom-division-item-background);
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.dom-item-split-btn {
+    width: 20px;
+    height: 20px;
+    background: url(./icon/screen_custom_division_split.svg) no-repeat;
+    background-size: contain;
+}
+.dom-item-split-btn:hover,
+.dom-item-merge-btn:hover {
+    cursor: pointer;
+}
+
+.dom-item-merge-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 20px;
+    height: 20px;
+    background: url(./icon/screen_custom_division_merge.svg) no-repeat;
+    background-size: contain;
+}
+
+.dom-item-flex {
+    display: flex;
+    box-sizing: border-box;
+    border: 1px solid var(--ws-player-custom-division-item-border);
+    background: var(--ws-player-custom-division-item-background);
+    float: left;
+    justify-content: center;
+    align-items: center;
+}
+.point-e-resize {
+    position: absolute;
+    z-index: 10;
+    cursor: e-resize;
+}
+.point-n-resize {
+    position: absolute;
+    z-index: 10;
+    cursor: n-resize;
+}
+
+.window-division-bottom-container {
+    height: 52px;
+    display: flex;
+    flex-direction: row-reverse;
+    border-top: 1px solid var(--ws-player-custom-division-border-color);
+    align-items: center;
+}
+
+.window-division-btn {
+    margin-right: 8px;
+    float: right;
+    width: 60px;
+	height: 32px;
+	border-radius: 4px;
+	border: 0;
+}
+
+.window-division-btn-info {
+    background-color: var(--ws-player-custom-division-btn-info-bg);
+    color: var(--ws-player-custom-division-btn-info-color);
+    border: var(--ws-player-custom-division-btn-info-border);
+}
+
+.window-division-btn-info:hover {
+    color: var(--ws-player-custom-division-btn-info-hover-color);
+    border: var(--ws-player-custom-division-btn-info-hover-border);
+}
+
+.window-division-btn-primary {
+    background-color: var(--ws-player-custom-division-btn-primary-bg);
+    color: var(--ws-player-custom-division-btn-primary-color);
+    border: var(--ws-player-custom-division-btn-primary-border);
+}
+.window-division-btn-primary:hover {
+    background-color: var(--ws-player-custom-division-btn-primary-hover-bg);
+}
+
+.window-division-btn:hover {
+    cursor: pointer;
+}

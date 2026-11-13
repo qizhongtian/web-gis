@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import UnoCSS from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -13,6 +14,8 @@ export default defineConfig(({ mode }) => {
   // 部署子路径（GitHub Pages 项目站点为 /<仓库名>/）：CI 环境变量 > .env.[mode] > 根路径
   const env = loadEnv(mode, process.cwd(), '')
   const base = (process.env.VITE_BASE || env.VITE_BASE || '/').replace(/\/?$/, '/')
+  // 本地 HTTPS：npm run dev:https（.env.https 里 VITE_HTTPS=1），自签证书，浏览器需手动信任一次
+  const useHttps = (process.env.VITE_HTTPS || env.VITE_HTTPS) === '1'
   return {
     base,
     plugins: [
@@ -33,6 +36,8 @@ export default defineConfig(({ mode }) => {
         dts: 'src/types/components.d.ts',
       }),
       mockServer(),
+      // 开启后 dev / preview 都用自签证书，页面变 https 时播放器会自动改用 wss
+      ...(useHttps ? [basicSsl()] : []),
     ],
     resolve: {
       alias: {
