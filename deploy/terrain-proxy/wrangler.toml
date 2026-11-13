@@ -1,0 +1,13 @@
+name = "web-gis-terrain-proxy"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+
+# 部署：cd deploy/terrain-proxy && npx wrangler deploy
+# 部署完成会得到 https://web-gis-terrain-proxy.<account>.workers.dev
+# 地形地址即：https://web-gis-terrain-proxy.<account>.workers.dev/gis/SMPstatic/20251011HKdemqp
+#
+# 如需绑定自有域名（更稳定、可被公司网络访问），解开下面注释并先在
+# Cloudflare 里把该域名设为 Zone：
+# routes = [
+#   { pattern = "gis.example.com/gis/*", zone_name = "example.com" }
+# ]

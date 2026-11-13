@@ -50,6 +50,11 @@ jobs:
         env:
           # 没有后端，启用浏览器端静态 mock（admin / 123456）
           VITE_STATIC_MOCK: '1'
+          # 香港 DEM 地形反代地址（deploy/terrain-proxy 里的 Cloudflare Worker）
+          # 在 Settings → Secrets and variables → Actions → Variables 里新建 VITE_HK_TERRAIN_URL，
+          # 值形如 https://web-gis-terrain-proxy.<account>.workers.dev/gis/SMPstatic/20251011HKdemqp
+          # 不配置则回落到直连源站（会被 CORS 拦截），地形相关示例不可用
+          VITE_HK_TERRAIN_URL: ${{ vars.VITE_HK_TERRAIN_URL }}
         run: npm run build
 
       - name: Upload artifact
