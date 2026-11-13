@@ -274,6 +274,14 @@ export const mockMenus: MockMenu[] = [
         '/video/easyplayer',
         'video/easyplayer/index.vue',
       ),
+      leaf(
+        8501,
+        'ZLMRTCClient.js',
+        'ZLMRTCClient.js',
+        'menus.videoZlmrtc',
+        '/video/zlmrtc',
+        'video/zlmrtc/index.vue',
+      ),
     ],
   },
   {

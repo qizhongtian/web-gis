@@ -146,6 +146,7 @@ export default {
     videoFlv: 'Flv.js',
     videoHls: 'Hls.js',
     videoEasyplayer: 'EasyPlayer.js',
+    videoZlmrtc: 'ZLMRTCClient.js',
     system: '系统管理',
     systemUser: '用户管理',
     systemRole: '角色管理',
