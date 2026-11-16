@@ -7,6 +7,7 @@ import { useAppStore } from '@/store/app'
 import { useUserStore } from '@/store/user'
 import BrandLogo from '@/components/BrandLogo.vue'
 import LangSwitch from '@/components/LangSwitch.vue'
+import GlobalSearch from '@/components/GlobalSearch.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -81,6 +82,8 @@ async function onLogout() {
     </div>
 
     <div class="flex-1" />
+
+    <GlobalSearch />
 
     <LangSwitch />
 
