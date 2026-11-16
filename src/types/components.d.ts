@@ -56,6 +56,7 @@ declare module 'vue' {
     LangSwitch: typeof import('./../components/LangSwitch.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ToolPage: typeof import('./../components/tools/ToolPage.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']

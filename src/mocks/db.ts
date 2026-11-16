@@ -285,6 +285,40 @@ export const mockMenus: MockMenu[] = [
     ],
   },
   {
+    id: 9,
+    label: '在线工具',
+    labelEn: 'Toolkit',
+    key: 'menus.tools',
+    icon: 'Suitcase',
+    path: '/tools',
+    component: '',
+    roles: ['admin', 'viewer'],
+    children: [
+      group(91, '编辑器', 'Editors', 'menus.toolsEditor', 'EditPen', '/tools/editor', [
+        leaf(9101, 'Markdown', 'Markdown', 'menus.toolsMarkdown', '/tools/editor/markdown', 'tools/editor/markdown/index.vue'),
+        leaf(9102, '富文本', 'Rich Text', 'menus.toolsRichtext', '/tools/editor/richtext', 'tools/editor/richtext/index.vue'),
+        leaf(9103, '代码比对', 'Code Diff', 'menus.toolsDiff', '/tools/editor/diff', 'tools/editor/diff/index.vue'),
+      ]),
+      group(92, '编码转换', 'Converters', 'menus.toolsCodec', 'Switch', '/tools/codec', [
+        leaf(9201, 'JSON 工具', 'JSON Tools', 'menus.toolsJson', '/tools/codec/json', 'tools/codec/json/index.vue'),
+        leaf(9202, '正则测试', 'Regex Test', 'menus.toolsRegex', '/tools/codec/regex', 'tools/codec/regex/index.vue'),
+        leaf(9203, '编码解码', 'Encode / Decode', 'menus.toolsEncode', '/tools/codec/encode', 'tools/codec/encode/index.vue'),
+        leaf(9204, '时间戳转换', 'Timestamp', 'menus.toolsTimestamp', '/tools/codec/timestamp', 'tools/codec/timestamp/index.vue'),
+      ]),
+      group(93, '设计辅助', 'Design', 'menus.toolsDesign', 'Brush', '/tools/design', [
+        leaf(9301, '颜色工具', 'Color', 'menus.toolsColor', '/tools/design/color', 'tools/design/color/index.vue'),
+        leaf(9302, '渐变生成', 'Gradient', 'menus.toolsGradient', '/tools/design/gradient', 'tools/design/gradient/index.vue'),
+        leaf(9303, '阴影生成', 'Box Shadow', 'menus.toolsShadow', '/tools/design/shadow', 'tools/design/shadow/index.vue'),
+        leaf(9304, '电子签名', 'Signature', 'menus.toolsSignature', '/tools/design/signature', 'tools/design/signature/index.vue'),
+      ]),
+      group(94, '图片工具', 'Images', 'menus.toolsImage', 'Picture', '/tools/image', [
+        leaf(9401, '图片 Base64', 'Image Base64', 'menus.toolsImageBase64', '/tools/image/base64', 'tools/image/base64/index.vue'),
+        leaf(9402, '图片压缩', 'Image Compress', 'menus.toolsImageCompress', '/tools/image/compress', 'tools/image/compress/index.vue'),
+        leaf(9403, '二维码生成', 'QR Code', 'menus.toolsQrcode', '/tools/image/qrcode', 'tools/image/qrcode/index.vue'),
+      ]),
+    ],
+  },
+  {
     id: 5,
     label: '系统管理',
     labelEn: 'System',
