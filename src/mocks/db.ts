@@ -163,6 +163,7 @@ export const mockMenus: MockMenu[] = [
         leaf(2154, '弹窗跟随与边缘避让', 'Viewport Popup', 'menus.cesiumFaqPopup', '/cesium/faq/popup', 'cesium/faq/popup/index.vue'),
         leaf(2155, '海量点图标随视角缩放', 'Point Scale by Distance', 'menus.cesiumFaqPointScale', '/cesium/faq/pointscale', 'cesium/faq/point-scale/index.vue'),
         leaf(2156, '点选高亮单条', 'Highlight Picked Point', 'menus.cesiumFaqPointPick', '/cesium/faq/pointpick', 'cesium/faq/point-pick/index.vue'),
+        leaf(2157, '地形贴图标注', 'Terrain Surface Label', 'menus.cesiumFaqTerrainLabel', '/cesium/faq/terrainlabel', 'cesium/faq/terrain-label/index.vue'),
       ]),
     ],
   },

@@ -111,6 +111,7 @@ export default {
     cesiumFaqPopup: '弹窗跟随与边缘避让',
     cesiumFaqPointScale: '海量点图标随视角缩放',
     cesiumFaqPointPick: '点选高亮单条',
+    cesiumFaqTerrainLabel: '地形贴图标注',
     openlayer: 'Openlayer',
     olBasic: '基础',
     olMap: '地图初始化',

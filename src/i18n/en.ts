@@ -111,6 +111,7 @@ export default {
     cesiumFaqPopup: 'Viewport-Aware Popup',
     cesiumFaqPointScale: 'Point Scale by Distance',
     cesiumFaqPointPick: 'Highlight Picked Point',
+    cesiumFaqTerrainLabel: 'Terrain Surface Label',
     openlayer: 'Openlayer',
     olBasic: 'Basic',
     olMap: 'Init Map',

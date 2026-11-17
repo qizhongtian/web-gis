@@ -167,6 +167,19 @@ export const knowledgeMeta: KnowledgeMeta[] = [
     scenario: { zh: '海量点性能', en: 'Massive points' },
   },
   {
+    path: '/cesium/faq/terrainlabel',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '图标与文字像贴纸一样铺在地表，随地形起伏，拉远自动分级隐藏且互不重叠。',
+      en: 'Icons and text are painted onto ground-aligned polygons, following terrain, hiding by distance and never overlapping.',
+    },
+    keywords: {
+      zh: ['贴地文字', '地形贴图', 'Canvas 纹理', '多边形贴地', '标注重叠', '地名标注'],
+      en: ['ground label', 'terrain sticker', 'canvas texture', 'polygon clamp', 'label overlap'],
+    },
+    scenario: { zh: '点位上图', en: 'Points on map' },
+  },
+  {
     path: '/cesium/faq/label',
     addedAt: '2026-11-12',
     summary: {
