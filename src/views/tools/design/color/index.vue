@@ -137,9 +137,9 @@ function copyAll() {
       <el-button size="small" type="primary" @click="copyAll">{{ copiedKey === 'all' ? '已复制' : '复制全部' }}</el-button>
     </template>
 
-    <div class="grid gap-3 lg:grid-cols-[380px_1fr]">
+    <div class="grid flex-1 gap-3 lg:grid-cols-[380px_1fr]">
       <!-- 左侧：选择与转换 -->
-      <section class="app-panel p-3 space-y-3">
+      <section class="app-panel flex flex-col gap-3 p-3">
         <div class="flex items-center gap-2">
           <el-color-picker v-model="hex" size="large" />
           <el-input v-model="hex" class="font-mono" placeholder="#2563eb" />
@@ -154,7 +154,7 @@ function copyAll() {
         </div>
 
         <div
-          class="relative flex h-20 items-center justify-center overflow-hidden rounded-xl border border-[#eef0f3]"
+          class="relative flex min-h-[80px] flex-1 items-center justify-center overflow-hidden rounded-xl border border-[#eef0f3]"
           style="background-image: linear-gradient(45deg, #f1f3f5 25%, transparent 25%), linear-gradient(-45deg, #f1f3f5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f1f3f5 75%), linear-gradient(-45deg, transparent 75%, #f1f3f5 75%); background-size: 14px 14px; background-position: 0 0, 0 7px, 7px -7px, -7px 0;"
         >
           <div class="absolute inset-0" :style="{ background: rgbaString }" />

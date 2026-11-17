@@ -230,7 +230,7 @@ const toolbar = computed(() => [
       <input ref="fileRef" type="file" accept=".html,.htm,text/html" class="hidden" @change="importHtml" />
     </template>
 
-    <section class="app-panel overflow-hidden flex flex-col">
+    <section class="app-panel overflow-hidden flex flex-col flex-1 min-h-0">
       <div class="flex flex-wrap items-center gap-1 px-2 py-1.5 border-b border-[#eef0f3]">
         <template v-if="mode === 'visual'">
           <button v-for="t in toolbar" :key="t.key" type="button" class="rt-tool" :title="t.title" @click="t.run">
@@ -326,7 +326,7 @@ const toolbar = computed(() => [
         </div>
       </div>
 
-      <div v-if="mode === 'code'" class="flex flex-col" style="height: calc(100vh - 268px); min-height: 360px">
+      <div v-if="mode === 'code'" class="flex flex-col flex-1 min-h-0" style="min-height: 320px">
         <textarea v-model="source" class="rt-source" spellcheck="false" />
         <div class="flex items-center gap-2 px-3 py-2 border-t border-[#eef0f3] bg-[#fafbfc]">
           <span class="text-[11.5px] text-[#9ca3af]">直接编辑 HTML，应用后回到可视化模式</span>
@@ -337,8 +337,8 @@ const toolbar = computed(() => [
       <div
         v-else
         ref="editorRef"
-        class="rt-body overflow-auto px-5 py-4"
-        style="height: calc(100vh - 268px); min-height: 360px"
+        class="rt-body overflow-auto px-5 py-4 flex-1 min-h-0"
+        style="min-height: 320px"
         contenteditable="true"
         spellcheck="false"
         @input="sync"

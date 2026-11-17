@@ -162,7 +162,7 @@ function fillReverse() {
       <el-button size="small" @click="running = !running">{{ running ? '暂停' : '继续' }}</el-button>
     </template>
 
-    <section class="app-panel p-3 space-y-3">
+    <section class="app-panel flex flex-1 flex-col gap-3 p-3">
       <!-- 当前时间 -->
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl bg-gradient-to-r from-[#eef4ff] to-[#f5f3ff] px-4 py-3">
         <div>

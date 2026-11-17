@@ -165,9 +165,9 @@ detectWebp()
       <input ref="fileRef" type="file" accept="image/*" class="hidden" @change="onInputChange" />
     </template>
 
-    <div v-if="!source" class="app-panel p-3">
+    <div v-if="!source" class="app-panel flex flex-1 flex-col p-3">
       <div
-        class="flex min-h-[320px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 text-center transition"
+        class="flex min-h-[320px] flex-1 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-6 text-center transition"
         :class="dragging ? 'border-[#2563eb] bg-[#eef4ff]' : 'border-[#e6e8eb] bg-[#fafbfc] hover:border-[#bfd4fb]'"
         @click="fileRef?.click()"
         @dragover.prevent="dragging = true"
@@ -180,8 +180,8 @@ detectWebp()
       </div>
     </div>
 
-    <div v-else class="grid gap-3 lg:grid-cols-[320px_1fr]">
-      <section class="app-panel p-3 space-y-3">
+    <div v-else class="grid flex-1 gap-3 lg:grid-cols-[320px_1fr]">
+      <section class="app-panel flex flex-col gap-3 p-3">
         <div class="flex items-center gap-2">
           <span class="text-[12.5px] font-medium text-[#374151]">压缩设置</span>
           <el-tag v-if="webpSupported" size="small" type="success" class="!text-[10px]">WebP 可用</el-tag>
@@ -227,7 +227,7 @@ detectWebp()
         <el-button size="small" type="primary" class="w-full" :disabled="!compressedBlob" @click="download">下载压缩图</el-button>
       </section>
 
-      <section class="app-panel p-3">
+      <section class="app-panel flex flex-col p-3">
         <div class="flex flex-wrap items-center gap-2 pb-2">
           <span class="text-[12.5px] font-medium text-[#374151]">对比预览</span>
           <span class="text-[11px] text-[#9ca3af]">左：原图 · 右：压缩后</span>
@@ -235,7 +235,7 @@ detectWebp()
           <span v-else-if="saved > 0" class="ml-auto text-[11px] text-[#059669]">节省 {{ formatBytes(saved) }}</span>
         </div>
 
-        <div class="relative flex min-h-[380px] items-center justify-center overflow-hidden rounded-xl border border-[#eef0f3] bg-[#fafbfc] p-2">
+        <div class="relative flex min-h-[380px] flex-1 items-center justify-center overflow-hidden rounded-xl border border-[#eef0f3] bg-[#fafbfc] p-2">
           <div class="relative inline-block max-w-full select-none overflow-hidden" style="line-height: 0">
             <img :src="source" alt="原图" class="block max-h-[520px] max-w-full object-contain" />
             <img

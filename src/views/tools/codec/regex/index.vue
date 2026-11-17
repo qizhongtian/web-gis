@@ -179,7 +179,7 @@ async function copyAllMatches() {
       <el-button size="small" @click="copyAllMatches">复制全部匹配</el-button>
     </template>
 
-    <section class="app-panel p-3 space-y-3">
+    <section class="app-panel flex flex-1 flex-col gap-3 p-3">
       <div class="flex flex-wrap items-end gap-2">
         <div class="min-w-[280px] flex-1">
           <div class="flex items-center gap-1 pb-1 text-[12px] text-[#6b7280]">
@@ -206,15 +206,15 @@ async function copyAllMatches() {
 
       <el-alert v-if="compiled.error" :title="`正则语法错误：${compiled.error}`" type="error" show-icon :closable="false" class="!py-1.5" />
 
-      <div class="grid gap-3 lg:grid-cols-2">
-        <div>
+      <div class="grid flex-1 gap-3 lg:grid-cols-2">
+        <div class="flex min-h-[180px] flex-col">
           <div class="flex items-center gap-2 pb-1.5">
             <span class="text-[12.5px] font-medium text-[#374151]">测试文本</span>
             <span class="text-[11px] text-[#9ca3af]">{{ text.length }} 字符</span>
           </div>
           <textarea v-model="text" class="io-box" spellcheck="false" placeholder="粘贴待匹配文本…" />
         </div>
-        <div>
+        <div class="flex min-h-[180px] flex-col">
           <div class="flex items-center gap-2 pb-1.5">
             <span class="text-[12.5px] font-medium text-[#374151]">高亮预览</span>
             <span class="text-[11px] text-[#9ca3af]">{{ matches.length }} 处匹配</span>
@@ -224,14 +224,14 @@ async function copyAllMatches() {
       </div>
 
       <div v-if="showReplace" class="grid gap-3 lg:grid-cols-2">
-        <div>
+        <div class="flex flex-col">
           <div class="flex items-center gap-2 pb-1.5">
             <span class="text-[12.5px] font-medium text-[#374151]">替换为</span>
             <span class="text-[11px] text-[#9ca3af]">支持 $1 / $& 与命名分组 $&lt;name&gt;</span>
           </div>
           <textarea v-model="replacement" class="io-box short" spellcheck="false" placeholder="$1" />
         </div>
-        <div>
+        <div class="flex flex-col">
           <div class="flex items-center gap-2 pb-1.5">
             <span class="text-[12.5px] font-medium text-[#374151]">替换结果</span>
             <el-button size="small" text class="ml-auto" @click="copyContent(replaced, 'rep')">
@@ -278,7 +278,8 @@ async function copyAllMatches() {
 .io-box {
   display: block;
   width: 100%;
-  height: calc(100vh - 500px);
+  height: auto;
+  flex: 1 1 0;
   min-height: 180px;
   padding: 10px 12px;
   border: 1px solid #eef0f3;
@@ -292,6 +293,7 @@ async function copyAllMatches() {
   line-height: 1.7;
 }
 .io-box.short {
+  flex: none;
   height: 90px;
   min-height: 90px;
 }
@@ -301,8 +303,9 @@ async function copyAllMatches() {
   background: #fff;
 }
 .preview-box {
-  height: calc(100vh - 500px);
-  min-height: 180px;
+  height: auto;
+  flex: 1 1 0;
+  min-height: 120px;
   padding: 10px 12px;
   border: 1px solid #eef0f3;
   border-radius: 10px;

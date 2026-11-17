@@ -199,7 +199,7 @@ function reset() {
       <input ref="fileInputRef" type="file" accept=".md,.markdown,.txt,text/markdown" class="hidden" @change="importFile" />
     </template>
 
-    <section class="app-panel overflow-hidden flex flex-col">
+    <section class="app-panel overflow-hidden flex flex-col flex-1 min-h-0">
       <!-- 工具栏 -->
       <div class="flex items-center gap-1 px-2 py-1.5 border-b border-[#eef0f3] flex-wrap">
         <button
@@ -241,7 +241,7 @@ function reset() {
         </button>
       </div>
 
-      <div class="grid min-h-0" :class="view === 'split' ? 'md:grid-cols-2' : 'grid-cols-1'" style="height: calc(100vh - 268px); min-height: 360px">
+      <div class="grid min-h-0 flex-1" :class="view === 'split' ? 'md:grid-cols-2' : 'grid-cols-1'" style="min-height: 320px">
         <textarea
           v-if="view !== 'preview'"
           ref="editorRef"

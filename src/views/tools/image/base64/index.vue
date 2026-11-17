@@ -160,10 +160,10 @@ function clearReverse() {
     </template>
 
     <!-- 图片转 Base64 -->
-    <div v-if="tab === 'toBase64'" class="grid gap-3 lg:grid-cols-2">
-      <section class="app-panel p-3 space-y-3">
+    <div v-if="tab === 'toBase64'" class="grid flex-1 gap-3 lg:grid-cols-2">
+      <section class="app-panel flex flex-col gap-3 p-3">
         <div
-          class="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-4 text-center transition"
+          class="flex min-h-[220px] flex-1 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-4 text-center transition"
           :class="dragging ? 'border-[#2563eb] bg-[#eef4ff]' : 'border-[#e6e8eb] bg-[#fafbfc] hover:border-[#bfd4fb]'"
           @click="fileRef?.click()"
           @dragover.prevent="dragging = true"
@@ -193,7 +193,7 @@ function clearReverse() {
         </div>
       </section>
 
-      <section class="app-panel p-3 space-y-2">
+      <section class="app-panel flex flex-col gap-2 p-3">
         <div class="flex flex-wrap items-center gap-2">
           <el-radio-group v-model="outputType" size="small">
             <el-radio-button value="dataUrl">DataURL</el-radio-button>
@@ -223,8 +223,8 @@ function clearReverse() {
     </div>
 
     <!-- Base64 转图片 -->
-    <div v-else class="grid gap-3 lg:grid-cols-2">
-      <section class="app-panel p-3 space-y-2">
+    <div v-else class="grid flex-1 gap-3 lg:grid-cols-2">
+      <section class="app-panel flex flex-col gap-2 p-3">
         <div class="flex items-center gap-2">
           <span class="text-[12.5px] font-medium text-[#374151]">Base64 / DataURL</span>
           <el-select v-model="reverseMime" size="small" style="width: 130px" class="ml-auto">
@@ -250,7 +250,7 @@ function clearReverse() {
         </div>
       </section>
 
-      <section class="app-panel flex min-h-[260px] flex-col p-3">
+      <section class="app-panel flex min-h-[260px] flex-1 flex-col p-3">
         <div class="pb-2 text-[12.5px] font-medium text-[#374151]">预览</div>
         <div class="flex flex-1 items-center justify-center rounded-xl border border-[#eef0f3] bg-[#fafbfc] p-3">
           <img
@@ -270,8 +270,9 @@ function clearReverse() {
 .io-box {
   display: block;
   width: 100%;
-  height: calc(100vh - 380px);
-  min-height: 240px;
+  height: auto;
+  flex: 1 1 0;
+  min-height: 200px;
   padding: 10px 12px;
   border: 1px solid #eef0f3;
   border-radius: 10px;

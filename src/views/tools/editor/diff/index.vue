@@ -172,8 +172,8 @@ function clearAll() {
       </section>
     </div>
 
-    <section class="app-panel overflow-hidden">
-      <div class="flex flex-wrap items-center gap-2 px-3 py-2 border-b border-[#eef0f3] bg-[#fafbfc]">
+    <section class="app-panel overflow-hidden flex flex-col flex-1 min-h-0">
+      <div class="shrink-0 flex flex-wrap items-center gap-2 px-3 py-2 border-b border-[#eef0f3] bg-[#fafbfc]">
         <el-checkbox v-model="opts.ignoreWhitespace" size="small">忽略空白</el-checkbox>
         <el-checkbox v-model="opts.ignoreCase" size="small">忽略大小写</el-checkbox>
         <el-checkbox v-model="onlyDiff" size="small">仅显示差异</el-checkbox>
@@ -190,13 +190,13 @@ function clearAll() {
         </div>
       </div>
 
-      <div v-if="identical" class="flex flex-col items-center justify-center py-16 text-center">
+      <div v-if="identical" class="flex flex-1 flex-col items-center justify-center py-16 text-center">
         <div class="text-[28px]">✓</div>
         <p class="mt-2 text-[13px] font-medium text-[#059669]">两份内容完全一致</p>
         <p class="mt-1 text-[12px] text-[#9ca3af]">共 {{ stats.unchanged }} 行</p>
       </div>
 
-      <div v-else class="overflow-auto" style="max-height: calc(100vh - 460px); min-height: 240px">
+      <div v-else class="flex-1 min-h-0 overflow-auto" style="min-height: 240px">
         <!-- 并排视图 -->
         <table v-if="mode === 'side'" class="diff-table" :class="{ 'no-wrap': !wrap }">
           <tbody>

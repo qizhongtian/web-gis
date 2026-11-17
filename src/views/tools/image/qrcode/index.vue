@@ -163,8 +163,8 @@ onMounted(() => scheduleDraw(0))
       <el-button size="small" type="primary" :disabled="!info.modules" @click="download">下载 PNG</el-button>
     </template>
 
-    <div class="grid gap-3 lg:grid-cols-[1fr_360px]">
-      <section class="app-panel p-3 space-y-3">
+    <div class="grid flex-1 gap-3 lg:grid-cols-[1fr_360px]">
+      <section class="app-panel flex flex-col gap-3 p-3">
         <div class="flex flex-wrap items-center gap-1.5">
           <span class="text-[11.5px] text-[#6b7280]">示例</span>
           <button v-for="s in samples" :key="s.label" type="button" class="mini-chip" @click="text = s.value">
@@ -230,9 +230,9 @@ onMounted(() => scheduleDraw(0))
         </p>
       </section>
 
-      <section class="app-panel p-3">
+      <section class="app-panel flex flex-col p-3">
         <div class="pb-2 text-[12.5px] font-medium text-[#374151]">预览</div>
-        <div class="flex flex-col items-center justify-center rounded-xl border border-[#eef0f3] p-3">
+        <div class="flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-[#eef0f3] p-3">
           <div
             class="flex max-w-full items-center justify-center"
             :style="{
@@ -258,7 +258,8 @@ onMounted(() => scheduleDraw(0))
 .io-box {
   display: block;
   width: 100%;
-  min-height: 96px;
+  flex: 1 1 0;
+  min-height: 110px;
   padding: 10px 12px;
   border: 1px solid #eef0f3;
   border-radius: 10px;

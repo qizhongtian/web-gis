@@ -247,7 +247,7 @@ function clearAll() {
       <input ref="fileRef" type="file" accept=".json,application/json,text/plain" class="hidden" @change="importFile" />
     </template>
 
-    <section class="app-panel p-3 space-y-3">
+    <section class="app-panel flex flex-1 flex-col gap-3 p-3">
       <div class="flex flex-wrap items-center gap-2">
         <el-button size="small" type="primary" @click="formatJson">格式化</el-button>
         <el-button size="small" @click="minify">压缩</el-button>
@@ -281,8 +281,8 @@ function clearAll() {
         </div>
       </div>
 
-      <div class="grid gap-3 lg:grid-cols-2">
-        <div class="flex flex-col">
+      <div class="grid flex-1 gap-3 lg:grid-cols-2">
+        <div class="flex min-h-[200px] flex-col">
           <div class="flex items-center gap-2 pb-1.5">
             <span class="text-[12.5px] font-medium text-[#374151]">输入</span>
             <span class="text-[11px] text-[#9ca3af]">{{ inputSize }} · {{ input.split('\n').length }} 行</span>
@@ -291,7 +291,7 @@ function clearAll() {
           <textarea v-model="input" class="io-box" spellcheck="false" placeholder="粘贴 JSON 文本…" />
         </div>
 
-        <div class="flex flex-col">
+        <div class="flex min-h-[200px] flex-col">
           <div class="flex items-center gap-2 pb-1.5">
             <span class="text-[12.5px] font-medium text-[#374151]">结果</span>
             <span class="text-[11px] text-[#9ca3af]">{{ outputSize }}</span>
@@ -313,8 +313,9 @@ function clearAll() {
 .io-box {
   display: block;
   width: 100%;
-  height: calc(100vh - 430px);
-  min-height: 240px;
+  height: auto;
+  flex: 1 1 0;
+  min-height: 200px;
   padding: 10px 12px;
   border: 1px solid #eef0f3;
   border-radius: 10px;

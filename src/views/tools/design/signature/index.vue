@@ -202,7 +202,7 @@ onUnmounted(() => {
       <el-button size="small" type="primary" :disabled="!hasContent" @click="exportPng">下载 PNG</el-button>
     </template>
 
-    <section class="app-panel p-3">
+    <section class="app-panel flex flex-1 flex-col p-3">
       <div class="flex flex-wrap items-center gap-x-4 gap-y-2 pb-3">
         <div class="flex items-center gap-1.5">
           <span class="text-[11.5px] text-[#6b7280]">笔迹颜色</span>
@@ -237,7 +237,7 @@ onUnmounted(() => {
         <span class="ml-auto text-[11px] text-[#9ca3af]">画布 {{ sizeLabel }} · 支持数位板 / 触屏</span>
       </div>
 
-      <div ref="wrapRef" class="relative">
+      <div ref="wrapRef" class="relative flex min-h-0 flex-1 items-center justify-center">
         <div
           class="relative overflow-hidden rounded-xl border border-[#e6e8eb]"
           :style="{

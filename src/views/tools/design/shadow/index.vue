@@ -162,7 +162,7 @@ const previewBgStyle = computed(() => {
       </el-button>
     </template>
 
-    <div class="grid gap-3 lg:grid-cols-[400px_1fr]">
+    <div class="grid flex-1 gap-3 lg:grid-cols-[400px_1fr]">
       <section class="app-panel p-3 space-y-3">
         <div class="flex items-center gap-2">
           <el-radio-group v-model="mode" size="small">
@@ -207,8 +207,8 @@ const previewBgStyle = computed(() => {
         </div>
       </section>
 
-      <div class="space-y-3">
-        <section class="app-panel p-3">
+      <div class="flex flex-col gap-3">
+        <section class="app-panel flex min-h-[240px] flex-1 flex-col p-3">
           <div class="flex items-center gap-2 pb-2">
             <span class="text-[12.5px] font-medium text-[#374151]">预览</span>
             <el-radio-group v-model="previewBg" size="small" class="ml-auto">
@@ -217,7 +217,7 @@ const previewBgStyle = computed(() => {
               <el-radio-button value="grid">网格</el-radio-button>
             </el-radio-group>
           </div>
-          <div class="flex h-[280px] items-center justify-center rounded-xl border border-[#eef0f3]" :style="previewBgStyle">
+          <div class="flex flex-1 items-center justify-center rounded-xl border border-[#eef0f3]" :style="previewBgStyle">
             <div v-if="mode === 'box'">
               <div
                 class="flex h-[112px] w-[220px] items-center justify-center rounded-xl bg-white text-[13px] text-[#374151]"

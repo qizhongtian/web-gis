@@ -201,7 +201,7 @@ const outputBytes = computed(() => new TextEncoder().encode(output.value).length
       <el-button size="small" type="primary" @click="copyOutput">{{ copied ? '已复制' : '复制结果' }}</el-button>
     </template>
 
-    <section class="app-panel p-3 space-y-3">
+    <section class="app-panel flex flex-1 flex-col gap-3 p-3">
       <div class="flex flex-wrap items-center gap-2">
         <el-radio-group :model-value="mode" size="small" @change="onModeChange">
           <el-radio-button v-for="m in MODES" :key="m.value" :value="m.value">{{ m.label }}</el-radio-button>
@@ -216,8 +216,8 @@ const outputBytes = computed(() => new TextEncoder().encode(output.value).length
       <p class="text-[11.5px] text-[#9ca3af]">{{ currentHint }}</p>
       <el-alert v-if="error" :title="error" type="error" show-icon :closable="false" class="!py-1.5" />
 
-      <div class="grid gap-3 lg:grid-cols-2">
-        <div>
+      <div class="grid flex-1 gap-3 lg:grid-cols-2">
+        <div class="flex min-h-[200px] flex-col">
           <div class="flex items-center gap-2 pb-1.5">
             <span class="text-[12.5px] font-medium text-[#374151]">原文</span>
             <span class="text-[11px] text-[#9ca3af]">{{ input.length }} 字符 · {{ inputBytes }} 字节</span>
@@ -225,7 +225,7 @@ const outputBytes = computed(() => new TextEncoder().encode(output.value).length
           </div>
           <textarea v-model="input" class="io-box" spellcheck="false" placeholder="输入待转换内容…" />
         </div>
-        <div>
+        <div class="flex min-h-[200px] flex-col">
           <div class="flex items-center gap-2 pb-1.5">
             <span class="text-[12.5px] font-medium text-[#374151]">结果</span>
             <span class="text-[11px] text-[#9ca3af]">{{ output.length }} 字符 · {{ outputBytes }} 字节</span>
@@ -246,8 +246,9 @@ const outputBytes = computed(() => new TextEncoder().encode(output.value).length
 .io-box {
   display: block;
   width: 100%;
-  height: calc(100vh - 360px);
-  min-height: 260px;
+  height: auto;
+  flex: 1 1 0;
+  min-height: 200px;
   padding: 10px 12px;
   border: 1px solid #eef0f3;
   border-radius: 10px;

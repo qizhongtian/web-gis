@@ -93,7 +93,7 @@ async function copy(value: string, key: string) {
       </el-button>
     </template>
 
-    <div class="grid gap-3 lg:grid-cols-[400px_1fr]">
+    <div class="grid flex-1 gap-3 lg:grid-cols-[400px_1fr]">
       <section class="app-panel p-3 space-y-3">
         <div>
           <div class="pb-1.5 text-[11.5px] text-[#6b7280]">渐变类型</div>
@@ -152,13 +152,13 @@ async function copy(value: string, key: string) {
         </div>
       </section>
 
-      <div class="space-y-3">
-        <section class="app-panel p-3">
+      <div class="flex flex-col gap-3">
+        <section class="app-panel flex min-h-[240px] flex-1 flex-col p-3">
           <div class="flex items-center gap-2 pb-2">
             <span class="text-[12.5px] font-medium text-[#374151]">预览</span>
             <span class="ml-auto text-[11px] text-[#9ca3af]">{{ sortedStops.length }} 个色标</span>
           </div>
-          <div class="h-[280px] rounded-xl border border-[#eef0f3]" :style="{ backgroundImage: css }" />
+          <div class="flex-1 rounded-xl border border-[#eef0f3]" :style="{ backgroundImage: css }" />
         </section>
 
         <section class="app-panel p-3 space-y-2">
