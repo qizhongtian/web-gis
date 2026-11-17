@@ -58,9 +58,13 @@ const parsed = computed<{ big: bigint; negative: boolean; isInt: boolean } | nul
   return { big, negative, isInt: true }
 })
 
+// 构建目标是 es2015，不能出现 BigInt 字面量（0n / 1n），统一用 BigInt() 构造
+const ZERO = BigInt(0)
+const ONE = BigInt(1)
+
 function parseIntSafe(text: string, base: number): bigint | null {
   if (!text) return null
-  let value = 0n
+  let value = ZERO
   const b = BigInt(base)
   for (const ch of text.toLowerCase()) {
     const d = DIGITS.indexOf(ch)
@@ -74,11 +78,11 @@ function parseIntSafe(text: string, base: number): bigint | null {
 }
 
 function toBase(value: bigint, base: number): string {
-  if (value === 0n) return '0'
+  if (value === ZERO) return '0'
   let v = value
   const b = BigInt(base)
   let out = ''
-  while (v > 0n) {
+  while (v > ZERO) {
     out = DIGITS[Number(v % b)] + out
     v /= b
   }
@@ -90,7 +94,7 @@ const bitView = computed(() => {
   const p = parsed.value
   if (!p || !p.isInt) return ''
   const width = BigInt(bits.value)
-  const mod = 1n << width
+  const mod = ONE << width
   let v = p.big % mod
   if (p.negative) v = (mod - v) % mod
   const bin = v.toString(2).padStart(bits.value, '0')
@@ -118,7 +122,7 @@ const decimalInfo = computed(() => {
   const v = p.negative ? -p.big : p.big
   return [
     { label: '十进制值', value: v.toString() },
-    { label: '位数（二进制）', value: (p.big === 0n ? 1 : p.big.toString(2).length).toString() },
+    { label: '位数（二进制）', value: (p.big === ZERO ? 1 : p.big.toString(2).length).toString() },
     { label: '是否安全整数', value: v <= BigInt(Number.MAX_SAFE_INTEGER) && v >= BigInt(Number.MIN_SAFE_INTEGER) ? '是' : '否（超出 2^53）' },
     { label: 'Number 表示', value: Number(v).toString() },
   ]
