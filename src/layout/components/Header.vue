@@ -8,6 +8,7 @@ import { useUserStore } from '@/store/user'
 import BrandLogo from '@/components/BrandLogo.vue'
 import LangSwitch from '@/components/LangSwitch.vue'
 import GlobalSearch from '@/components/GlobalSearch.vue'
+import HeaderWeather from '@/components/weather/HeaderWeather.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -84,6 +85,8 @@ async function onLogout() {
     <div class="flex-1" />
 
     <GlobalSearch />
+
+    <HeaderWeather />
 
     <LangSwitch />
 

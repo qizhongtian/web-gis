@@ -256,8 +256,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onHotkey))
 <style scoped>
 .gs-trigger {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 6px;
+  width: 260px;
   height: 32px;
   padding: 0 8px 0 10px;
   border: 1px solid #e6e8eb;
@@ -266,17 +268,20 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onHotkey))
   color: #8a9099;
   font-size: 12.5px;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 .gs-trigger:hover {
   border-color: #c7d7fb;
   background: #fff;
   color: #2563eb;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
 }
 .gs-trigger-text {
-  max-width: 96px;
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   white-space: nowrap;
+  text-align: left;
   text-overflow: ellipsis;
 }
 .gs-kbd,
@@ -289,6 +294,16 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onHotkey))
   font-size: 10px;
   line-height: 1.3;
   font-family: inherit;
+}
+@media (max-width: 1279px) {
+  .gs-trigger {
+    width: 206px;
+  }
+}
+@media (max-width: 1023px) {
+  .gs-trigger {
+    width: 160px;
+  }
 }
 @media (max-width: 767px) {
   .gs-trigger {

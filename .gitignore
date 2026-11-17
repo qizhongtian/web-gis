@@ -2,6 +2,8 @@
 node_modules
 dist
 dist-ssr
+# 构建校验用的独立输出目录（vite build --outDir dist-check）
+dist-check
 .vite
 *.tsbuildinfo
 

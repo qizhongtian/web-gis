@@ -38,6 +38,7 @@ declare module 'vue' {
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElOption: typeof import('element-plus/es')['ElOption']
+    ElPopover: typeof import('element-plus/es')['ElPopover']
     ElProgress: typeof import('element-plus/es')['ElProgress']
     ElRadioButton: typeof import('element-plus/es')['ElRadioButton']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
@@ -53,10 +54,12 @@ declare module 'vue' {
     GisLoading: typeof import('./../components/GisLoading.vue')['default']
     GlobalSearch: typeof import('./../components/GlobalSearch.vue')['default']
     GuidePanel: typeof import('./../components/GuidePanel.vue')['default']
+    HeaderWeather: typeof import('./../components/weather/HeaderWeather.vue')['default']
     LangSwitch: typeof import('./../components/LangSwitch.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ToolPage: typeof import('./../components/tools/ToolPage.vue')['default']
+    WeatherIcon: typeof import('./../components/weather/WeatherIcon.vue')['default']
   }
   export interface ComponentCustomProperties {
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
