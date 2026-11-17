@@ -33,6 +33,81 @@ export function formatNumber(v: number | null | undefined, digits = 6): string {
   return v.toFixed(digits)
 }
 
+/* ---------------------------- WGS84 ↔ ECEF（地心地固） ---------------------------- */
+
+/** WGS84 椭球长半轴（米）与扁率 */
+const WGS84_A = 6378137
+const WGS84_F = 1 / 298.257223563
+const WGS84_E2 = WGS84_F * (2 - WGS84_F)
+
+export interface EcefPoint {
+  /** 地心 X（米） */
+  x: number
+  /** 地心 Y（米） */
+  y: number
+  /** 地心 Z（米） */
+  z: number
+}
+
+export interface GeodeticPoint {
+  /** 经度（度） */
+  lon: number
+  /** 纬度（度） */
+  lat: number
+  /** 大地高（米） */
+  height: number
+}
+
+/**
+ * WGS84 大地坐标（度 / 米） -> ECEF 地心地固坐标（米）
+ * 与 Cesium.Cartesian3.fromDegrees 使用同一椭球参数，误差在亚毫米级。
+ */
+export function geodeticToEcef(lon: number, lat: number, height = 0): EcefPoint {
+  const lonRad = (lon * Math.PI) / 180
+  const latRad = (lat * Math.PI) / 180
+  const sinLat = Math.sin(latRad)
+  const cosLat = Math.cos(latRad)
+  // 卯酉圈曲率半径
+  const n = WGS84_A / Math.sqrt(1 - WGS84_E2 * sinLat * sinLat)
+  return {
+    x: (n + height) * cosLat * Math.cos(lonRad),
+    y: (n + height) * cosLat * Math.sin(lonRad),
+    z: (n * (1 - WGS84_E2) + height) * sinLat,
+  }
+}
+
+/**
+ * ECEF 地心地固坐标（米） -> WGS84 大地坐标（度 / 米）
+ * 逐次逼近法，6 次迭代可收敛到毫米级；极点（p≈0）单独处理。
+ */
+export function ecefToGeodetic(x: number, y: number, z: number): GeodeticPoint {
+  const p = Math.hypot(x, y)
+  const lon = (Math.atan2(y, x) * 180) / Math.PI
+
+  // 极点附近 cos(lat) 趋近 0，用短半轴直接求高
+  if (p < 1e-9) {
+    const b = WGS84_A * (1 - WGS84_F)
+    return { lon: 0, lat: z >= 0 ? 90 : -90, height: Math.abs(z) - b }
+  }
+
+  let latRad = Math.atan2(z, p * (1 - WGS84_E2))
+  let height = 0
+  for (let i = 0; i < 6; i++) {
+    const sinLat = Math.sin(latRad)
+    const n = WGS84_A / Math.sqrt(1 - WGS84_E2 * sinLat * sinLat)
+    height = p / Math.cos(latRad) - n
+    latRad = Math.atan2(z, p * (1 - (WGS84_E2 * n) / (n + height)))
+  }
+
+  return { lon, lat: (latRad * 180) / Math.PI, height }
+}
+
+/** 点到地心的距离（米） */
+export function ecefDistanceToCenter(x: number, y: number, z: number): number {
+  return Math.hypot(x, y, z)
+}
+
+
 /** 经纬度格式化 */
 export function formatLngLat(lon: number, lat: number, digits = 6): string {
   return `${formatNumber(lon, digits)}, ${formatNumber(lat, digits)}`

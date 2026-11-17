@@ -313,12 +313,12 @@ export const knowledgeMeta: KnowledgeMeta[] = [
     path: '/cesium/coord/transform',
     addedAt: '2026-11-07',
     summary: {
-      zh: '经纬度与笛卡尔坐标互转，支持批量与精度对比。',
-      en: 'Convert between longitude/latitude and Cartesian coordinates, batch and precision aware.',
+      zh: 'WGS84 经纬度与 ECEF 地心坐标双向转换：手动输入、地图点选、定位到点，结果可复制。',
+      en: 'Two-way WGS84 ↔ ECEF conversion with manual input, map picking, fly-to-point and copyable results.',
     },
     keywords: {
-      zh: ['坐标转换', '经纬度', '笛卡尔', 'WGS84', 'Cartesian'],
-      en: ['coordinate transform', 'lng lat', 'cartesian', 'wgs84'],
+      zh: ['坐标转换', '经纬度', '笛卡尔', 'WGS84', 'ECEF', '定位', '复制'],
+      en: ['coordinate transform', 'lng lat', 'cartesian', 'wgs84', 'ecef', 'fly to', 'copy'],
     },
     scenario: { zh: '高程与坐标', en: 'Elevation & coordinate' },
   },

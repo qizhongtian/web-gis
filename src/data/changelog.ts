@@ -13,6 +13,17 @@ export interface ChangelogItem {
 /** 首页时间线展示的更新动态（按时间倒序） */
 export const changelog: ChangelogItem[] = [
   {
+    id: '2026-11-17-coord-transform',
+    date: '2026-11-17',
+    type: 'fix',
+    title: { zh: '重构坐标转换页', en: 'Rebuilt coordinate transform page' },
+    desc: {
+      zh: '支持手动输入经纬度 / ECEF、双向转换、地图点选与定位到点，数值一键复制。',
+      en: 'Manual lon / lat and ECEF input, two-way conversion, map picking, fly-to-point and one-click copy.',
+    },
+    path: '/cesium/coord/transform',
+  },
+  {
     id: '2026-11-17-debug',
     date: '2026-11-17',
     type: 'feat',

@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import CesiumOverlay from '@/components/CesiumOverlay.vue'
-import { useCesium } from '@/composables/useCesium'
+import { onCesiumReady, useCesium } from '@/composables/useCesium'
 import { formatNumber, hk80ToWgs84, wgs84ToHk80 } from '@/utils/gis/coord'
 
 const viewer = useCesium()
@@ -44,6 +44,26 @@ async function copy(text: string) {
   }
 }
 
+/** 标记并飞向该点 */
+function flyTo(lonValue: number, latValue: number) {
+  mark(lonValue, latValue)
+  const v = viewer.value
+  if (!v || !CesiumLib || v.isDestroyed?.()) return
+  const target = CesiumLib.Cartesian3.fromDegrees(lonValue, latValue, 0)
+  v.camera.flyToBoundingSphere(new CesiumLib.BoundingSphere(target, 1), {
+    offset: new CesiumLib.HeadingPitchRange(0, CesiumLib.Math.toRadians(-45), 4000),
+    duration: 1.2,
+  })
+}
+
+function locateWgs84() {
+  flyTo(lon.value, lat.value)
+}
+
+function locateHk80() {
+  flyTo(wgs84.value[0], wgs84.value[1])
+}
+
 onCesiumReady((v, C) => {
   CesiumLib = C
   const handler = new C.ScreenSpaceEventHandler(v.scene.canvas)
@@ -71,7 +91,10 @@ onCesiumReady((v, C) => {
     <div class="section">
       <div class="section-head">
         <span>WGS84 → HK80</span>
-        <el-button size="small" text type="primary" @click="copy(`${hk80[0]}, ${hk80[1]}`)">复制</el-button>
+        <div class="acts">
+          <el-button size="small" text type="primary" @click="locateWgs84">定位</el-button>
+          <el-button size="small" text type="primary" @click="copy(`${hk80[0]}, ${hk80[1]}`)">复制</el-button>
+        </div>
       </div>
       <div class="grid">
         <span>经度</span>
@@ -88,7 +111,10 @@ onCesiumReady((v, C) => {
     <div class="section">
       <div class="section-head">
         <span>HK80 → WGS84</span>
-        <el-button size="small" text type="primary" @click="copy(`${wgs84[0]}, ${wgs84[1]}`)">复制</el-button>
+        <div class="acts">
+          <el-button size="small" text type="primary" @click="locateHk80">定位</el-button>
+          <el-button size="small" text type="primary" @click="copy(`${wgs84[0]}, ${wgs84[1]}`)">复制</el-button>
+        </div>
       </div>
       <div class="grid">
         <span>E</span>
@@ -125,6 +151,14 @@ onCesiumReady((v, C) => {
   margin-bottom: 4px;
   font-size: 12px;
   color: #1f2328;
+}
+.acts {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.acts :deep(.el-button + .el-button) {
+  margin-left: 0;
 }
 .grid {
   display: grid;
