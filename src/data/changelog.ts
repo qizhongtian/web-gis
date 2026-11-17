@@ -13,6 +13,72 @@ export interface ChangelogItem {
 /** 首页时间线展示的更新动态（按时间倒序） */
 export const changelog: ChangelogItem[] = [
   {
+    id: '2026-11-17-debug',
+    date: '2026-11-17',
+    type: 'feat',
+    title: { zh: '新增调试检测工具组', en: 'Added DevTools group' },
+    desc: {
+      zh: '设备信息、能力探测、存储管理与性能面板四个页面。',
+      en: 'Device info, capability detection, storage manager and performance panel.',
+    },
+    path: '/tools/debug/perf',
+  },
+  {
+    id: '2026-11-17-cheatsheet',
+    date: '2026-11-17',
+    type: 'feat',
+    title: { zh: '新增前端速查模块', en: 'Added frontend cheatsheets' },
+    desc: {
+      zh: 'CSS / JS / HTTP / Git / Vue3 速查，支持关键词搜索与一键复制。',
+      en: 'CSS / JS / HTTP / Git / Vue3 sheets with search and one-click copy.',
+    },
+    path: '/tools/cheatsheet/css',
+  },
+  {
+    id: '2026-11-17-data',
+    date: '2026-11-17',
+    type: 'feat',
+    title: { zh: '新增数据转换工具组', en: 'Added data conversion group' },
+    desc: {
+      zh: 'CSV ↔ JSON、JSON → TS 与 SQL 格式化（词法切分，保留字符串与注释）。',
+      en: 'CSV ↔ JSON, JSON → TS and SQL formatter with tokenizer-based parsing.',
+    },
+    path: '/tools/data/sql',
+  },
+  {
+    id: '2026-11-17-text',
+    date: '2026-11-17',
+    type: 'feat',
+    title: { zh: '新增文本处理工具组', en: 'Added text tools group' },
+    desc: {
+      zh: '文本统计、命名风格、行处理与假数据生成。',
+      en: 'Text stats, case convert, line tools and mock data generator.',
+    },
+    path: '/tools/text/mock',
+  },
+  {
+    id: '2026-11-17-codec',
+    date: '2026-11-17',
+    type: 'feat',
+    title: { zh: '编码转换补充 JWT / 哈希 / 进制', en: 'Added JWT, hash and radix converters' },
+    desc: {
+      zh: 'JWT 声明校验、MD5 与 SHA 系列哈希、BigInt 进制互转。',
+      en: 'JWT claim checks, MD5 / SHA hashes and BigInt radix conversion.',
+    },
+    path: '/tools/codec/jwt',
+  },
+  {
+    id: '2026-11-17-design',
+    date: '2026-11-17',
+    type: 'feat',
+    title: { zh: '设计辅助补充圆角 / 单位 / 对比度', en: 'Added radius, units and contrast tools' },
+    desc: {
+      zh: '可视化圆角、多单位换算与 WCAG 对比度检测。',
+      en: 'Visual border radius, unit conversion and WCAG contrast checker.',
+    },
+    path: '/tools/design/contrast',
+  },
+  {
     id: '2026-11-13-zlmrtc',
     date: '2026-11-13',
     type: 'feat',

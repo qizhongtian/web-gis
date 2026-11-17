@@ -361,6 +361,292 @@ export const knowledgeMeta: KnowledgeMeta[] = [
     },
     scenario: { zh: '三维特效', en: '3D effects' },
   },
+  {
+    path: '/tools/codec/jwt',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '粘贴 JWT 即解析 Header / Payload，校验 exp、iat、nbf 时间声明并提示算法风险。',
+      en: 'Paste a JWT to decode header and payload, validate exp / iat / nbf claims and flag risky algorithms.',
+    },
+    keywords: {
+      zh: ['JWT', 'Token', '解码', '鉴权', '过期时间', 'HS256'],
+      en: ['jwt', 'token', 'decode', 'auth', 'expiry', 'hs256'],
+    },
+    scenario: { zh: '编码转换', en: 'Converters' },
+  },
+  {
+    path: '/tools/codec/hash',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '文本与文件哈希计算，支持 MD5、SHA-1、SHA-256 等常用算法并一键对比。',
+      en: 'Compute text and file hashes with MD5, SHA-1, SHA-256 and compare results side by side.',
+    },
+    keywords: {
+      zh: ['哈希', '摘要', 'MD5', 'SHA-256', '文件校验', 'Web Crypto'],
+      en: ['hash', 'digest', 'md5', 'sha-256', 'checksum', 'web crypto'],
+    },
+    scenario: { zh: '编码转换', en: 'Converters' },
+  },
+  {
+    path: '/tools/codec/radix',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '二进制、八进制、十进制、十六进制与 Base36 互转，基于 BigInt 支持大整数。',
+      en: 'Convert between binary, octal, decimal, hex and Base36 with BigInt support for large values.',
+    },
+    keywords: {
+      zh: ['进制转换', '二进制', '十六进制', 'Base36', 'BigInt'],
+      en: ['radix', 'binary', 'hex', 'base36', 'bigint'],
+    },
+    scenario: { zh: '编码转换', en: 'Converters' },
+  },
+  {
+    path: '/tools/design/radius',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '可视化调节四角圆角，实时生成 border-radius CSS 并支持一键复制。',
+      en: 'Adjust each corner visually and get ready-to-copy border-radius CSS in real time.',
+    },
+    keywords: {
+      zh: ['圆角', 'border-radius', 'CSS', '可视化', '样式'],
+      en: ['border radius', 'rounded', 'css', 'visual', 'style'],
+    },
+    scenario: { zh: '设计辅助', en: 'Design' },
+  },
+  {
+    path: '/tools/design/unit',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: 'px / rem / pt / % / vw 多单位换算，可自定义根字号与视口宽度。',
+      en: 'Convert px / rem / pt / % / vw with configurable root font size and viewport width.',
+    },
+    keywords: {
+      zh: ['单位换算', 'px', 'rem', 'vw', '响应式', '根字号'],
+      en: ['unit convert', 'px', 'rem', 'vw', 'responsive', 'root font size'],
+    },
+    scenario: { zh: '设计辅助', en: 'Design' },
+  },
+  {
+    path: '/tools/design/contrast',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '按 WCAG 计算前景 / 背景对比度，给出 AA、AAA 达标结论与改进建议色。',
+      en: 'Check foreground / background contrast against WCAG with AA, AAA results and suggested fixes.',
+    },
+    keywords: {
+      zh: ['对比度', 'WCAG', '无障碍', 'AA', 'AAA', '配色'],
+      en: ['contrast', 'wcag', 'accessibility', 'aa', 'aaa', 'color'],
+    },
+    scenario: { zh: '设计辅助', en: 'Design' },
+  },
+  {
+    path: '/tools/text/stats',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '统计字符、汉字、单词、行数与段落，同时估算阅读时长与字节体积。',
+      en: 'Count characters, CJK glyphs, words, lines and paragraphs, plus estimated reading time and bytes.',
+    },
+    keywords: {
+      zh: ['文本统计', '字数', '词数', '行数', '阅读时长'],
+      en: ['text stats', 'character count', 'word count', 'lines', 'reading time'],
+    },
+    scenario: { zh: '文本处理', en: 'Text' },
+  },
+  {
+    path: '/tools/text/case',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: 'camelCase、PascalCase、snake_case、kebab-case、CONSTANT 等命名风格互转。',
+      en: 'Convert between camelCase, PascalCase, snake_case, kebab-case and CONSTANT naming styles.',
+    },
+    keywords: {
+      zh: ['命名风格', '驼峰', '下划线', '短横线', '大小写转换'],
+      en: ['case convert', 'camel', 'snake', 'kebab', 'pascal', 'uppercase'],
+    },
+    scenario: { zh: '文本处理', en: 'Text' },
+  },
+  {
+    path: '/tools/text/lines',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '按行去重、排序、去空行、加前后缀与行号，适合批量整理清单与配置。',
+      en: 'Deduplicate, sort, trim blank lines, add prefixes / suffixes or line numbers to batches of lines.',
+    },
+    keywords: {
+      zh: ['行处理', '去重', '排序', '去空行', '批量', '行号'],
+      en: ['line tools', 'dedupe', 'sort', 'blank lines', 'batch', 'line numbers'],
+    },
+    scenario: { zh: '文本处理', en: 'Text' },
+  },
+  {
+    path: '/tools/text/mock',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '按字段配置生成中文姓名、手机号、邮箱等假数据，可导出 JSON / CSV / SQL / TS。',
+      en: 'Generate mock names, phones, emails by field and export as JSON, CSV, SQL or TypeScript.',
+    },
+    keywords: {
+      zh: ['假数据', 'Mock', '测试数据', '姓名', '手机号', '导出'],
+      en: ['mock data', 'fake data', 'test data', 'name', 'phone', 'export'],
+    },
+    scenario: { zh: '文本处理', en: 'Text' },
+  },
+  {
+    path: '/tools/data/csv',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: 'CSV 与 JSON 双向转换，可指定分隔符与表头，自动处理引号转义。',
+      en: 'Two-way CSV and JSON conversion with configurable delimiter and header, quoting handled.',
+    },
+    keywords: {
+      zh: ['CSV', 'JSON', '表格', '分隔符', '转换', '导入导出'],
+      en: ['csv', 'json', 'table', 'delimiter', 'convert', 'import export'],
+    },
+    scenario: { zh: '数据转换', en: 'Data' },
+  },
+  {
+    path: '/tools/data/json-ts',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '粘贴 JSON 自动推导 TypeScript interface，可选可选字段并兼容嵌套数组。',
+      en: 'Turn JSON into TypeScript interfaces with optional fields and nested array support.',
+    },
+    keywords: {
+      zh: ['JSON 转 TS', 'interface', '类型推导', 'TypeScript', '代码生成'],
+      en: ['json to ts', 'interface', 'type inference', 'typescript', 'codegen'],
+    },
+    scenario: { zh: '数据转换', en: 'Data' },
+  },
+  {
+    path: '/tools/data/sql',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: 'SQL 格式化与压缩，按词法切分保留字符串与注释，多词关键字正确缩进。',
+      en: 'Format and minify SQL with tokenizer-based parsing that preserves strings, comments and multi-word keywords.',
+    },
+    keywords: {
+      zh: ['SQL', '格式化', '压缩', '美化', '关键字', '词法分析'],
+      en: ['sql', 'format', 'minify', 'beautify', 'keyword', 'tokenizer'],
+    },
+    scenario: { zh: '数据转换', en: 'Data' },
+  },
+  {
+    path: '/tools/cheatsheet/css',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '布局、弹性网格、选择器、动效等 CSS 高频写法速查，支持搜索与一键复制。',
+      en: 'CSS cheatsheet for layout, flex / grid, selectors and animations with search and copy.',
+    },
+    keywords: {
+      zh: ['CSS', '速查', 'Flex', 'Grid', '选择器', '布局'],
+      en: ['css', 'cheatsheet', 'flex', 'grid', 'selector', 'layout'],
+    },
+    scenario: { zh: '前端速查', en: 'Cheatsheet' },
+  },
+  {
+    path: '/tools/cheatsheet/js',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '数组、对象、字符串、异步与类型判断的 JavaScript 常用片段速查。',
+      en: 'JavaScript cheatsheet for arrays, objects, strings, async and type checks.',
+    },
+    keywords: {
+      zh: ['JavaScript', '速查', '数组', '对象', 'Promise', '工具函数'],
+      en: ['javascript', 'cheatsheet', 'array', 'object', 'promise', 'utils'],
+    },
+    scenario: { zh: '前端速查', en: 'Cheatsheet' },
+  },
+  {
+    path: '/tools/cheatsheet/http',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: 'HTTP 方法、状态码、缓存头与跨域相关响应头速查表。',
+      en: 'HTTP cheatsheet covering methods, status codes, cache headers and CORS headers.',
+    },
+    keywords: {
+      zh: ['HTTP', '状态码', '缓存', 'CORS', '请求头', '速查'],
+      en: ['http', 'status code', 'cache', 'cors', 'headers', 'cheatsheet'],
+    },
+    scenario: { zh: '前端速查', en: 'Cheatsheet' },
+  },
+  {
+    path: '/tools/cheatsheet/git',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '提交、分支、变基、回滚与排查类 Git 命令速查。',
+      en: 'Git cheatsheet for commit, branch, rebase, rollback and troubleshooting commands.',
+    },
+    keywords: {
+      zh: ['Git', '命令', '分支', 'rebase', '回滚', '速查'],
+      en: ['git', 'command', 'branch', 'rebase', 'reset', 'cheatsheet'],
+    },
+    scenario: { zh: '前端速查', en: 'Cheatsheet' },
+  },
+  {
+    path: '/tools/cheatsheet/vue',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: 'Vue 3 组合式 API、响应式、生命周期与组件通信写法速查。',
+      en: 'Vue 3 cheatsheet for Composition API, reactivity, lifecycle and component communication.',
+    },
+    keywords: {
+      zh: ['Vue3', '组合式 API', 'setup', '响应式', '生命周期', '速查'],
+      en: ['vue3', 'composition api', 'setup', 'reactivity', 'lifecycle', 'cheatsheet'],
+    },
+    scenario: { zh: '前端速查', en: 'Cheatsheet' },
+  },
+  {
+    path: '/tools/debug/device',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '汇总屏幕尺寸、DPR、语言时区、CPU / 内存、网络、电量与 WebGL 渲染器等设备信息。',
+      en: 'Inspect screen size, DPR, locale, CPU / memory, network, battery and WebGL renderer.',
+    },
+    keywords: {
+      zh: ['设备信息', 'UA', '分辨率', 'DPR', 'WebGL', '网络类型'],
+      en: ['device info', 'user agent', 'resolution', 'dpr', 'webgl', 'network'],
+    },
+    scenario: { zh: '调试检测', en: 'DevTools' },
+  },
+  {
+    path: '/tools/debug/capability',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '一键检测 40+ 项浏览器能力（WebGL、WebGPU、Observer、存储等），可只看不支持的项。',
+      en: 'Detect 40+ browser capabilities (WebGL, WebGPU, observers, storage) and filter unsupported ones.',
+    },
+    keywords: {
+      zh: ['能力检测', '特性检测', '兼容性', 'WebGPU', 'API', '浏览器'],
+      en: ['capability', 'feature detect', 'compatibility', 'webgpu', 'api', 'browser'],
+    },
+    scenario: { zh: '调试检测', en: 'DevTools' },
+  },
+  {
+    path: '/tools/debug/storage',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: '查看与编辑 localStorage、sessionStorage、Cookie，显示体积与 5MB 配额占比。',
+      en: 'View and edit localStorage, sessionStorage and cookies with size and 5MB quota usage.',
+    },
+    keywords: {
+      zh: ['本地存储', 'localStorage', 'sessionStorage', 'Cookie', '配额', '调试'],
+      en: ['storage', 'localstorage', 'sessionstorage', 'cookie', 'quota', 'debug'],
+    },
+    scenario: { zh: '调试检测', en: 'DevTools' },
+  },
+  {
+    path: '/tools/debug/perf',
+    addedAt: '2026-11-17',
+    summary: {
+      zh: 'Performance API 性能面板：导航耗时、FP / FCP / LCP / CLS、资源汇总与最慢请求。',
+      en: 'Performance panel with navigation timing, FP / FCP / LCP / CLS, resource summary and slowest requests.',
+    },
+    keywords: {
+      zh: ['性能', 'LCP', 'CLS', 'FCP', 'PerformanceObserver', '加载耗时'],
+      en: ['performance', 'lcp', 'cls', 'fcp', 'performanceobserver', 'timing'],
+    },
+    scenario: { zh: '调试检测', en: 'DevTools' },
+  },
 ]
 
 export const searchScenes: SearchScene[] = [
@@ -402,5 +688,26 @@ export const searchScenes: SearchScene[] = [
     label: { zh: '数据上图', en: 'Data on map' },
     desc: { zh: 'GeoJSON 上传与图层管理', en: 'GeoJSON upload and layers' },
     query: { zh: '上传', en: 'upload' },
+  },
+  {
+    key: 'convert',
+    label: { zh: '编码与数据转换', en: 'Encoding & data' },
+    desc: { zh: 'JWT、哈希、进制、CSV、SQL', en: 'JWT, hash, radix, CSV, SQL' },
+    query: { zh: '转换', en: 'convert' },
+    category: 'menus.tools',
+  },
+  {
+    key: 'cheatsheet',
+    label: { zh: '前端速查', en: 'Cheatsheet' },
+    desc: { zh: 'CSS / JS / HTTP / Git / Vue3', en: 'CSS / JS / HTTP / Git / Vue3' },
+    query: { zh: '速查', en: 'cheatsheet' },
+    category: 'menus.tools',
+  },
+  {
+    key: 'debug',
+    label: { zh: '调试检测', en: 'DevTools' },
+    desc: { zh: '设备、能力、存储与性能', en: 'Device, capability, storage, perf' },
+    query: { zh: '调试', en: 'debug' },
+    category: 'menus.tools',
   },
 ]

@@ -205,6 +205,141 @@ textarea {
   margin: 0;
 }
 
+/* ============ 在线工具通用元素 ============ */
+.tool-io {
+  display: block;
+  width: 100%;
+  min-height: 160px;
+  padding: 10px 12px;
+  border: 1px solid #eef0f3;
+  border-radius: 10px;
+  outline: none;
+  resize: vertical;
+  background: #fcfcfd;
+  color: #1f2328;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  tab-size: 2;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.tool-io:focus {
+  border-color: #bfd4fb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.06);
+  background: #fff;
+}
+
+.tool-card {
+  border: 1px solid #eef0f3;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+.tool-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #374151;
+}
+.tool-code {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fafbfc;
+  color: #1f2328;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.tool-chip {
+  padding: 2px 8px;
+  border: 1px solid #e6e8eb;
+  border-radius: 999px;
+  background: #fff;
+  color: #4b5563;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.tool-chip:hover {
+  border-color: #c7d7fb;
+  background: #eef4ff;
+  color: #2563eb;
+}
+.tool-link-btn {
+  border: 0;
+  border-radius: 4px;
+  padding: 1px 6px;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 11.5px;
+  cursor: pointer;
+}
+.tool-link-btn:hover {
+  background: #eef4ff;
+  color: #2563eb;
+}
+.tool-note {
+  border-radius: 8px;
+  background: #fafbfc;
+  padding: 8px 10px;
+  color: #6b7280;
+  font-size: 11.5px;
+  line-height: 1.75;
+}
+.tool-kv {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px dashed #f1f3f5;
+}
+.tool-kv:last-child {
+  border-bottom: 0;
+}
+.tool-kv-label {
+  flex: none;
+  width: 132px;
+  font-size: 11.5px;
+  color: #9ca3af;
+}
+.tool-kv-value {
+  flex: 1;
+  min-width: 0;
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: 12.5px;
+  color: #1f2328;
+  word-break: break-all;
+}
+.tool-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.tool-table th {
+  padding: 7px 10px;
+  background: #fafbfc;
+  color: #6b7280;
+  font-weight: 500;
+  text-align: left;
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+.tool-table td {
+  padding: 7px 10px;
+  border-top: 1px solid #f1f3f5;
+  color: #1f2328;
+  vertical-align: top;
+}
+.tool-table tbody tr:hover td {
+  background: #f8fafc;
+}
+
 /* 页面切换动效 */
 .fade-enter-active,
 .fade-leave-active {
