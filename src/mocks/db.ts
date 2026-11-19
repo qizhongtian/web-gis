@@ -115,6 +115,10 @@ export const mockMenus: MockMenu[] = [
         leaf(2107, '点图层', 'Point Layer', 'menus.cesiumPoint', '/cesium/basic/point', 'cesium/basic/point/index.vue'),
         leaf(2108, '线图层', 'Line Layer', 'menus.cesiumLine', '/cesium/basic/line', 'cesium/basic/line/index.vue'),
         leaf(2109, '面图层', 'Polygon Layer', 'menus.cesiumPolygon', '/cesium/basic/polygon', 'cesium/basic/polygon/index.vue'),
+        leaf(2201, '精灵线', 'Sprite Line', 'menus.cesiumSpriteLine', '/cesium/basic/sprite-line', 'cesium/basic/sprite-line/index.vue'),
+        leaf(2202, '扩散圆', 'Ripple Circle', 'menus.cesiumRippleCircle', '/cesium/basic/ripple-circle', 'cesium/basic/ripple-circle/index.vue'),
+        leaf(2203, '扩散多边形', 'Ripple Polygon', 'menus.cesiumRipplePolygon', '/cesium/basic/ripple-polygon', 'cesium/basic/ripple-polygon/index.vue'),
+        leaf(2204, '电子围栏', 'E-Fence', 'menus.cesiumFence', '/cesium/basic/fence', 'cesium/basic/fence/index.vue'),
       ]),
       group(23, '工具', 'Tools', 'menus.cesiumTool', 'Tools', '/cesium/tool', [
         leaf(2301, '空间量算', 'Measure', 'menus.cesiumMeasure', '/cesium/tool/measure', 'cesium/tool/measure/index.vue'),
