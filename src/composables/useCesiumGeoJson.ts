@@ -7,6 +7,8 @@ export interface GeoJsonStyle {
   strokeWidth: number
   clamp: boolean
   pointSize: number
+  /** 面拉伸高度（米），0 表示平铺 */
+  extrudedHeight: number
 }
 
 export interface GeoJsonProperty {
@@ -34,6 +36,7 @@ export function useCesiumGeoJson() {
     strokeWidth: 2,
     clamp: false,
     pointSize: 22,
+    extrudedHeight: 0,
   })
 
   let viewer: any = null
@@ -84,6 +87,14 @@ export function useCesiumGeoJson() {
         entity.polygon.outline = true
         entity.polygon.outlineColor = stroke
         entity.polygon.outlineWidth = style.strokeWidth / 2
+        // 拉伸：必须关掉贴地高度参考，否则 extrude 会与 clamp 冲突
+        if (style.extrudedHeight > 0) {
+          entity.polygon.heightReference = C.HeightReference.NONE
+          entity.polygon.height = 0
+          entity.polygon.extrudedHeight = style.extrudedHeight
+        } else {
+          entity.polygon.extrudedHeight = undefined
+        }
       }
     })
   }

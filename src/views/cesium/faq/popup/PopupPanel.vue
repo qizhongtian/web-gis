@@ -254,7 +254,7 @@ function tick(force = false) {
   // 关闭跟随后不再逐帧更新（打开弹窗 / 改配置时用 force 补一次）
   if (!follow.value && !force) return
 
-  const win = C.SceneTransforms.wgs84ToWindowCoordinates(scene, anchorWorld, scratch)
+  const win = C.SceneTransforms.worldToWindowCoordinates(scene, anchorWorld, scratch)
   // 背面（被地球挡住）或算不出来 → 直接隐藏，别让弹窗贴在边上不动
   if (!win) {
     inView.value = false

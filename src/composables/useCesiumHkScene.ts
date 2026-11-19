@@ -67,9 +67,9 @@ export function useCesiumHkScene(options: HkSceneOptions = {}) {
     if (!defaultMeshTilesetUrl) return
     tilesetLoading.value = true
     try {
-      const tileset = C.Cesium3DTileset?.fromUrl
-        ? await C.Cesium3DTileset.fromUrl(defaultMeshTilesetUrl, { maximumScreenSpaceError: 16 })
-        : await new C.Cesium3DTileset({ url: defaultMeshTilesetUrl })
+      const tileset = await C.Cesium3DTileset.fromUrl(defaultMeshTilesetUrl, {
+        maximumScreenSpaceError: 16,
+      })
       if (v.isDestroyed?.()) {
         tileset.destroy?.()
         return

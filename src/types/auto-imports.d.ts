@@ -6,6 +6,7 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const ASSET_INSPECT_KEY: typeof import('../composables/useCesiumAssetInspect')['ASSET_INSPECT_KEY']
   const BASEMAPS: typeof import('../composables/useCesiumBasemap')['BASEMAPS']
   const CESIUM_LIB_KEY: typeof import('../composables/useCesium')['CESIUM_LIB_KEY']
   const CESIUM_VIEWER_KEY: typeof import('../composables/useCesium')['CESIUM_VIEWER_KEY']
@@ -148,6 +149,7 @@ declare global {
   const useArrayReduce: typeof import('@vueuse/core')['useArrayReduce']
   const useArraySome: typeof import('@vueuse/core')['useArraySome']
   const useArrayUnique: typeof import('@vueuse/core')['useArrayUnique']
+  const useAssetInspect: typeof import('../composables/useCesiumAssetInspect')['useAssetInspect']
   const useAsyncQueue: typeof import('@vueuse/core')['useAsyncQueue']
   const useAsyncState: typeof import('@vueuse/core')['useAsyncState']
   const useAttrs: typeof import('vue')['useAttrs']
@@ -159,6 +161,7 @@ declare global {
   const useBrowserLocation: typeof import('@vueuse/core')['useBrowserLocation']
   const useCached: typeof import('@vueuse/core')['useCached']
   const useCesium: typeof import('../composables/useCesium')['useCesium']
+  const useCesiumAssetInspect: typeof import('../composables/useCesiumAssetInspect')['useCesiumAssetInspect']
   const useCesiumBasemap: typeof import('../composables/useCesiumBasemap')['useCesiumBasemap']
   const useCesiumDraw: typeof import('../composables/useCesiumDraw')['useCesiumDraw']
   const useCesiumGeoJson: typeof import('../composables/useCesiumGeoJson')['useCesiumGeoJson']
@@ -355,6 +358,7 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface GlobalComponents {}
   interface ComponentCustomProperties {
+    readonly ASSET_INSPECT_KEY: UnwrapRef<typeof import('../composables/useCesiumAssetInspect')['ASSET_INSPECT_KEY']>
     readonly BASEMAPS: UnwrapRef<typeof import('../composables/useCesiumBasemap')['BASEMAPS']>
     readonly CESIUM_LIB_KEY: UnwrapRef<typeof import('../composables/useCesium')['CESIUM_LIB_KEY']>
     readonly CESIUM_VIEWER_KEY: UnwrapRef<typeof import('../composables/useCesium')['CESIUM_VIEWER_KEY']>
@@ -497,6 +501,7 @@ declare module 'vue' {
     readonly useArrayReduce: UnwrapRef<typeof import('@vueuse/core')['useArrayReduce']>
     readonly useArraySome: UnwrapRef<typeof import('@vueuse/core')['useArraySome']>
     readonly useArrayUnique: UnwrapRef<typeof import('@vueuse/core')['useArrayUnique']>
+    readonly useAssetInspect: UnwrapRef<typeof import('../composables/useCesiumAssetInspect')['useAssetInspect']>
     readonly useAsyncQueue: UnwrapRef<typeof import('@vueuse/core')['useAsyncQueue']>
     readonly useAsyncState: UnwrapRef<typeof import('@vueuse/core')['useAsyncState']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
@@ -508,6 +513,7 @@ declare module 'vue' {
     readonly useBrowserLocation: UnwrapRef<typeof import('@vueuse/core')['useBrowserLocation']>
     readonly useCached: UnwrapRef<typeof import('@vueuse/core')['useCached']>
     readonly useCesium: UnwrapRef<typeof import('../composables/useCesium')['useCesium']>
+    readonly useCesiumAssetInspect: UnwrapRef<typeof import('../composables/useCesiumAssetInspect')['useCesiumAssetInspect']>
     readonly useCesiumBasemap: UnwrapRef<typeof import('../composables/useCesiumBasemap')['useCesiumBasemap']>
     readonly useCesiumDraw: UnwrapRef<typeof import('../composables/useCesiumDraw')['useCesiumDraw']>
     readonly useCesiumGeoJson: UnwrapRef<typeof import('../composables/useCesiumGeoJson')['useCesiumGeoJson']>

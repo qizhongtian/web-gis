@@ -96,7 +96,9 @@ export function useCesiumTileset() {
       offset: new C.HeadingPitchRange(
         C.Math.toRadians(35),
         C.Math.toRadians(-32),
-        Math.max(radius * 4, radius + 120),
+        // 城市级数据用 radius * 3 拉开距离；小物体（高斯泼溅常见 1~5m）
+        // 用固定下限，否则会停在百米外导致 SSE 太小、瓦片不被请求
+        Math.max(radius * 3, radius + 6),
       ),
     })
   }

@@ -9,7 +9,7 @@ import { ref, watch } from 'vue'
  * - `uniforms` 的值可以是函数：Cesium 会每帧调用它，适合 `u_time`、强度、开关量等动态参数；
  *   值为函数时不可再通过 `setUniform` 覆盖（Cesium 内部会把它固化为只读属性）
  *
- * 着色器约定（Cesium 1.115 / GLSL ES 3.00）：
+ * 着色器约定（Cesium 1.140 / GLSL ES 3.00）：
  * ```glsl
  * uniform sampler2D colorTexture;
  * in vec2 v_textureCoordinates;

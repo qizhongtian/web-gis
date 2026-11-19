@@ -316,7 +316,7 @@ function runLayout(force = false) {
 
   for (const it of order) {
     // 3) 投影（相机背后返回 undefined）
-    const sp = C.SceneTransforms.wgs84ToWindowCoordinates(scene, it.position, scratchScreen)
+    const sp = C.SceneTransforms.worldToWindowCoordinates(scene, it.position, scratchScreen)
     // 4) 视口裁剪：视野外直接关掉
     if (!sp || sp.x < -it.width || sp.x > W + it.width || sp.y < -LABEL_H || sp.y > H + LABEL_H) {
       if (it.label.show) it.label.show = false
@@ -370,7 +370,7 @@ function countView() {
   const H = scene.canvas.clientHeight
   let visible = 0
   for (const it of items) {
-    const sp = C.SceneTransforms.wgs84ToWindowCoordinates(scene, it.position, scratchScreen)
+    const sp = C.SceneTransforms.worldToWindowCoordinates(scene, it.position, scratchScreen)
     if (!sp) continue
     if (sp.x < -it.width || sp.x > W + it.width || sp.y < -LABEL_H || sp.y > H + LABEL_H) continue
     visible++

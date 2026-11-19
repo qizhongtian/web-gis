@@ -21,12 +21,16 @@ const props = withDefaults(
     blocks: CodeBlock[]
     /** 注意事项条目 */
     notes: NoteItem[]
+    /** 专业名词解释段落（传入后多一个「说明」页签，正文用反引号包住的部分渲染成行内代码） */
+    intro?: string[]
     /** 面板标题 */
     title?: string
     /** 代码块分组标题 */
     blocksTitle?: string
     /** 代码页签文案 */
     guideLabel?: string
+    /** 说明页签文案 */
+    introLabel?: string
     /** 注意事项页签文案 */
     notesLabel?: string
     /** 注意事项页签顶部的说明条，留空则不显示 */
@@ -36,12 +40,14 @@ const props = withDefaults(
     title: '集成说明',
     blocksTitle: '集成步骤',
     guideLabel: '使用说明',
+    introLabel: '专业解释',
     notesLabel: '注意事项',
     notesTip: '',
+    intro: () => [],
   },
 )
 
-const tab = ref<'guide' | 'notes'>('guide')
+const tab = ref<'intro' | 'guide' | 'notes'>(props.intro.length ? 'intro' : 'guide')
 const openNotes = ref<number[]>(props.notes.map((_, i) => i))
 
 const allNotesOpen = computed(() => props.notes.length > 0 && openNotes.value.length === props.notes.length)
@@ -70,12 +76,24 @@ function splitCode(text: string) {
       <i class="dot" />
       <span class="panel-title">{{ props.title }}</span>
       <div class="seg">
+        <button v-if="props.intro.length" type="button" :class="{ on: tab === 'intro' }" @click="tab = 'intro'">
+          {{ props.introLabel }}
+        </button>
         <button type="button" :class="{ on: tab === 'guide' }" @click="tab = 'guide'">{{ props.guideLabel }}</button>
         <button type="button" :class="{ on: tab === 'notes' }" @click="tab = 'notes'">{{ props.notesLabel }}</button>
       </div>
     </header>
 
     <div class="panel-body">
+      <div v-if="props.intro.length" v-show="tab === 'intro'" class="intro">
+        <p v-for="(text, i) in props.intro" :key="i" class="intro-p">
+          <template v-for="(seg, si) in splitCode(text)" :key="si">
+            <code v-if="si % 2">{{ seg }}</code>
+            <span v-else>{{ seg }}</span>
+          </template>
+        </p>
+      </div>
+
       <CodePanel v-show="tab === 'guide'" class="guide-code" :blocks="props.blocks" :title="props.blocksTitle" />
 
       <div v-show="tab === 'notes'" class="notes">
@@ -185,6 +203,31 @@ function splitCode(text: string) {
   border: 0;
   box-shadow: none;
   background: transparent;
+}
+
+.intro {
+  flex: 1;
+  min-height: 0;
+  padding: 2px;
+  overflow: auto;
+}
+.intro-p {
+  margin: 0 0 8px;
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.72;
+  text-align: justify;
+}
+.intro-p:last-child {
+  margin-bottom: 0;
+}
+.intro-p code {
+  padding: 0 3px;
+  border-radius: 3px;
+  background: #f1f5f9;
+  color: #b45309;
+  font-size: 11.5px;
+  word-break: break-all;
 }
 
 .notes {

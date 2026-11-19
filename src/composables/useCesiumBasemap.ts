@@ -121,9 +121,8 @@ export function useCesiumBasemap() {
   function setExaggeration(value: number) {
     terrain.value.exaggeration = value
     if (!viewer) return
-    // 不同 Cesium 版本属性名不同，做兼容
-    if ('verticalExaggeration' in viewer.scene) viewer.scene.verticalExaggeration = value
-    else if (viewer.scene.globe) viewer.scene.globe.terrainExaggeration = value
+    // 1.116 起 Globe.terrainExaggeration 已移除，统一使用 Scene.verticalExaggeration
+    viewer.scene.verticalExaggeration = value
   }
 
   onCesiumReady((v, lib) => {

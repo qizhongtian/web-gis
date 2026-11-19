@@ -46,7 +46,7 @@ function measure(text) {
   {
     title: '投影到屏幕，得到像素矩形',
     desc: 'label 是屏幕空间的东西，必须在屏幕坐标里做碰撞；相机背后、视口外的点先剔除',
-    code: `const sp = C.SceneTransforms.wgs84ToWindowCoordinates(
+    code: `const sp = C.SceneTransforms.worldToWindowCoordinates(
   scene, it.position, scratch,
 )
 if (!sp) {            // 相机背后

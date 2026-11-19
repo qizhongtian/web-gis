@@ -234,7 +234,7 @@ function tick() {
   if (!vw || !vh) return
   if (viewSize.value[0] !== vw || viewSize.value[1] !== vh) viewSize.value = [vw, vh]
 
-  const win = C.SceneTransforms.wgs84ToWindowCoordinates(scene, popup.value.anchor, scratch)
+  const win = C.SceneTransforms.worldToWindowCoordinates(scene, popup.value.anchor, scratch)
   if (!win) return hidePopup()
   if (occluder) {
     occluder.cameraPosition = scene.camera.positionWC

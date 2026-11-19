@@ -336,8 +336,7 @@ function updateVisibility() {
   const maxDist = labelDistance.value * 1000
   const pitchFactor = Math.max(0.42, Math.abs(Math.sin(camera.pitch)))
   const pxH = (lastWorldH * pitchFactor) / metersPerPixel()
-  const toWindow =
-    C.SceneTransforms.worldToWindowCoordinates || C.SceneTransforms.wgs84ToWindowCoordinates
+  const toWindow = C.SceneTransforms.worldToWindowCoordinates
   const canvas = viewer.scene.canvas
   const camPos = camera.positionWC
   const tmp = new C.Cartesian3()

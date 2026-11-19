@@ -13,6 +13,31 @@ export interface ChangelogItem {
 /** 首页时间线展示的更新动态（按时间倒序） */
 export const changelog: ChangelogItem[] = [
   {
+    id: '2026-11-19-cesium-1.140',
+    date: '2026-11-19',
+    type: 'feat',
+    title: {
+      zh: 'Cesium 升级至 1.140，支持高斯泼溅',
+      en: 'Upgraded Cesium to 1.140 with Gaussian splatting',
+    },
+    desc: {
+      zh: '依赖升级到 CesiumJS 1.140.0，原生支持 KHR_gaussian_splatting / SPZ2 高斯泼溅瓦片；同时适配 1.116 起的 Scene.verticalExaggeration 与 1.121 起的 worldToWindowCoordinates。',
+      en: 'Upgraded to CesiumJS 1.140.0 with native Gaussian splatting (KHR_gaussian_splatting / SPZ2); migrated to Scene.verticalExaggeration and worldToWindowCoordinates.',
+    },
+    path: '/cesium/basic/gaussian',
+  },
+  {
+    id: '2026-11-19-data-inspect',
+    date: '2026-11-19',
+    type: 'feat',
+    title: { zh: '新增数据探查页', en: 'Added data inspector' },
+    desc: {
+      zh: '上传点线面 GeoJSON、tileset.json、glTF / GLB，查看结构属性、Cesium 运行时对象与用法代码。',
+      en: 'Inspect point / line / polygon GeoJSON, tileset.json and glTF / GLB with structure, properties, Cesium runtime objects and usage code.',
+    },
+    path: '/cesium/tool/inspect',
+  },
+  {
     id: '2026-11-17-coord-transform',
     date: '2026-11-17',
     type: 'fix',
@@ -131,7 +156,7 @@ export const changelog: ChangelogItem[] = [
     type: 'opt',
     title: { zh: '地形默认改用全球高程服务', en: 'Terrain now defaults to global elevation service' },
     desc: { zh: '统一 provider 创建入口，并新增 Worker 地形反代解决生产跨域。', en: 'Unified provider entry and added a Worker terrain proxy for CORS.' },
-    path: '/cesium/layer/terrain',
+    path: '/cesium/basic/terrain',
   },
   {
     id: '2026-11-13-cluster',

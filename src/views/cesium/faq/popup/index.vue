@@ -32,7 +32,7 @@ const scratch = new C.Cartesian2()
 viewer.scene.postRender.addEventListener(() => {
   if (!anchorWorld || !popupVisible) return
 
-  const win = C.SceneTransforms.wgs84ToWindowCoordinates(
+  const win = C.SceneTransforms.worldToWindowCoordinates(
     viewer.scene, anchorWorld, scratch,
   )
   if (!win) return hide()          // 背面 / 算不出来
@@ -112,7 +112,7 @@ const vw = canvas.clientWidth
 const vh = canvas.clientHeight
 inView = ax >= 0 && ax <= vw && ay >= 0 && ay <= vh
 
-// 2) 背面：地球挡住时 wgs84ToWindowCoordinates 仍可能返回坐标，
+// 2) 背面：地球挡住时 worldToWindowCoordinates 仍可能返回坐标，
 //    要用 EllipsoidalOccluder 判断锚点是否被地球遮挡
 const occluder = new C.EllipsoidalOccluder(
   C.Ellipsoid.WGS84,
@@ -172,7 +172,7 @@ Cesium 里点击点 / 线 / 面弹出信息窗，窗口跟随场景视口移动�
 
 【实现步骤】
 1. 点击：scene.pick 拿要素，scene.pickPosition 拿世界坐标（失败则用要素中心）
-2. 每帧：scene.postRender → SceneTransforms.wgs84ToWindowCoordinates
+2. 每帧：scene.postRender → SceneTransforms.worldToWindowCoordinates
          得到 canvas 坐标，加上 canvas.getBoundingClientRect 偏移
 3. 尺寸：弹窗 DOM 量一次 offsetWidth/offsetHeight，用 ResizeObserver 监听变化；
          不要每帧读，会强制同步布局

@@ -108,9 +108,13 @@ export const mockMenus: MockMenu[] = [
       group(21, '基础', 'Basic', 'menus.cesiumBasic', 'SetUp', '/cesium/basic', [
         leaf(2101, '地球初始化', 'Init Globe', 'menus.cesiumInit', '/cesium/basic/init', 'cesium/basic/init/index.vue'),
         leaf(2102, '相机控制', 'Camera', 'menus.cesiumCamera', '/cesium/basic/camera', 'cesium/basic/camera/index.vue'),
-      ]),
-      group(22, 'Geojson', 'Geojson', 'menus.cesiumGeojson', 'DataLine', '/cesium/geojson', [
-        leaf(2201, 'GeoJSON加载', 'Load GeoJSON', 'menus.cesiumGeojsonLoad', '/cesium/geojson/load', 'cesium/geojson/load/index.vue'),
+        leaf(2103, '地形', 'Terrain', 'menus.cesiumTerrain', '/cesium/basic/terrain', 'cesium/basic/terrain/index.vue'),
+        leaf(2104, '3D Tiles 倾斜', '3D Tiles', 'menus.cesiumTiles', '/cesium/basic/3dtiles', 'cesium/basic/3dtiles/index.vue'),
+        leaf(2105, '高斯泼溅', 'Gaussian Splatting', 'menus.cesiumGaussian', '/cesium/basic/gaussian', 'cesium/basic/gaussian/index.vue'),
+        leaf(2106, '模型', 'Model', 'menus.cesiumModel', '/cesium/basic/model', 'cesium/basic/model/index.vue'),
+        leaf(2107, '点图层', 'Point Layer', 'menus.cesiumPoint', '/cesium/basic/point', 'cesium/basic/point/index.vue'),
+        leaf(2108, '线图层', 'Line Layer', 'menus.cesiumLine', '/cesium/basic/line', 'cesium/basic/line/index.vue'),
+        leaf(2109, '面图层', 'Polygon Layer', 'menus.cesiumPolygon', '/cesium/basic/polygon', 'cesium/basic/polygon/index.vue'),
       ]),
       group(23, '工具', 'Tools', 'menus.cesiumTool', 'Tools', '/cesium/tool', [
         leaf(2301, '空间量算', 'Measure', 'menus.cesiumMeasure', '/cesium/tool/measure', 'cesium/tool/measure/index.vue'),
@@ -120,21 +124,7 @@ export const mockMenus: MockMenu[] = [
         leaf(2305, '天气特效', 'Weather', 'menus.cesiumWeather', '/cesium/tool/weather', 'cesium/tool/weather/index.vue'),
         leaf(2306, '矢量上传', 'Vector Upload', 'menus.cesiumVector', '/cesium/tool/vector', 'cesium/tool/vector/index.vue'),
         leaf(2307, '高程提取', 'Surface Elevation', 'menus.cesiumElevation', '/cesium/tool/elevation', 'cesium/tool/elevation/index.vue'),
-      ]),
-      group(24, '图层', 'Layers', 'menus.cesiumLayer', 'Menu', '/cesium/layer', [
-        leaf(2401, '影像图层切换', 'Imagery Switch', 'menus.cesiumImagery', '/cesium/layer/imagery', 'cesium/layer/imagery/index.vue'),
-        leaf(2402, '地形与高程', 'Terrain & Elevation', 'menus.cesiumTerrain', '/cesium/layer/terrain', 'cesium/layer/terrain/index.vue'),
-        leaf(2403, 'GeoServer 服务', 'GeoServer', 'menus.cesiumGeoServer', '/cesium/layer/geoserver', 'cesium/layer/geoserver/index.vue'),
-      ]),
-      group(25, '3D Tiles', '3D Tiles', 'menus.cesiumTiles', 'Box', '/cesium/tiles', [
-        leaf(2501, 'OSM建筑', 'OSM Buildings', 'menus.cesiumOsm', '/cesium/tiles/osm', 'cesium/tiles/osm/index.vue'),
-        leaf(2502, '加载与拾取', 'Load & Pick', 'menus.cesiumTilesLoad', '/cesium/tiles/3dtiles', 'cesium/tiles/3dtiles/index.vue'),
-      ]),
-      group(213, '模型', 'Model', 'menus.cesiumModelGroup', 'Coordinate', '/cesium/model', [
-        leaf(2130, 'glTF / GLB', 'glTF / GLB', 'menus.cesiumModel', '/cesium/model/gltf', 'cesium/model/gltf/index.vue'),
-      ]),
-      group(27, '飞入', 'Fly To', 'menus.cesiumFly', 'Promotion', '/cesium/fly', [
-        leaf(2701, '城市漫游', 'City Roaming', 'menus.cesiumFlyTo', '/cesium/fly/city', 'cesium/fly/city/index.vue'),
+        leaf(2308, '数据探查', 'Data Inspector', 'menus.cesiumInspect', '/cesium/tool/inspect', 'cesium/tool/inspect/index.vue'),
       ]),
       group(28, '坐标转换', 'Coord Transform', 'menus.cesiumCoord', 'Switch', '/cesium/coord', [
         leaf(2801, '经纬度/笛卡尔转换', 'WGS84 <-> Cartesian', 'menus.cesiumTransform', '/cesium/coord/transform', 'cesium/coord/transform/index.vue'),

@@ -37,6 +37,19 @@ export type ChangeType = 'feat' | 'fix' | 'opt' | 'chore'
 
 export const knowledgeMeta: KnowledgeMeta[] = [
   {
+    path: '/cesium/tool/inspect',
+    addedAt: '2026-11-19',
+    summary: {
+      zh: '上传点 / 线 / 面 GeoJSON、tileset.json 与 glTF / GLB，解析结构属性并上图，展示 Cesium 可读取的数据与用法代码。',
+      en: 'Upload point / line / polygon GeoJSON, tileset.json and glTF / GLB, inspect structure and properties, load onto the map, and read Cesium runtime objects with code recipes.',
+    },
+    keywords: {
+      zh: ['数据探查', 'GeoJSON', '3D Tiles', 'tileset', 'glTF', 'GLB', '属性', '拾取'],
+      en: ['data inspector', 'geojson', '3d tiles', 'tileset', 'gltf', 'glb', 'properties', 'picking'],
+    },
+    scenario: { zh: '数据接入', en: 'Data onboarding' },
+  },
+  {
     path: '/video/wsplayer/real',
     addedAt: '2026-11-13',
     summary: {
@@ -258,15 +271,15 @@ export const knowledgeMeta: KnowledgeMeta[] = [
     scenario: { zh: '数据上图', en: 'Data on map' },
   },
   {
-    path: '/cesium/layer/terrain',
+    path: '/cesium/basic/terrain',
     addedAt: '2026-11-13',
     summary: {
-      zh: '地形服务默认改用全球高程（免密钥），并可叠加倾斜模型与本地地形。',
-      en: 'Terrain defaults to a keyless global elevation service, with tilted models and local terrain support.',
+      zh: '地形服务默认使用全球高程（免密钥），可切换自建 quantized-mesh、垂直夸张与按需采样高程。',
+      en: 'Terrain uses a keyless global elevation service by default, with quantized-mesh, vertical exaggeration and on-demand sampling.',
     },
     keywords: {
-      zh: ['地形', '高程服务', 'DEM', '跨域', '倾斜模型'],
-      en: ['terrain', 'elevation service', 'dem', 'cors', 'tilted model'],
+      zh: ['地形', '高程服务', 'DEM', '跨域', 'quantized-mesh'],
+      en: ['terrain', 'elevation service', 'dem', 'cors', 'quantized-mesh'],
     },
     scenario: { zh: '高程与坐标', en: 'Elevation & coordinate' },
   },

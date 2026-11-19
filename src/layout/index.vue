@@ -14,7 +14,7 @@ const appStore = useAppStore()
  * 需要 keep-alive 缓存的页面组件名
  * 页面内用 defineOptions({ name: 'XXX' }) 声明，名字加到这里即可缓存（地图与表单状态不会因切换路由丢失）
  */
-const cachedViews = ['CesiumVectorUpload']
+const cachedViews = ['CesiumVectorUpload', 'CesiumDataInspect']
 
 /**
  * 直接取 route.matched 最深层的页面组件来渲染

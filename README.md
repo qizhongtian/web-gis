@@ -29,12 +29,12 @@ web-gis/
 │   │   └── app.ts            # 语言、侧边栏状态（VueUse useLocalStorage 持久化）
 │   ├── utils/
 │   │   ├── loadScript.ts     # 动态注入 script/link
-│   │   └── gis/              # cesiumLoader / olLoader / threeLoader（CDN 按需加载）
+│   │   └── gis/              # cesiumLoader / olLoader / threeLoader（本地静态资源按需加载）
 │   ├── views/
 │   │   ├── login/            # 登录页
 │   │   ├── dashboard/        # 首页
-│   │   ├── cesium/           # Cesium 示例：基础/Geojson/工具/图层/3D Tiles/飞入/坐标转换/
-│   │   │                     #           视频融合/聚合/空间分析/综合应用
+│   │   ├── cesium/           # Cesium 示例：基础（地形/3D Tiles/高斯泼溅/模型/点线面）/工具/坐标转换/
+│   │   │                     #           视频融合/聚合/空间分析/综合应用/常见问题
 │   │   ├── openlayer/        # OpenLayers 示例：基础/图层/工具/交互
 │   │   ├── three/            # Three.js 示例：基础/几何体/材质/动画
 │   │   └── system/           # 用户管理 / 角色管理 / 菜单管理（admin 专属）
@@ -107,13 +107,14 @@ npm run preview
 
 ### GIS 库加载策略
 
-为避免将体积庞大的 Cesium（约 40MB+）打入业务包，平台默认通过 CDN（jsDelivr）**按需动态加载**三大 GIS 库：
+为避免将体积庞大的 Cesium 打入业务包，Cesium 以 UMD 方式从 `public/cesium` **按需动态加载**（本地静态资源，不依赖 CDN，离线/内网可用）：
 
-- `cesiumLoader.ts`：注入 `Cesium.js` + `widgets.css`（UMD）
+- `cesiumLoader.ts`：注入 `public/cesium/Cesium.js` + `Widgets/widgets.css`，版本由 `cesium` 依赖决定（当前 `1.140.0`）
+- 静态资源由 `scripts/sync-vendor.mjs` 在 `postinstall / predev / prebuild` 自动从 `node_modules/cesium/Build/Cesium` 复制；升级依赖后强制刷新：`npm run sync:vendor -- --force`
 - `olLoader.ts`：`ol@9` ESM 子模块动态 import
 - `threeLoader.ts`：`three.module.js` 动态 import
 
-如需离线/内网部署：`npm i cesium ol three`，将 loader 改为静态 import，并在 `vite.config.ts` 中配置 `vite-plugin-cesium` 或手动 copy 静态资源。
+> Cesium 1.140 原生支持 3D Gaussian Splatting（`KHR_gaussian_splatting` + `KHR_gaussian_splatting_compression_spz_2`，需 ≥ 1.135）。
 
 ## 三、打包优化
 
