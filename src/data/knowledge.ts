@@ -336,15 +336,15 @@ export const knowledgeMeta: KnowledgeMeta[] = [
     scenario: { zh: '高程与坐标', en: 'Elevation & coordinate' },
   },
   {
-    path: '/openlayer/tool/measure',
+    path: '/openlayer/analysis/distance',
     addedAt: '2026-11-06',
     summary: {
-      zh: 'OpenLayers 距离量算，支持继续绘制、撤销与清除。',
-      en: 'OpenLayers distance measurement with continue, undo and clear.',
+      zh: 'OpenLayers 距离分析，ol/sphere 按椭球面计算线长度，支持撤销与清除。',
+      en: 'OpenLayers distance analysis with ellipsoidal length, undo and clear.',
     },
     keywords: {
-      zh: ['OpenLayers', '距离量算', '测量', '撤销'],
-      en: ['openlayers', 'measure', 'distance', 'undo'],
+      zh: ['OpenLayers', '距离', '量算', '测量', '撤销'],
+      en: ['openlayers', 'distance', 'measure', 'length', 'undo'],
     },
     scenario: { zh: '量算与分析', en: 'Measure & analysis' },
   },

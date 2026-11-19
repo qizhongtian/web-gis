@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import DemoBox from '@/components/DemoBox.vue'
 import { loadOl } from '@/utils/gis/olLoader'
+import { createDemoMap } from '@/utils/gis/olDemo'
 
-async function init(ol: any, el: HTMLElement) {
-  const { Map, View, TileLayer, VectorLayer, VectorSource, OSM, GeoJSON, Style, Stroke, Fill, CircleStyle, fromLonLat } = ol
+const count = ref(0)
+let map: any = null
+let source: any = null
 
+async function init(lib: any, el: HTMLElement) {
   const geojson = {
     type: 'FeatureCollection',
     features: [
@@ -23,37 +27,53 @@ async function init(ol: any, el: HTMLElement) {
         properties: { name: '区域' },
         geometry: {
           type: 'Polygon',
-          coordinates: [[[114, 34], [120, 34], [120, 30], [114, 30], [114, 34]]],
+          coordinates: [
+            [
+              [114, 34],
+              [120, 34],
+              [120, 30],
+              [114, 30],
+              [114, 34],
+            ],
+          ],
         },
       },
     ],
   }
 
-  const vectorLayer = new VectorLayer({
-    source: new VectorSource({ features: new GeoJSON().readFeatures(geojson, { dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857' }) }),
-    style: new Style({
-      stroke: new Stroke({ color: '#22d3ee', width: 2 }),
-      fill: new Fill({ color: 'rgba(34,211,238,0.2)' }),
-      image: new CircleStyle({
+  source = new lib.VectorSource({
+    features: new lib.GeoJSON().readFeatures(geojson, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:3857',
+    }),
+  })
+
+  const vectorLayer = new lib.VectorLayer({
+    source,
+    style: new lib.Style({
+      stroke: new lib.Stroke({ color: '#22d3ee', width: 2 }),
+      fill: new lib.Fill({ color: 'rgba(34,211,238,0.2)' }),
+      image: new lib.CircleStyle({
         radius: 6,
-        fill: new Fill({ color: '#f97316' }),
-        stroke: new Stroke({ color: '#fff', width: 2 }),
+        fill: new lib.Fill({ color: '#f97316' }),
+        stroke: new lib.Stroke({ color: '#fff', width: 2 }),
       }),
     }),
   })
 
-  const map = new Map({
-    target: el,
-    layers: [new TileLayer({ source: new OSM() }), vectorLayer],
-    view: new View({ center: fromLonLat([116.5, 32]), zoom: 5 }),
-  })
-  return () => map.setTarget(null)
+  map = createDemoMap(lib, el, { center: [116.5, 32], zoom: 5, layers: [vectorLayer] })
+  count.value = source.getFeatures().length
+  return () => {
+    map?.setTarget(null)
+    map = null
+  }
 }
 </script>
 
 <template>
   <div class="h-full flex flex-col p-2 gap-2">
-    <p class="demo-hint">矢量图层：VectorLayer + GeoJSON 要素 + Style 样式（点 / 面）</p>
+    <p class="demo-hint">VectorLayer：VectorSource 管理要素集合，统一 Style 渲染点 / 线 / 面，支持增删要素后自动重绘</p>
+    <el-tag class="w-fit" size="small" effect="plain">要素数：{{ count }}</el-tag>
     <DemoBox class="flex-1" :loader="loadOl" :init="init" />
   </div>
 </template>

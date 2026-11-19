@@ -53,6 +53,7 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     GisLoading: typeof import('./../components/GisLoading.vue')['default']
     GlobalSearch: typeof import('./../components/GlobalSearch.vue')['default']
     GuidePanel: typeof import('./../components/GuidePanel.vue')['default']
