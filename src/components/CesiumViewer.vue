@@ -25,8 +25,8 @@ import { createViewer } from '@/utils/gis/cesiumInit'
  */
 const props = withDefaults(
   defineProps<{
-    /** 覆盖默认 Viewer 配置 */
-    options?: Record<string, any>
+    /** 覆盖默认 Viewer 配置；传函数时在 Cesium 就绪后调用，便于用 Cesium 命名空间构造控件 / 底图清单 */
+    options?: Record<string, any> | ((C: any) => Record<string, any>)
     /** 初始视角 [经度, 纬度, 高度(米)] */
     home?: [number, number, number]
     /** 是否显示底部状态栏 */
@@ -170,11 +170,17 @@ function destroyViewer() {
   }
 }
 
+/** 解析 options：允许传函数（此时才能拿到 Cesium 命名空间） */
+function resolveOptions(C: any) {
+  return typeof props.options === 'function' ? props.options(C) : props.options
+}
+
 /** 合并自定义底图配置：传 imageryUrl 时替换默认 OSM 底图 */
 function buildOptions(C: any) {
-  if (!props.imageryUrl) return props.options
+  const options = resolveOptions(C)
+  if (!props.imageryUrl) return options
   return {
-    ...props.options,
+    ...options,
     baseLayer: new C.ImageryLayer(
       new C.UrlTemplateImageryProvider({
         url: props.imageryUrl,
