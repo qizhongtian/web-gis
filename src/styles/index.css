@@ -133,6 +133,12 @@ textarea {
 .app-menu .el-sub-menu__title:hover {
   background: #f3f4f6;
 }
+/* 文本超长省略，图标与展开箭头固定不被挤出 */
+.app-menu .el-menu-item > .el-icon,
+.app-menu .el-sub-menu__title > .el-icon,
+.app-menu .el-sub-menu__icon-arrow {
+  flex-shrink: 0;
+}
 .app-menu .el-menu-item.is-active {
   background: #eef4ff;
   color: var(--app-primary);

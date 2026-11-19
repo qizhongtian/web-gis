@@ -58,6 +58,7 @@ declare module 'vue' {
     GuidePanel: typeof import('./../components/GuidePanel.vue')['default']
     HeaderWeather: typeof import('./../components/weather/HeaderWeather.vue')['default']
     LangSwitch: typeof import('./../components/LangSwitch.vue')['default']
+    OverflowTooltip: typeof import('./../components/OverflowTooltip.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ToolPage: typeof import('./../components/tools/ToolPage.vue')['default']
