@@ -349,7 +349,7 @@ export const knowledgeMeta: KnowledgeMeta[] = [
     scenario: { zh: '量算与分析', en: 'Measure & analysis' },
   },
   {
-    path: '/leaflet/tool/draw',
+    path: '/leaflet/interaction/draw',
     addedAt: '2026-11-06',
     summary: {
       zh: 'Leaflet 绘制与量算，点 / 线 / 面绘制后即时给出长度与面积。',
