@@ -128,6 +128,32 @@ export const knowledgeMeta: KnowledgeMeta[] = [
     scenario: { zh: '视频接入', en: 'Video streaming' },
   },
   {
+    path: '/video/jessibuca',
+    addedAt: '2026-11-20',
+    summary: {
+      zh: 'Jessibuca 走 wasm 软解播放 FLV 与裸流，覆盖 H.265、缓冲调优与错误码排错。',
+      en: 'Jessibuca plays FLV and raw streams via wasm decoding, with H.265, buffering and error-code handling.',
+    },
+    keywords: {
+      zh: ['Jessibuca', 'wasm', 'H.265', 'FLV', '软解', '直播'],
+      en: ['jessibuca', 'wasm', 'h.265', 'flv', 'software decoding', 'live'],
+    },
+    scenario: { zh: '视频接入', en: 'Video streaming' },
+  },
+  {
+    path: '/video/h265web',
+    addedAt: '2026-11-20',
+    summary: {
+      zh: 'h265web.js 在浏览器内软解 H.265，支持 http-flv / ws-flv / HLS / MP4。',
+      en: 'h265web.js decodes H.265 in the browser, supporting http-flv / ws-flv / HLS / MP4.',
+    },
+    keywords: {
+      zh: ['h265web.js', 'H.265', 'wasm', '软解', 'enhanced-rtmp', 'FLV'],
+      en: ['h265web.js', 'h.265', 'wasm', 'software decoding', 'enhanced-rtmp', 'flv'],
+    },
+    scenario: { zh: '视频接入', en: 'Video streaming' },
+  },
+  {
     path: '/cesium/cluster/points',
     addedAt: '2026-11-13',
     summary: {

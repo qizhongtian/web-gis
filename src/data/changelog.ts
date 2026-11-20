@@ -13,6 +13,17 @@ export interface ChangelogItem {
 /** 首页时间线展示的更新动态（按时间倒序） */
 export const changelog: ChangelogItem[] = [
   {
+    id: '2026-11-20-video-jessibuca-h265web',
+    date: '2026-11-20',
+    type: 'feat',
+    title: { zh: '新增 Jessibuca 与 h265web.js 两个播放示例', en: 'Added Jessibuca and h265web.js demos' },
+    desc: {
+      zh: '两个 wasm 软解播放器示例：Jessibuca 覆盖 FLV/裸流与 H.264/H.265 解码策略，h265web.js 覆盖 H.265 的 FLV/HLS/MP4，均带事件日志与排错说明。',
+      en: 'Two wasm-decoding players: Jessibuca for FLV/raw streams with H.264/H.265 strategy, h265web.js for H.265 over FLV/HLS/MP4, both with event logs and troubleshooting notes.',
+    },
+    path: '/video/jessibuca',
+  },
+  {
     id: '2026-11-20-cluster-guide',
     date: '2026-11-20',
     type: 'opt',

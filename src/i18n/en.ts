@@ -300,6 +300,8 @@ export default {
     videoHls: 'Hls.js',
     videoEasyplayer: 'EasyPlayer.js',
     videoZlmrtc: 'ZLMRTCClient.js',
+    videoJessibuca: 'Jessibuca',
+    videoH265web: 'h265web.js',
     tools: 'Toolkit',
     toolsEditor: 'Editors',
     toolsMarkdown: 'Markdown',
