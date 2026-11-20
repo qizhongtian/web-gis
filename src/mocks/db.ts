@@ -553,6 +553,7 @@ export const mockMenus: MockMenu[] = [
       ),
       leaf(8601, 'Jessibuca', 'Jessibuca', 'menus.videoJessibuca', '/video/jessibuca', 'video/jessibuca/index.vue'),
       leaf(8701, 'h265web.js', 'h265web.js', 'menus.videoH265web', '/video/h265web', 'video/h265web/index.vue'),
+      leaf(8901, 'WebRTC', 'WebRTC', 'menus.videoWebrtc', '/video/webrtc', 'video/webrtc/index.vue'),
     ],
   },
   {

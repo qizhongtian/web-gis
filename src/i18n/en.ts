@@ -302,6 +302,7 @@ export default {
     videoZlmrtc: 'ZLMRTCClient.js',
     videoJessibuca: 'Jessibuca',
     videoH265web: 'h265web.js',
+    videoWebrtc: 'WebRTC',
     tools: 'Toolkit',
     toolsEditor: 'Editors',
     toolsMarkdown: 'Markdown',

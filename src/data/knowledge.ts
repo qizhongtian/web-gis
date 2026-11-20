@@ -154,6 +154,19 @@ export const knowledgeMeta: KnowledgeMeta[] = [
     scenario: { zh: '视频接入', en: 'Video streaming' },
   },
   {
+    path: '/video/webrtc',
+    addedAt: '2026-11-20',
+    summary: {
+      zh: '原生 WebRTC 拉流：手写 RTCPeerConnection，兼容 WHEP 与 ZLMediaKit 的 SDP 交换。',
+      en: 'Native WebRTC playback with a hand-written RTCPeerConnection, covering WHEP and ZLMediaKit SDP exchange.',
+    },
+    keywords: {
+      zh: ['WebRTC', 'WHEP', 'RTCPeerConnection', 'SDP', '超低延迟'],
+      en: ['webrtc', 'whep', 'rtcpeerconnection', 'sdp', 'low latency'],
+    },
+    scenario: { zh: '视频接入', en: 'Video streaming' },
+  },
+  {
     path: '/cesium/cluster/points',
     addedAt: '2026-11-13',
     summary: {

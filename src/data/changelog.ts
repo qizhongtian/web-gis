@@ -13,6 +13,17 @@ export interface ChangelogItem {
 /** 首页时间线展示的更新动态（按时间倒序） */
 export const changelog: ChangelogItem[] = [
   {
+    id: '2026-11-20-video-webrtc',
+    date: '2026-11-20',
+    type: 'feat',
+    title: { zh: '新增原生 WebRTC 拉流示例', en: 'Added native WebRTC playback demo' },
+    desc: {
+      zh: '不依赖播放器库，直接用 RTCPeerConnection + fetch 完成 SDP 交换，支持 WHEP、ZLMediaKit 与自定义 POST 接口，并展示 ICE 状态与 getStats 指标。',
+      en: 'Plays WebRTC without any player library: RTCPeerConnection plus fetch handles the SDP exchange for WHEP, ZLMediaKit and custom POST endpoints, with ICE state and getStats metrics.',
+    },
+    path: '/video/webrtc',
+  },
+  {
     id: '2026-11-20-video-jessibuca-h265web',
     date: '2026-11-20',
     type: 'feat',
