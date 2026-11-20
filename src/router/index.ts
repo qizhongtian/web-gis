@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router'
+import { startProgress, doneProgress, failProgress } from '@/utils/progress'
 
 export const staticRoutes: RouteRecordRaw[] = [
   {
@@ -26,5 +27,18 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: staticRoutes,
 })
+
+// 页面跳转时顶部显示进度条（首个 beforeEach 注册，先于鉴权守卫执行）
+router.beforeEach(() => {
+  startProgress()
+  return true
+})
+
+// 导航结束（含重定向、被取消）都收尾；真正的错误由 onError 走失败态
+router.afterEach(() => {
+  doneProgress()
+})
+
+router.onError(() => failProgress())
 
 export default router
