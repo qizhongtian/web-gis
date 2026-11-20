@@ -13,6 +13,17 @@ export interface ChangelogItem {
 /** 首页时间线展示的更新动态（按时间倒序） */
 export const changelog: ChangelogItem[] = [
   {
+    id: '2026-11-20-cluster-guide',
+    date: '2026-11-20',
+    type: 'opt',
+    title: { zh: '聚合示例新增关键代码与注意事项面板', en: 'Added code & notes panel to cluster demos' },
+    desc: {
+      zh: '点位聚合与聚合点详情页右侧接入可折叠说明面板，整理 EntityCluster 事件、token 反查成员、弹窗逐帧投屏等要点。',
+      en: 'Cluster demos now ship a collapsible right panel covering EntityCluster events, token-based member lookup and per-frame popup projection.',
+    },
+    path: '/cesium/cluster/detail',
+  },
+  {
     id: '2026-11-19-cesium-1.140',
     date: '2026-11-19',
     type: 'feat',
