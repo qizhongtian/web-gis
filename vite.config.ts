@@ -51,6 +51,8 @@ export default defineConfig(({ mode }) => {
         'leaflet',
         'flv.js',
         'hls.js',
+        'maplibre-gl',
+        'mapbox-gl',
         'ol/Map.js',
         'ol/View.js',
         'ol/layer/Tile.js',
@@ -94,7 +96,8 @@ export default defineConfig(({ mode }) => {
       drop: isProd ? ['console', 'debugger'] : [],
     },
     build: {
-      target: 'es2015',
+      // bigint 字面量（maplibre-gl / mapbox-gl 内部使用）需要 es2020 及以上
+      target: 'es2020',
       cssCodeSplit: true,
       sourcemap: false,
       chunkSizeWarningLimit: 1500,
@@ -108,6 +111,8 @@ export default defineConfig(({ mode }) => {
               if (id.includes('node_modules/three/')) return 'gis-three'
               if (id.includes('node_modules/leaflet/')) return 'gis-leaflet'
               if (id.includes('node_modules/cesium/')) return 'gis-cesium'
+              if (id.includes('node_modules/maplibre-gl/')) return 'gis-maplibre'
+              if (id.includes('node_modules/mapbox-gl/')) return 'gis-mapbox'
               if (id.includes('element-plus')) return 'element-plus'
               if (id.includes('echarts')) return 'echarts'
               if (id.includes('vue') || id.includes('pinia')) return 'vue-vendor'

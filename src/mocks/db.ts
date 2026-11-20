@@ -441,6 +441,71 @@ export const mockMenus: MockMenu[] = [
     ],
   },
   {
+    id: 10,
+    label: 'MapLibre',
+    key: 'menus.maplibre',
+    icon: 'Compass',
+    path: '/maplibre',
+    component: '',
+    roles: ['admin', 'viewer'],
+    children: [
+      group(75, '基础', 'Basic', 'menus.maplibreBasic', 'SetUp', '/maplibre/basic', [
+        leaf(7501, '地图初始化', 'Init Map', 'menus.mlMap', '/maplibre/basic/map', 'maplibre/basic/map/index.vue'),
+        leaf(7502, '样式与底图', 'Style & Basemap', 'menus.mlStyle', '/maplibre/basic/style', 'maplibre/basic/style/index.vue'),
+        leaf(7503, '相机控制', 'Camera', 'menus.mlCamera', '/maplibre/basic/camera', 'maplibre/basic/camera/index.vue'),
+      ]),
+      group(76, '数据与图层', 'Data & Layers', 'menus.maplibreData', 'Menu', '/maplibre/data', [
+        leaf(7601, 'GeoJSON 图层', 'GeoJSON Layer', 'menus.mlGeojson', '/maplibre/data/geojson', 'maplibre/data/geojson/index.vue'),
+        leaf(7602, '标记与弹窗', 'Marker & Popup', 'menus.mlMarker', '/maplibre/data/marker', 'maplibre/data/marker/index.vue'),
+        leaf(7603, '栅格图层', 'Raster Layer', 'menus.mlRaster', '/maplibre/data/raster', 'maplibre/data/raster/index.vue'),
+        leaf(7604, '图层管理', 'Layer Manager', 'menus.mlLayers', '/maplibre/data/layers', 'maplibre/data/layers/index.vue'),
+      ]),
+      group(77, '三维可视化', '3D Visualization', 'menus.maplibre3d', 'DataLine', '/maplibre/3d', [
+        leaf(7701, '3D 建筑', '3D Buildings', 'menus.mlBuildings', '/maplibre/3d/buildings', 'maplibre/3d/buildings/index.vue'),
+        leaf(7702, '地形起伏', 'Terrain', 'menus.mlTerrain', '/maplibre/3d/terrain', 'maplibre/3d/terrain/index.vue'),
+        leaf(7703, '热力图', 'Heatmap', 'menus.mlHeatmap', '/maplibre/3d/heatmap', 'maplibre/3d/heatmap/index.vue'),
+      ]),
+      group(78, '高级进阶', 'Advanced', 'menus.maplibreAdvanced', 'Odometer', '/maplibre/advanced', [
+        leaf(7801, '点聚合', 'Cluster', 'menus.mlCluster', '/maplibre/advanced/cluster', 'maplibre/advanced/cluster/index.vue'),
+        leaf(7802, '大数据渲染', 'Big Data', 'menus.mlBigdata', '/maplibre/advanced/bigdata', 'maplibre/advanced/bigdata/index.vue'),
+        leaf(7803, '自定义图层', 'Custom Layer', 'menus.mlCustom', '/maplibre/advanced/custom', 'maplibre/advanced/custom/index.vue'),
+        leaf(7804, '路径动画', 'Path Animation', 'menus.mlAnimate', '/maplibre/advanced/animate', 'maplibre/advanced/animate/index.vue'),
+      ]),
+    ],
+  },
+  {
+    id: 11,
+    label: 'Mapbox',
+    key: 'menus.mapbox',
+    icon: 'Position',
+    path: '/mapbox',
+    component: '',
+    roles: ['admin', 'viewer'],
+    children: [
+      group(85, '基础', 'Basic', 'menus.mapboxBasic', 'SetUp', '/mapbox/basic', [
+        leaf(8501, '地图初始化', 'Init Map', 'menus.mbxMap', '/mapbox/basic/map', 'mapbox/basic/map/index.vue'),
+        leaf(8502, '样式切换', 'Style Switch', 'menus.mbxStyle', '/mapbox/basic/style', 'mapbox/basic/style/index.vue'),
+        leaf(8503, '相机动画', 'Camera', 'menus.mbxCamera', '/mapbox/basic/camera', 'mapbox/basic/camera/index.vue'),
+      ]),
+      group(86, '数据与图层', 'Data & Layers', 'menus.mapboxData', 'Menu', '/mapbox/data', [
+        leaf(8601, 'GeoJSON 图层', 'GeoJSON Layer', 'menus.mbxGeojson', '/mapbox/data/geojson', 'mapbox/data/geojson/index.vue'),
+        leaf(8602, '标记与弹窗', 'Marker & Popup', 'menus.mbxMarker', '/mapbox/data/marker', 'mapbox/data/marker/index.vue'),
+        leaf(8603, '栅格图层', 'Raster Layer', 'menus.mbxRaster', '/mapbox/data/raster', 'mapbox/data/raster/index.vue'),
+      ]),
+      group(87, '三维可视化', '3D Visualization', 'menus.mapbox3d', 'DataLine', '/mapbox/3d', [
+        leaf(8701, '3D 建筑', '3D Buildings', 'menus.mbxBuildings', '/mapbox/3d/buildings', 'mapbox/3d/buildings/index.vue'),
+        leaf(8702, '地形起伏', 'Terrain', 'menus.mbxTerrain', '/mapbox/3d/terrain', 'mapbox/3d/terrain/index.vue'),
+        leaf(8703, '热力图', 'Heatmap', 'menus.mbxHeatmap', '/mapbox/3d/heatmap', 'mapbox/3d/heatmap/index.vue'),
+      ]),
+      group(88, '高级进阶', 'Advanced', 'menus.mapboxAdvanced', 'Odometer', '/mapbox/advanced', [
+        leaf(8801, '点聚合', 'Cluster', 'menus.mbxCluster', '/mapbox/advanced/cluster', 'mapbox/advanced/cluster/index.vue'),
+        leaf(8802, '大数据渲染', 'Big Data', 'menus.mbxBigdata', '/mapbox/advanced/bigdata', 'mapbox/advanced/bigdata/index.vue'),
+        leaf(8803, '自定义图层', 'Custom Layer', 'menus.mbxCustom', '/mapbox/advanced/custom', 'mapbox/advanced/custom/index.vue'),
+        leaf(8804, '要素查询', 'Feature Query', 'menus.mbxQuery', '/mapbox/advanced/query', 'mapbox/advanced/query/index.vue'),
+      ]),
+    ],
+  },
+  {
     id: 8,
     label: '视频监控',
     labelEn: 'Video Monitor',

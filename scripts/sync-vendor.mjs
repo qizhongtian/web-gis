@@ -70,7 +70,25 @@ async function syncOpenLayers() {
   console.log('[vendor] OpenLayers css -> public/vendor/ol')
 }
 
+async function syncGl() {
+  await copyFile(
+    path.join(root, 'node_modules/maplibre-gl/dist/maplibre-gl.css'),
+    path.join(VENDOR_DEST, 'maplibre/maplibre-gl.css'),
+  )
+  await copyFile(
+    path.join(root, 'node_modules/mapbox-gl/dist/mapbox-gl.css'),
+    path.join(VENDOR_DEST, 'mapbox/mapbox-gl.css'),
+  )
+  // MapLibre 的 Worker 是自包含单文件，放到 public 下可绕开打包器的 URL 重写
+  await copyFile(
+    path.join(root, 'node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs'),
+    path.join(VENDOR_DEST, 'maplibre/maplibre-gl-worker.mjs'),
+  )
+  console.log('[vendor] MapLibre / Mapbox 静态资源 -> public/vendor')
+}
+
 await syncCesium()
 await syncLeaflet()
 await syncOpenLayers()
+await syncGl()
 console.log('[vendor] 静态资源同步完成')
