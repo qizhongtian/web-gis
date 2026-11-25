@@ -15,7 +15,7 @@ const HK_HOME: [number, number, number] = [114.1694, 22.3193, 28000]
 </script>
 
 <template>
-  <div class="h-full min-h-0 flex flex-col gap-2 p-2">
+  <div class="inspect-page h-full min-h-0 flex flex-col gap-2 p-2">
     <p class="demo-hint">{{ t('inspect.hint') }}</p>
 
     <CesiumViewer
@@ -28,3 +28,19 @@ const HK_HOME: [number, number, number] = [114.1694, 22.3193, 28000]
     </CesiumViewer>
   </div>
 </template>
+
+<style scoped>
+/* 由 top/bottom 限定可用高度，避免 fill 的 height: 100% 忽略底部留白。 */
+.inspect-page :deep(.overlay-panel.is-fill) {
+  height: auto;
+  min-height: 0;
+}
+
+.inspect-page :deep(.overlay-panel:not(.is-fill)) {
+  bottom: auto;
+}
+
+.inspect-page :deep(.panel-head) {
+  flex-shrink: 0;
+}
+</style>
