@@ -7,6 +7,9 @@
  * 改数据只改这里，两边自动保持一致。
  */
 
+import { chartItemsByLibrary } from '../utils/charts/examples'
+import { chartExamplePath, chartLevelLabels, chartLevels, libraries, libraryMetas } from '../utils/charts/model'
+
 export interface MockUser {
   id: number
   username: string
@@ -556,6 +559,23 @@ export const mockMenus: MockMenu[] = [
       leaf(8901, 'WebRTC', 'WebRTC', 'menus.videoWebrtc', '/video/webrtc', 'video/webrtc/index.vue'),
     ],
   },
+  group(12, '图表基础库', 'Chart Libraries', 'menus.charts', 'DataAnalysis', '/charts',
+    libraries.map((library, libraryIndex) => {
+      const name = libraryMetas[library].name
+      const path = `/charts/${library}`
+      const keys = { echarts: 'chartEcharts', g2: 'chartG2', d3: 'chartD3', plotly: 'chartPlotly' }
+      return group(1201 + libraryIndex, name, name, `menus.${keys[library]}`, '', path,
+        chartLevels.map((level, levelIndex) => group(
+          12000 + libraryIndex * 100 + levelIndex,
+          ...chartLevelLabels[level], `menus.chartLevel_${level}`, '', `${path}/${level}`,
+          chartItemsByLibrary[library].filter(item => item.level === level).map((item, index) => leaf(
+            120000 + libraryIndex * 1000 + levelIndex * 100 + index,
+            ...item.title, `menus.chartExample_${item.id}`, chartExamplePath(item), 'charts/index.vue',
+          )),
+        )),
+      )
+    }),
+  ),
   {
     id: 9,
     label: '在线工具',

@@ -1,3 +1,5 @@
+import { chartMenuMessages } from '../utils/charts/examples'
+
 export default {
   common: {
     confirm: 'Confirm',
@@ -13,7 +15,7 @@ export default {
     loginFailed: 'Login failed',
     loading: 'Loading...',
     loadingLib: 'Loading GIS library...',
-    appName: 'WebGIS Demo Platform',
+    appName: 'Visualization Lab',
     booting: 'Preparing workspace',
     loadingEngine: 'LOADING GIS ENGINE',
     loadingEngineDesc: 'Initializing map engine',
@@ -30,10 +32,10 @@ export default {
     menu: 'Menu',
   },
   login: {
-    title: 'WebGIS Demo Platform',
-    subtitle: 'Cesium · OpenLayers · Leaflet · Three.js demos in one place',
-    slogan: 'All your geo-visualization demos in one clean workspace',
-    desc: 'Browse, debug and manage 2D / 3D map demos with built-in roles and i18n.',
+    title: 'Visualization Lab',
+    subtitle: 'WebGIS · 3D scenes · Charts · Video playback',
+    slogan: 'Experiment with maps, scenes, and charts in one workspace',
+    desc: 'Run interactive examples for 2D maps, 3D scenes, video players, and charts, and compare how different libraries work.',
     feature1: 'Dynamic routes + role menus',
     feature2: 'Button-level permissions',
     feature3: 'One-click language switch',
@@ -64,6 +66,12 @@ export default {
   },
   menus: {
     home: 'Home',
+    charts: 'Chart Libraries',
+    chartEcharts: 'Apache ECharts',
+    chartG2: 'AntV G2',
+    chartD3: 'D3.js',
+    chartPlotly: 'Plotly.js',
+    ...chartMenuMessages(1),
     cesium: 'Cesium',
     cesiumBasic: 'Basic',
     cesiumInit: 'Init Globe',
@@ -355,7 +363,7 @@ export default {
   },
   dashboard: {
     hello: 'Hello, {name}!',
-    desc: 'A WebGIS demo platform built with Vue3 + TS + Pinia + Element Plus + UnoCSS',
+    desc: 'Explore 2D maps, 3D scenes, video playback, data charts, and developer tools. Run examples and compare how different libraries work.',
     recentKnowledge: 'Recently Added',
     recentKnowledgeDesc: 'New demos and solutions, newest first',
     changelog: 'Changelog',

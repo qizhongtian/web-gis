@@ -1,3 +1,5 @@
+import { chartMenuMessages } from '../utils/charts/examples'
+
 export default {
   common: {
     confirm: '确认',
@@ -13,7 +15,7 @@ export default {
     loginFailed: '登录失败',
     loading: '加载中...',
     loadingLib: '正在加载 GIS 库...',
-    appName: 'WebGIS 示例管理平台',
+    appName: '可视化实验室',
     booting: '正在准备工作空间',
     loadingEngine: '正在启动地图引擎',
     loadingEngineDesc: '正在初始化地图引擎',
@@ -30,10 +32,10 @@ export default {
     menu: '菜单',
   },
   login: {
-    title: 'WebGIS 示例管理平台',
-    subtitle: 'Cesium · OpenLayers · Leaflet · Three.js 示例一体化管理',
-    slogan: '把地理可视化示例，放进一个清爽的后台',
-    desc: '统一浏览、调试与管理二维 / 三维地图示例，内置权限与国际化能力。',
+    title: '可视化实验室',
+    subtitle: 'WebGIS · 三维场景 · 数据图表 · 视频播放',
+    slogan: '从地图到图表，在同一个工作台动手试验',
+    desc: '浏览二维地图、三维场景、播放器和数据图表的交互示例，比较不同技术的实现方式。',
     feature1: '动态路由 + 角色权限菜单',
     feature2: '按钮级权限控制',
     feature3: '中英文一键切换',
@@ -64,6 +66,12 @@ export default {
   },
   menus: {
     home: '首页',
+    charts: '图表基础库',
+    chartEcharts: 'Apache ECharts',
+    chartG2: 'AntV G2',
+    chartD3: 'D3.js',
+    chartPlotly: 'Plotly.js',
+    ...chartMenuMessages(0),
     cesium: 'Cesium',
     cesiumBasic: '基础',
     cesiumInit: '地球初始化',
@@ -355,7 +363,7 @@ export default {
   },
   dashboard: {
     hello: '你好，{name}！',
-    desc: '这是一个基于 Vue3 + TS + Pinia + Element Plus + UnoCSS 的 WebGIS 示例管理平台',
+    desc: '按主题探索二维地图、三维场景、视频播放、数据图表和开发工具，运行示例并比较不同技术的实现。',
     recentKnowledge: '最近新增知识',
     recentKnowledgeDesc: '近期补充的示例与问题解法，按时间倒序',
     changelog: '更新动态',

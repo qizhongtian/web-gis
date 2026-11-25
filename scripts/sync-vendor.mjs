@@ -4,6 +4,7 @@
  * - Cesium：复制 node_modules/cesium/Build/Cesium（Cesium.js / Workers / Assets / Widgets / ThirdParty）
  * - Leaflet：复制 leaflet.css 与配套 images（标注图标）
  * - OpenLayers：复制 ol.css
+ * - 图表库：复制 ECharts、G2、D3、Plotly.js 的浏览器 UMD 文件和许可证
  *
  * 由 postinstall / predev / prebuild 自动调用；手动强制刷新：npm run sync:vendor -- --force
  */
@@ -87,8 +88,31 @@ async function syncGl() {
   console.log('[vendor] MapLibre / Mapbox 静态资源 -> public/vendor')
 }
 
+async function syncCharts() {
+  const files = {
+    'echarts.js': 'echarts/dist/echarts.min.js',
+    'g2.js': '@antv/g2/dist/g2.min.js',
+    'd3.js': 'd3/dist/d3.min.js',
+    'plotly.js': 'plotly.js-dist-min/plotly.min.js',
+  }
+  for (const [name, source] of Object.entries(files)) {
+    await copyFile(path.join(root, 'node_modules', source), path.join(VENDOR_DEST, 'charts', name))
+  }
+  // 保留分发包的许可证文件，第三方脚本不打进站点业务包。
+  for (const [name, pkg] of [['echarts', 'echarts'], ['g2', '@antv/g2'], ['d3', 'd3'], ['plotly', 'plotly.js-dist-min']]) {
+    const dir = path.join(root, 'node_modules', pkg)
+    for (const notice of ['LICENSE', 'LICENSE.txt', 'LICENSE.md', 'NOTICE', 'NOTICE.txt']) {
+      if (existsSync(path.join(dir, notice))) {
+        await copyFile(path.join(dir, notice), path.join(VENDOR_DEST, 'charts', 'licenses', `${name}-${notice}`))
+      }
+    }
+  }
+  console.log('[vendor] 四套图表 UMD 脚本 -> public/vendor/charts')
+}
+
 await syncCesium()
 await syncLeaflet()
 await syncOpenLayers()
 await syncGl()
+await syncCharts()
 console.log('[vendor] 静态资源同步完成')

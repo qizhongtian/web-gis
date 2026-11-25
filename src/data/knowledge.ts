@@ -37,6 +37,26 @@ export type ChangeType = 'feat' | 'fix' | 'opt' | 'chore'
 
 export const knowledgeMeta: KnowledgeMeta[] = [
   {
+    path: '/charts/echarts', addedAt: '2026-11-25',
+    summary: { zh: '从柱状图、折线和环形图，进阶到时间范围缩放、热力矩阵和桑基图。', en: 'From bars, lines, and donuts to time-range zoom, heatmaps, and Sankey diagrams.' },
+    keywords: { zh: ['图表', '热力图', '桑基图', '缩放'], en: ['echarts', 'heatmap', 'sankey', 'dataZoom'] },
+  },
+  {
+    path: '/charts/g2', addedAt: '2026-11-25',
+    summary: { zh: '用图形语法声明基础图表、分组对比、散点刷选和多视图联动。', en: 'Use the grammar of graphics for basics, grouped comparisons, scatter brushing, and linked views.' },
+    keywords: { zh: ['图形语法', '散点', '刷选', '联动'], en: ['antv', 'g2', 'brush', 'linked views'] },
+  },
+  {
+    path: '/charts/d3', addedAt: '2026-11-25',
+    summary: { zh: '用 SVG 和比例尺绘制图表，实现刷选、矩形树图和可拖拽力导向网络。', en: 'Build SVG charts using scales, brushing, treemaps, and a draggable force network.' },
+    keywords: { zh: ['比例尺', '刷选', '矩形树图', '力导向'], en: ['d3', 'svg', 'treemap', 'force simulation'] },
+  },
+  {
+    path: '/charts/plotly', addedAt: '2026-11-25',
+    summary: { zh: '通过交互图表查看趋势、统计分布、套索选择和可旋转三维曲面。', en: 'Explore trends, statistical distributions, lasso selection, and a rotatable 3D surface.' },
+    keywords: { zh: ['箱线图', '小提琴图', '套索', '三维曲面'], en: ['plotly', 'box plot', 'violin', 'lasso', '3d surface'] },
+  },
+  {
     path: '/cesium/tool/inspect',
     addedAt: '2026-11-19',
     summary: {

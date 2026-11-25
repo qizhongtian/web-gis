@@ -1,6 +1,10 @@
-# WebGIS 示例管理平台
+# 可视化实验室
 
-基于 **Vue 3 + TypeScript + Pinia + Vue Router 4 + VueUse + Element Plus + UnoCSS** 的 WebGIS 工具示例管理平台，集成 **Cesium.js / OpenLayers / Three.js** 示例，包含登录鉴权、动态路由、权限菜单、按钮权限、中英文切换等后台管理能力，整体为深色科技风。
+一个面向前端开发者的交互示例集合，覆盖 **二维与三维地图、Three.js 场景、视频播放、数据图表与日常工具**。可以按类别运行和比较不同实现，观察图表缩放、刷选、联动等交互。项目使用 Vue 3、TypeScript、Vite、Pinia 和 Element Plus，支持动态菜单、角色权限与中英文切换。
+
+### 图表基础库
+
+从系统左侧「图表基础库 → 图表库 → 基础 / 进阶 / 高级」打开各示例。Apache ECharts、AntV G2、D3.js 和 Plotly.js 共提供 33 个示例；每个示例含图表预览、可编辑和复制的 JavaScript，以及常见坑点说明。所有示例数据均在本地生成；四套浏览器分发脚本由 `scripts/sync-vendor.mjs` 从锁定的 npm 依赖复制到 `public/vendor/charts`，进入对应页面后才加载，不使用在线 CDN。安装依赖或运行标准开发、构建命令会自动同步这些资源；部署产物随站点提供脚本。Plotly.js 三维曲面需要浏览器支持 WebGL。
 
 ![tech](https://img.shields.io/badge/Vue-3.x-brightgreen) ![tech](https://img.shields.io/badge/TypeScript-5.x-blue) ![tech](https://img.shields.io/badge/Vite-5.x-purple)
 
@@ -14,7 +18,7 @@ web-gis/
 ├── src/
 │   ├── api/                  # axios 封装（拦截器：token 注入、401 处理、业务码解包）
 │   ├── components/
-│   │   └── DemoBox.vue       # GIS 示例通用容器（CDN 加载 loading/error/retry + 资源释放）
+│   │   └── DemoBox.vue       # GIS 示例通用容器（按需加载、错误重试和资源释放）
 │   ├── directives/
 │   │   └── permission.ts     # v-permission 按钮权限指令
 │   ├── i18n/                 # vue-i18n 中英文语言包（zh-CN / en）
@@ -121,7 +125,7 @@ npm run preview
 已在 `vite.config.ts` 中落地：
 
 1. **手动分包（manualChunks）**：`element-plus`、`vue 全家桶`、`vendor` 分离，长缓存 + 并行加载；
-2. **代码分割**：全部视图与 GIS 库均为懒加载（路由级 `import()` + 动态 CDN）；
+2. **代码分割**：视图以路由为单位加载；图表库按页加载同源静态脚本，不进入业务包；
 3. **CSS 代码分割**：`cssCodeSplit: true`，按需加载样式；
 4. **去除 console/debugger**：esbuild `drop`，零成本清除；
 5. **chunkSizeWarningLimit**：放宽 GIS 大包告警阈值，配合分包定位问题。

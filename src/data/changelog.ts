@@ -13,6 +13,17 @@ export interface ChangelogItem {
 /** 首页时间线展示的更新动态（按时间倒序） */
 export const changelog: ChangelogItem[] = [
   {
+    id: '2026-11-25-chart-libraries',
+    date: '2026-11-25',
+    type: 'feat',
+    title: { zh: '新增图表基础库', en: 'Added chart libraries' },
+    desc: {
+      zh: 'Apache ECharts、AntV G2、D3.js 和 Plotly.js 共 24 个交互示例，从基础图表覆盖到刷选、网络布局和三维曲面，图表脚本随站点部署。',
+      en: 'Twenty-four examples across Apache ECharts, AntV G2, D3.js, and Plotly.js cover basic charts, brushing, network layouts, and 3D surfaces. All chart scripts are served with the site.',
+    },
+    path: '/charts/echarts',
+  },
+  {
     id: '2026-11-20-video-webrtc',
     date: '2026-11-20',
     type: 'feat',
@@ -241,7 +252,7 @@ export const changelog: ChangelogItem[] = [
     id: '2026-11-06-init',
     date: '2026-11-06',
     type: 'chore',
-    title: { zh: '初始化 WebGIS 示例管理平台', en: 'Initialized WebGIS demo platform' },
+    title: { zh: '初始化项目与示例工作台', en: 'Initialized the project and demo workspace' },
     desc: { zh: 'Vue3 + TS + Pinia + Element Plus + UnoCSS。', en: 'Vue3 + TS + Pinia + Element Plus + UnoCSS.' },
   },
 ]
