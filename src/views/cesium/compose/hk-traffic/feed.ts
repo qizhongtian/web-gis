@@ -1,5 +1,9 @@
 /**
  * 数据获取与轮询
+ *
+ * 资源 URL 必须走 `import.meta.env.BASE_URL`，
+ * GitHub Pages 项目站点（/web-gis/）与本地 dev（/）自动适配；
+ * 不要写死 `/data/...`，否则 Pages 上会 404。
  */
 
 import type {
@@ -16,7 +20,7 @@ import type {
   RoadPointItem,
 } from './types'
 
-const DATA_BASE = '/data/hk-traffic/'
+const DATA_BASE = `${import.meta.env.BASE_URL}data/hk-traffic/`
 
 export async function fetchJson<T>(url: string, timeoutMs = 8000): Promise<T | null> {
   try {
