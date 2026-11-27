@@ -111,6 +111,7 @@ export default {
     cesiumTrack: '轨迹回放',
     cesiumDual: '双屏联动',
     cesiumFloor: '模型节点分层',
+    cesiumComposeHkTraffic: '香港交通情报',
     cesiumFaq: '常见问题解决',
     cesiumFaqClamp: '点位贴地(无高程)',
     cesiumFaqElevation: '点位高度取值',

@@ -152,6 +152,7 @@ export const mockMenus: MockMenu[] = [
         leaf(2121, '轨迹回放', 'Track Playback', 'menus.cesiumTrack', '/cesium/compose/trackplayback', 'cesium/compose/trackplayback/index.vue'),
         leaf(2122, '双屏联动', 'Dual Screen', 'menus.cesiumDual', '/cesium/compose/dualscreen', 'cesium/compose/dualscreen/index.vue'),
         leaf(2123, '模型节点分层', 'Model Floors', 'menus.cesiumFloor', '/cesium/compose/floor', 'cesium/compose/floor/index.vue'),
+        leaf(2124, '香港交通情报', 'HK Traffic Intel', 'menus.cesiumComposeHkTraffic', '/cesium/compose/hk-traffic', 'cesium/compose/hk-traffic/index.vue'),
       ]),
       group(215, '常见问题解决', 'FAQ Solutions', 'menus.cesiumFaq', 'QuestionFilled', '/cesium/faq', [
         leaf(2151, '点位贴地(无高程)', 'Clamp Point to Ground', 'menus.cesiumFaqClamp', '/cesium/faq/clamp', 'cesium/faq/clamp/index.vue'),

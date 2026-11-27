@@ -111,6 +111,7 @@ export default {
     cesiumTrack: 'Track Playback',
     cesiumDual: 'Dual Screen',
     cesiumFloor: 'Model Floors',
+    cesiumComposeHkTraffic: 'HK Traffic Intelligence',
     cesiumFaq: 'FAQ Solutions',
     cesiumFaqClamp: 'Clamp Point to Ground',
     cesiumFaqElevation: 'Point Elevation Sampling',
