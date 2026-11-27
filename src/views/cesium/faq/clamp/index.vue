@@ -3,10 +3,8 @@ import CesiumViewer from '@/components/CesiumViewer.vue'
 import GuidePanel from '@/components/GuidePanel.vue'
 import type { NoteItem } from '@/components/GuidePanel.vue'
 import type { CodeBlock } from '@/components/CodePanel.vue'
+import { HK_POINT_CLAMP_HOME } from '@/utils/gis/cesiumConfig'
 import ClampPanel from './ClampPanel.vue'
-
-/** 默认视角：香港全景 */
-const HOME: [number, number, number] = [114.1694, 22.3193, 38000]
 
 const blocks: CodeBlock[] = [
   {
@@ -245,7 +243,7 @@ const notes: NoteItem[] = [
           点位只有经纬度、没有高程：1000 点以内用 <code>heightReference</code> 逐帧自动贴，超过 1000 点自动降级为「预计算高度 + <code>NONE</code>」，每帧不再 clamp；默认 12 个点位、地形与倾斜摄影都开，文字标注只在相机距离 2 km 内显示。
         </span>
       </div>
-      <CesiumViewer class="map" :home="HOME">
+      <CesiumViewer class="map" :home="HK_POINT_CLAMP_HOME">
         <ClampPanel />
       </CesiumViewer>
     </section>

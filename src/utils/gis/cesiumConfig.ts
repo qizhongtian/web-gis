@@ -34,7 +34,11 @@ export const globalTerrainUrl
  * 未配置时直接用全球高程服务（ArcGIS，免密钥、无跨域问题）。
  * 所有示例页的默认地形地址都从这里取，改一处即可全站生效。
  */
-export const defaultTerrainServiceUrl = import.meta.env.VITE_HK_TERRAIN_URL || globalTerrainUrl
+export const configuredHkTerrainUrl = import.meta.env.VITE_HK_TERRAIN_URL?.trim() || ''
+export const defaultTerrainServiceUrl = configuredHkTerrainUrl || globalTerrainUrl
+
+/** 两个中国香港点位贴地示例共用的首屏视角。 */
+export const HK_POINT_CLAMP_HOME: [number, number, number] = [114.1694, 22.3193, 38000]
 
 /**
  * 是否为 ArcGIS 高程服务地址。
@@ -73,7 +77,8 @@ export async function createTerrainProvider(Cesium: any, url: string): Promise<a
  * 香港地政总署 3D 网格模型（倾斜摄影建筑，带真实楼体与地表起伏）。
  * 可用 `VITE_CESIUM_MESH_URL` 覆盖，或传空字符串关闭。
  */
-export const defaultMeshTilesetUrl = import.meta.env.VITE_CESIUM_MESH_URL
+export const configuredMeshTilesetUrl = import.meta.env.VITE_CESIUM_MESH_URL?.trim()
+export const defaultMeshTilesetUrl = configuredMeshTilesetUrl
   ?? 'https://data.map.gov.hk/api/3d-data/meshmodel/WGS84/tileset.json?key=ad5940a63bd344c48b0351ef1c7a905e'
 
 /**

@@ -262,7 +262,10 @@ const stageStatusText = () => {
         <div class="log-row">
           <div class="log-head">
             <span class="label">播放器事件</span>
-            <button type="button" class="clear-btn" @click="clearLogs">清空</button>
+            <div class="flex items-center gap-2">
+              <router-link to="/video/wsplayer/errors" class="text-xs text-[#1d4ed8] hover:underline">{{ $t('menus.videoWsErrors') }}</router-link>
+              <button type="button" class="clear-btn" @click="clearLogs">清空</button>
+            </div>
           </div>
           <ul class="logs">
             <li v-if="!logs.length" class="empty">暂无事件，初始化完成或发起播放后这里会打印回调</li>

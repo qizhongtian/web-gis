@@ -135,7 +135,7 @@ export const notes: NoteItem[] = [
   },
   {
     title: 'token 30 秒过期',
-    body: '拉流接口返回 `{ url, token }` 两个字段，rtsp 要自己拼上 `?token=xxx`。拿到地址后 30 秒内必须开始播放，Postman / demo 调试最容易超时。报 401 / 403 / 503 或错误码 224，基本都是 token 过期或没拼。',
+    body: '拉流接口返回 `{ url, token }` 两个字段，rtsp 要自己拼上 `?token=xxx`。拿到地址后 30 秒内必须开始播放，Postman / demo 调试最容易超时。SDK 播放码 224 / 401 表示码流 token 过期；503 表示当前拉流服务异常，不能仅凭这一项认定 token 过期。',
   },
   {
     title: 'ws 地址必须与 rtsp 指向同一台流媒体',

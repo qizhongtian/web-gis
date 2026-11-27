@@ -37,6 +37,11 @@ export type ChangeType = 'feat' | 'fix' | 'opt' | 'chore'
 
 export const knowledgeMeta: KnowledgeMeta[] = [
   {
+    path: '/cesium/faq/pointsurface', addedAt: '2026-11-27',
+    summary: { zh: '海量图标随距缩放、单条点选高亮，并贴合地形或 3D Tiles；高点量时分批采样。', en: 'Scale mass point icons by distance, highlight a single pick, and clamp to terrain or 3D Tiles with batch sampling at higher counts.' },
+    keywords: { zh: ['海量点', '点选', '无高程贴地', '倾斜摄影'], en: ['BillboardCollection', 'NearFarScalar', 'picking', '3D Tiles', 'clamping'] },
+  },
+  {
     path: '/charts/echarts', addedAt: '2026-11-25',
     summary: { zh: '从柱状图、折线和环形图，进阶到时间范围缩放、热力矩阵和桑基图。', en: 'From bars, lines, and donuts to time-range zoom, heatmaps, and Sankey diagrams.' },
     keywords: { zh: ['图表', '热力图', '桑基图', '缩放'], en: ['echarts', 'heatmap', 'sankey', 'dataZoom'] },
